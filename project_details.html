@@ -1,0 +1,1289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project Details | Kytron Solutions</title>
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+/* ==========================================================================
+   Design tokens / shared components copied 1:1 from Client.html so this page
+   feels like the same application. See Client.html for the source of truth;
+   keep both in sync if either changes.
+   ========================================================================== */
+:root{
+  --bg:#0B0F19; --surface:#111827; --surface-2:#0B0F19;
+  --border:#1F2937; --border-strong:#374151;
+  --text:#F3F4F6; --text-strong:#FFFFFF; --text-muted:#9CA3AF; --text-body:#D1D5DB;
+  --accent:#3B82F6; --accent-strong:#2563EB; --accent-light:#60A5FA;
+  --green:#22C55E; --amber:#F59E0B; --red:#EF4444; --purple:#A855F7;
+  --radius-sm:0.5rem; --radius-md:0.875rem; --radius-lg:1.25rem;
+  --header-h:64px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;}
+body{background-color:var(--bg); color:var(--text); font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,sans-serif; -webkit-font-smoothing:antialiased; min-height:100vh; overflow-x:hidden;}
+a{text-decoration:none;color:inherit;}
+button{font-family:inherit;}
+.hidden{display:none !important;}
+:focus-visible{outline:2px solid var(--accent-light);outline-offset:2px;border-radius:4px;}
+
+.btn-primary{background-color:var(--accent-strong); color:#fff; padding:0.625rem 1.25rem; border-radius:var(--radius-sm); font-size:0.875rem; font-weight:600; border:none; box-shadow:0 10px 15px -3px rgba(59,130,246,0.2); cursor:pointer; transition:background-color .2s ease; display:inline-flex; align-items:center; justify-content:center; gap:0.5rem;}
+.btn-primary:hover{background-color:#1D4ED8;} .btn-primary:disabled{opacity:0.55; cursor:not-allowed; box-shadow:none;}
+.btn-secondary{background-color:transparent; color:#fff; border:1px solid var(--border-strong); padding:0.625rem 1.25rem; border-radius:var(--radius-sm); font-size:0.875rem; font-weight:600; cursor:pointer; transition:all .2s ease; display:inline-flex; align-items:center; justify-content:center; gap:0.5rem;}
+.btn-secondary:hover{border-color:var(--accent); background-color:rgba(59,130,246,0.05);}
+.btn-danger{background:rgba(239,68,68,0.1); color:#FCA5A5; border:1px solid rgba(239,68,68,0.35); padding:0.625rem 1.25rem; border-radius:var(--radius-sm); font-size:0.875rem; font-weight:600; cursor:pointer;}
+.btn-danger:hover{background:rgba(239,68,68,0.18);}
+.btn-sm{padding:0.4rem 0.85rem; font-size:0.8rem;}
+.icon-btn{width:2.25rem; height:2.25rem; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; background:transparent; border:1px solid var(--border-strong); color:var(--text-muted); cursor:pointer; position:relative; transition:all .2s ease; flex-shrink:0;}
+.icon-btn:hover{color:#fff; border-color:var(--accent);} .icon-btn i{width:1.1rem;height:1.1rem;}
+
+.field{display:flex; flex-direction:column; gap:0.4rem; margin-bottom:1.1rem;}
+.field label{font-size:0.8125rem; font-weight:600; color:var(--text-body);}
+.field input, .field select, .field textarea{background-color:var(--bg); border:1px solid var(--border-strong); color:#fff; padding:0.7rem 0.9rem; border-radius:var(--radius-sm); font-size:0.9rem; font-family:inherit; transition:border-color .2s ease;}
+.field input:focus, .field select:focus, .field textarea:focus{border-color:var(--accent); outline:none;}
+.field .error-text{font-size:0.75rem; color:#FCA5A5; display:none;}
+.field.has-error input{border-color:var(--red);} .field.has-error .error-text{display:block;}
+
+.badge{display:inline-flex; align-items:center; gap:0.35rem; font-size:0.7rem; font-weight:700; padding:0.25rem 0.65rem; border-radius:9999px; text-transform:uppercase; letter-spacing:0.03em; white-space:nowrap;}
+.badge-dot{width:0.4rem; height:0.4rem; border-radius:50%; flex-shrink:0;}
+.badge-blue{background:rgba(59,130,246,0.12); color:#93C5FD;} .badge-blue .badge-dot{background:#3B82F6;}
+.badge-green{background:rgba(34,197,94,0.12); color:#86EFAC;} .badge-green .badge-dot{background:#22C55E;}
+.badge-amber{background:rgba(245,158,11,0.12); color:#FCD34D;} .badge-amber .badge-dot{background:#F59E0B;}
+.badge-red{background:rgba(239,68,68,0.12); color:#FCA5A5;} .badge-red .badge-dot{background:#EF4444;}
+.badge-gray{background:rgba(156,163,175,0.12); color:#D1D5DB;} .badge-gray .badge-dot{background:#9CA3AF;}
+.badge-purple{background:rgba(168,85,247,0.12); color:#D8B4FE;} .badge-purple .badge-dot{background:#A855F7;}
+
+.card{background-color:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md); padding:1.25rem;}
+
+#toast-stack{position:fixed; top:1rem; right:1rem; left:1rem; z-index:400; display:flex; flex-direction:column; gap:0.6rem; align-items:flex-end; pointer-events:none;}
+@media(min-width:640px){#toast-stack{left:auto; width:22rem;}}
+.toast{pointer-events:auto; width:100%; background:#111827; border:1px solid var(--border-strong); border-left:3px solid var(--accent); border-radius:var(--radius-sm); padding:0.85rem 1rem; display:flex; gap:0.65rem; align-items:flex-start; box-shadow:0 20px 40px rgba(0,0,0,0.45); animation:toast-in .25s cubic-bezier(.16,1,.3,1);}
+.toast.success{border-left-color:var(--green);} .toast.error{border-left-color:var(--red);}
+.toast i{width:1.1rem;height:1.1rem; flex-shrink:0; margin-top:0.1rem;}
+.toast.success i{color:var(--green);} .toast.error i{color:var(--red);} .toast.info i{color:var(--accent-light);}
+.toast p{font-size:0.85rem; color:var(--text-body); line-height:1.4;}
+.toast button{background:none;border:none;color:var(--text-muted);cursor:pointer;margin-left:auto;}
+@keyframes toast-in{from{opacity:0; transform:translateY(-8px);} to{opacity:1; transform:translateY(0);}}
+
+.state-block{display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:3rem 1.5rem; gap:0.85rem;}
+.state-block i{width:2.25rem; height:2.25rem; color:var(--text-muted);}
+.state-block h4{font-size:0.95rem; color:#fff; font-weight:700;}
+.state-block p{font-size:0.825rem; color:var(--text-muted); max-width:24rem; line-height:1.5;}
+.spinner{width:1.5rem; height:1.5rem; border-radius:50%; border:2.5px solid var(--border-strong); border-top-color:var(--accent-light); animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.skeleton{background:linear-gradient(90deg, var(--border) 25%, #26314699 37%, var(--border) 63%); background-size:400% 100%; animation:sk 1.4s ease infinite; border-radius:0.5rem;}
+@keyframes sk{0%{background-position:100% 50%;} 100%{background-position:0 50%;}}
+.skel-card{height:5rem; margin-bottom:0.75rem;} .skel-line{height:0.75rem; margin-bottom:0.5rem;}
+
+.modal-overlay{position:fixed; inset:0; background:rgba(0,0,0,0.65); z-index:200; display:flex; align-items:flex-end; justify-content:center; opacity:0; pointer-events:none; transition:opacity .2s ease;}
+@media(min-width:640px){.modal-overlay{align-items:center;}}
+.modal-overlay.open{opacity:1; pointer-events:auto;}
+.modal-box{background:var(--surface); border:1px solid var(--border-strong); border-radius:1.25rem 1.25rem 0 0; width:100%; max-width:30rem; max-height:88vh; overflow-y:auto; padding:1.5rem; transform:translateY(2rem); transition:transform .25s cubic-bezier(.16,1,.3,1); box-shadow:0 30px 60px rgba(0,0,0,0.55);}
+@media(min-width:640px){.modal-box{border-radius:1.25rem;}}
+.modal-overlay.open .modal-box{transform:translateY(0);}
+.modal-head{display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:1.1rem;}
+.modal-head h3{font-size:1.1rem; font-weight:800; color:#fff;}
+.modal-head p{font-size:0.8rem; color:var(--text-muted); margin-top:0.25rem;}
+.modal-close{background:none; border:none; color:var(--text-muted); cursor:pointer; padding:0.25rem;}
+
+/* -------------------------------------------------------------------- */
+/* PAGE-SPECIFIC                                                         */
+/* -------------------------------------------------------------------- */
+.app-topbar{position:sticky; top:0; z-index:60; height:var(--header-h); background-color:rgba(11,15,25,0.9); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; padding:0 1rem;}
+@media(min-width:768px){.app-topbar{padding:0 1.5rem;}}
+.brand-logo{font-size:1.3rem; font-weight:900; letter-spacing:0.05em; color:#fff; display:flex; align-items:center; gap:0.2rem;}
+.brand-logo span{color:var(--accent);}
+.back-link{display:inline-flex; align-items:center; gap:0.4rem; color:var(--text-muted); font-size:0.825rem; font-weight:600;}
+.back-link:hover{color:#fff;}
+
+.login-wrap{min-height:100vh; display:flex; align-items:center; justify-content:center; padding:1.5rem;}
+.login-card{width:100%; max-width:26rem; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:2rem 1.75rem;}
+.login-brand{display:flex; align-items:center; gap:0.4rem; font-size:1.4rem; font-weight:900; letter-spacing:0.05em; margin-bottom:0.35rem;}
+.login-brand span{color:var(--accent);}
+.login-card h2{font-size:1.05rem; font-weight:700; color:#fff; margin-bottom:0.3rem;}
+.login-card > p.sub{font-size:0.8125rem; color:var(--text-muted); margin-bottom:1.5rem;}
+.login-error{background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.35); color:#FCA5A5; font-size:0.8125rem; padding:0.7rem 0.9rem; border-radius:var(--radius-sm); margin-bottom:1.1rem; display:none; gap:0.5rem; align-items:flex-start;}
+.login-error.show{display:flex;} .login-error i{width:1rem; height:1rem; flex-shrink:0; margin-top:0.1rem;}
+
+.main-content{max-width:72rem; margin:0 auto; padding:1.25rem 1rem 4rem;}
+@media(min-width:768px){.main-content{padding:1.75rem 2rem 4rem;}}
+
+.proj-header{margin-bottom:1.5rem;}
+.proj-header-row{display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; flex-wrap:wrap;}
+.proj-header h1{font-size:1.5rem; font-weight:800; color:#fff; letter-spacing:-0.01em;}
+.proj-order{font-family:ui-monospace,"SF Mono",Menlo,monospace; font-size:0.8rem; color:var(--text-muted); margin-top:0.3rem;}
+.proj-meta-row{display:flex; flex-wrap:wrap; gap:1.25rem; margin-top:1rem; font-size:0.8125rem;}
+.proj-meta-row div dt{color:var(--text-muted); font-size:0.7rem; text-transform:uppercase; letter-spacing:0.03em; margin-bottom:0.2rem;}
+.proj-meta-row div dd{color:var(--text-body); font-weight:600;}
+
+.stepper{display:flex; overflow-x:auto; gap:0; padding:1.25rem 0.25rem; margin-bottom:1.5rem;}
+.step{display:flex; flex-direction:column; align-items:center; flex:1; min-width:5.5rem; position:relative;}
+.step .dot{width:1.9rem; height:1.9rem; border-radius:50%; background:var(--surface-2); border:2px solid var(--border-strong); display:flex; align-items:center; justify-content:center; font-size:0.7rem; font-weight:800; color:var(--text-muted); z-index:2;}
+.step .line{position:absolute; top:0.95rem; left:50%; width:100%; height:2px; background:var(--border-strong); z-index:1;}
+.step:last-child .line{display:none;}
+.step .lbl{font-size:0.7rem; color:var(--text-muted); margin-top:0.5rem; text-align:center; font-weight:600;}
+.step.done .dot{background:var(--accent-strong); border-color:var(--accent-strong); color:#fff;}
+.step.done .line{background:var(--accent-strong);}
+.step.current .dot{background:var(--bg); border-color:var(--accent-light); color:var(--accent-light); box-shadow:0 0 0 4px rgba(96,165,250,0.15);}
+.step.current .lbl{color:#fff;}
+
+.tabs{display:flex; gap:0.3rem; overflow-x:auto; border-bottom:1px solid var(--border); margin-bottom:1.5rem;}
+.tab-btn{background:none; border:none; color:var(--text-muted); font-size:0.85rem; font-weight:600; padding:0.75rem 0.9rem; cursor:pointer; white-space:nowrap; border-bottom:2px solid transparent; display:flex; align-items:center; gap:0.4rem;}
+.tab-btn:hover{color:#fff;}
+.tab-btn.active{color:#fff; border-bottom-color:var(--accent);}
+.tab-panel{display:none;} .tab-panel.active{display:block;}
+
+.overview-grid{display:grid; grid-template-columns:1fr; gap:1.25rem;}
+@media(min-width:900px){.overview-grid{grid-template-columns:2fr 1fr;}}
+.desc-text{font-size:0.875rem; line-height:1.7; color:var(--text-body); white-space:pre-line;}
+.chip-list{display:flex; flex-wrap:wrap; gap:0.5rem; margin-top:0.75rem;}
+.chip{background:var(--surface-2); border:1px solid var(--border-strong); border-radius:9999px; padding:0.3rem 0.75rem; font-size:0.75rem; color:var(--text-body); font-weight:600;}
+
+.entity-row{border:1px solid var(--border); border-radius:var(--radius-sm); padding:1rem; margin-bottom:0.75rem;}
+.entity-row-head{display:flex; align-items:flex-start; justify-content:space-between; gap:0.75rem;}
+.entity-row-head h4{font-size:0.9rem; font-weight:700; color:#fff;}
+.entity-row p.desc{font-size:0.8125rem; color:var(--text-muted); margin-top:0.35rem; line-height:1.5;}
+.entity-row .meta-line{display:flex; flex-wrap:wrap; gap:0.9rem; margin-top:0.6rem; font-size:0.75rem; color:var(--text-muted);}
+.entity-row .meta-line span{display:flex; align-items:center; gap:0.3rem;}
+.entity-row .meta-line i{width:0.85rem; height:0.85rem;}
+.milestone-progress{display:flex; align-items:center; gap:0.6rem; margin-top:0.65rem;}
+.milestone-progress .bar{flex:1; height:0.4rem; background:var(--border); border-radius:9999px; overflow:hidden;}
+.milestone-progress .bar > span{display:block; height:100%; background:linear-gradient(90deg,#3B82F6,#60A5FA);}
+.milestone-progress .pct{font-size:0.7rem; font-weight:700; color:var(--text-muted);}
+.entity-actions{display:flex; gap:0.5rem; margin-top:0.75rem; flex-wrap:wrap;}
+.owner-tag{font-size:0.7rem; font-weight:700; padding:0.15rem 0.5rem; border-radius:0.35rem;}
+.owner-tag.client{background:rgba(59,130,246,0.12); color:#93C5FD;}
+.owner-tag.team{background:rgba(168,85,247,0.12); color:#D8B4FE;}
+
+.file-row{display:flex; align-items:center; gap:0.85rem; padding:0.85rem; border:1px solid var(--border); border-radius:var(--radius-sm); margin-bottom:0.6rem;}
+.file-icon{width:2.5rem; height:2.5rem; border-radius:0.6rem; background:var(--surface-2); border:1px solid var(--border-strong); display:flex; align-items:center; justify-content:center; flex-shrink:0;}
+.file-icon i{width:1.15rem; height:1.15rem; color:var(--accent-light);}
+.file-body{flex:1; min-width:0;}
+.file-body p.name{font-size:0.85rem; font-weight:600; color:#fff; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.file-body p.meta{font-size:0.7rem; color:var(--text-muted); margin-top:0.2rem; display:flex; flex-wrap:wrap; gap:0.4rem; align-items:center;}
+.file-body p.meta span::after{content:"·"; margin-left:0.4rem; color:var(--border-strong);}
+.file-body p.meta span:last-child::after{content:"";}
+
+.timeline-item{display:flex; gap:0.85rem; padding-bottom:1.25rem; position:relative;}
+.timeline-item::before{content:""; position:absolute; left:0.44rem; top:1.1rem; bottom:0; width:2px; background:var(--border);}
+.timeline-item:last-child::before{display:none;}
+.timeline-dot{width:0.9rem; height:0.9rem; border-radius:50%; background:var(--accent-strong); border:2px solid var(--bg); box-shadow:0 0 0 2px var(--accent-strong); flex-shrink:0; margin-top:0.15rem;}
+.timeline-item .t-title{font-size:0.85rem; font-weight:700; color:#fff;}
+.timeline-item .t-desc{font-size:0.8rem; color:var(--text-muted); margin-top:0.15rem;}
+.timeline-item .t-time{font-size:0.7rem; color:var(--text-muted); margin-top:0.3rem;}
+
+.thread-panel{background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md); display:flex; flex-direction:column; min-height:22rem;}
+.thread-body{flex:1; overflow-y:auto; padding:1rem 1.1rem; display:flex; flex-direction:column; gap:0.8rem; max-height:26rem;}
+.msg-bubble{max-width:75%; padding:0.65rem 0.85rem; border-radius:0.85rem; font-size:0.825rem; line-height:1.45;}
+.msg-bubble.mine{align-self:flex-end; background:var(--accent-strong); color:#fff; border-bottom-right-radius:0.25rem;}
+.msg-bubble.theirs{align-self:flex-start; background:var(--surface-2); border:1px solid var(--border-strong); color:var(--text-body); border-bottom-left-radius:0.25rem;}
+.msg-bubble .time{display:block; font-size:0.65rem; opacity:0.7; margin-top:0.3rem;}
+.thread-input{display:flex; gap:0.6rem; padding:0.85rem; border-top:1px solid var(--border);}
+.thread-input input{flex:1;}
+
+.pay-row{display:flex; justify-content:space-between; padding:0.55rem 0; border-bottom:1px solid var(--border); font-size:0.825rem;}
+.pay-summary{display:grid; grid-template-columns:repeat(3,1fr); gap:0.75rem;}
+.pay-summary-item{background:var(--bg); border:1px solid var(--border); border-radius:0.75rem; padding:0.85rem 1rem; text-align:center;}
+.pay-summary-item span{display:block; font-size:0.7rem; text-transform:uppercase; letter-spacing:0.03em; color:var(--text-muted); margin-bottom:0.3rem;}
+.pay-summary-item strong{font-size:1.05rem; color:#fff;}
+@media(max-width:480px){.pay-summary{grid-template-columns:1fr;}}
+.waiting-tag{font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.02em; color:var(--text-muted); background:rgba(156,163,175,0.12); padding:0.2rem 0.5rem; border-radius:9999px;}
+.sec{margin-bottom:1rem;}
+.sec h5{font-size:0.7rem; text-transform:uppercase; letter-spacing:0.04em; color:var(--text-muted); margin-bottom:0.35rem;}
+.wiz-inline-notice{display:flex; gap:0.6rem; align-items:flex-start; background:rgba(34,197,94,0.08); border:1px solid rgba(34,197,94,0.3); border-radius:0.6rem; padding:0.7rem 0.9rem; font-size:0.8125rem; color:var(--text-body);}
+.wiz-inline-notice i{width:1rem; height:1rem; color:#86EFAC; flex-shrink:0; margin-top:0.1rem;}
+.pay-row:last-child{border-bottom:none;}
+.pay-row dt{color:var(--text-muted);} .pay-row dd{color:var(--text-body); font-weight:700;}
+.pay-row.total dt, .pay-row.total dd{color:#fff; font-size:0.95rem;}
+
+@media(prefers-reduced-motion:reduce){*{animation-duration:0.001ms !important; transition-duration:0.001ms !important;}}
+</style>
+</head>
+<body>
+
+<div id="toast-stack"></div>
+
+<div id="view-order-login" class="login-wrap hidden">
+  <div class="login-card">
+    <div class="login-brand">KYTRON<span>.</span></div>
+    <h2>Project sign-in</h2>
+    <p class="sub">Enter your Order ID and password to view this project.</p>
+    <div class="login-error" id="order-login-error"><i data-lucide="alert-circle"></i><span id="order-login-error-text">We could not verify those details.</span></div>
+    <form id="order-login-form" novalidate>
+      <div class="field" id="f-order-id">
+        <label for="order-id-input">Order ID</label>
+        <input type="text" id="order-id-input" placeholder="KYT-ORD-XXXXXXXXXXXX" autocomplete="off" required>
+        <span class="error-text">Enter your Order ID.</span>
+      </div>
+      <div class="field" id="f-order-password">
+        <label for="order-password-input">Password</label>
+        <input type="password" id="order-password-input" placeholder="••••••••" required>
+        <span class="error-text">Enter your password.</span>
+      </div>
+      <button type="submit" class="btn-primary" id="order-login-submit" style="width:100%;"><span>View project</span></button>
+    </form>
+    <p style="text-align:center; margin-top:1.4rem; font-size:0.8125rem; color:var(--text-muted);">Have an account? <a href="/client" style="color:var(--accent-light); font-weight:600;">Sign in to the Client Portal</a></p>
+  </div>
+</div>
+
+<div id="view-blocked" class="login-wrap hidden">
+  <div class="login-card" style="text-align:center;">
+    <i data-lucide="clock" style="width:2.5rem;height:2.5rem;color:var(--amber);margin:0 auto 1rem;"></i>
+    <h2 id="blocked-title">This project isn't ready yet</h2>
+    <p class="sub" id="blocked-body">Your project has been received and is awaiting approval. You'll be able to view its workspace here once that's complete.</p>
+    <a href="/client" class="btn-secondary" style="width:100%;">Back to Client Portal</a>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-revision">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div><h3>Request a revision</h3><p id="revision-remaining-note">Describe the change you'd like made.</p></div>
+      <button class="modal-close" data-close-modal="modal-revision"><i data-lucide="x"></i></button>
+    </div>
+    <form id="revision-form" novalidate>
+      <div class="field" id="f-revision-desc">
+        <label for="revision-desc">What would you like changed?</label>
+        <textarea id="revision-desc" rows="4" placeholder="Be as specific as you can." required></textarea>
+        <span class="error-text">Describe the revision you need.</span>
+      </div>
+      <button type="submit" class="btn-primary" style="width:100%;" id="revision-submit">Submit revision request</button>
+    </form>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-requirement">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div><h3 id="req-modal-title">Submit requirement</h3><p>Attach a file or add a note for the team.</p></div>
+      <button class="modal-close" data-close-modal="modal-requirement"><i data-lucide="x"></i></button>
+    </div>
+    <form id="requirement-form" novalidate>
+      <div class="field">
+        <label for="req-note">Note</label>
+        <textarea id="req-note" rows="3" placeholder="Add any context for this requirement"></textarea>
+      </div>
+      <div class="field">
+        <label for="req-file">Attach a file (optional)</label>
+        <input type="file" id="req-file">
+      </div>
+      <button type="submit" class="btn-primary" style="width:100%;" id="requirement-submit">Submit</button>
+    </form>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-payment">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div><h3>Report a payment</h3><p>Let us know what you paid — we'll verify it and update your balance.</p></div>
+      <button class="modal-close" data-close-modal="modal-payment"><i data-lucide="x"></i></button>
+    </div>
+    <form id="payment-form" novalidate>
+      <div class="field" id="f-pay-amount">
+        <label for="pay-amount">Amount paid (₹)</label>
+        <input type="number" id="pay-amount" min="0.01" step="0.01" required>
+        <span class="error-text">Enter a valid amount.</span>
+      </div>
+      <div class="field" id="f-pay-method">
+        <label for="pay-method">How did you pay?</label>
+        <select id="pay-method">
+          <option value="upi">UPI</option><option value="bank_transfer">Bank Transfer</option><option value="cash">Cash</option><option value="card">Card</option><option value="other">Other</option>
+        </select>
+        <span class="error-text">Select a method.</span>
+      </div>
+      <div class="field">
+        <label for="pay-reference">UTR / reference number <span style="font-weight:400;color:var(--text-muted);">(optional)</span></label>
+        <input type="text" id="pay-reference" placeholder="If you have one">
+      </div>
+      <div class="field">
+        <label for="pay-date">Date paid <span style="font-weight:400;color:var(--text-muted);">(optional)</span></label>
+        <input type="date" id="pay-date">
+      </div>
+      <div class="field">
+        <label for="pay-proof">Payment screenshot <span style="font-weight:400;color:var(--text-muted);">(optional, helps us verify faster)</span></label>
+        <input type="file" id="pay-proof" accept="image/*,application/pdf">
+      </div>
+      <div class="field">
+        <label for="pay-note">Note <span style="font-weight:400;color:var(--text-muted);">(optional)</span></label>
+        <textarea id="pay-note" rows="2"></textarea>
+      </div>
+      <button type="submit" class="btn-primary" style="width:100%;" id="payment-submit">Submit for verification</button>
+    </form>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-proposal-comment">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div><h3 id="proposal-comment-title">Request changes</h3><p id="proposal-comment-sub">Let Kytron know what you'd like adjusted.</p></div>
+      <button class="modal-close" data-close-modal="modal-proposal-comment"><i data-lucide="x"></i></button>
+    </div>
+    <form id="proposal-comment-form" novalidate>
+      <div class="field" id="f-proposal-comment">
+        <label for="proposal-comment-text" id="proposal-comment-label">What would you like changed?</label>
+        <textarea id="proposal-comment-text" rows="4"></textarea>
+        <span class="error-text">Please add a note.</span>
+      </div>
+      <button type="submit" class="btn-primary" style="width:100%;" id="proposal-comment-submit">Send</button>
+    </form>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-change-request">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div><h3>New change request</h3><p>For anything beyond a quick question — Kytron will review and get back to you with details.</p></div>
+      <button class="modal-close" data-close-modal="modal-change-request"><i data-lucide="x"></i></button>
+    </div>
+    <form id="change-request-form" novalidate>
+      <div class="field" id="f-cr-title">
+        <label for="cr-title">Title</label>
+        <input type="text" id="cr-title" placeholder="e.g. Add WhatsApp button">
+        <span class="error-text">Give it a short title.</span>
+      </div>
+      <div class="field">
+        <label for="cr-type">Category</label>
+        <select id="cr-type">
+          <option value="additional_feature">Additional feature</option>
+          <option value="design_change">Design change</option>
+          <option value="content_change">Content change</option>
+          <option value="revision">Revision</option>
+          <option value="scope_change">Scope change</option>
+          <option value="timeline_change">Timeline change</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div class="field" id="f-cr-description">
+        <label for="cr-description">Describe what you'd like</label>
+        <textarea id="cr-description" rows="4" placeholder="Explain what you need — as much detail as you can give"></textarea>
+        <span class="error-text">Tell us what you'd like changed.</span>
+      </div>
+      <button type="submit" class="btn-primary" style="width:100%;" id="cr-submit">Submit request</button>
+    </form>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-support-new">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div><h3>Get help</h3><p>Something wrong with your delivered project, or just have a question? Let us know.</p></div>
+      <button class="modal-close" data-close-modal="modal-support-new"><i data-lucide="x"></i></button>
+    </div>
+    <form id="support-new-form" novalidate>
+      <div class="field" id="f-support-title">
+        <label for="support-title">Title</label>
+        <input type="text" id="support-title" placeholder="e.g. Contact form not working">
+        <span class="error-text">Give it a short title.</span>
+      </div>
+      <div class="field" id="f-support-message">
+        <label for="support-message">What's happening?</label>
+        <textarea id="support-message" rows="4" placeholder="Describe the issue or question"></textarea>
+        <span class="error-text">Please describe what's happening.</span>
+      </div>
+      <button type="submit" class="btn-primary" style="width:100%;" id="support-new-submit">Submit</button>
+    </form>
+  </div>
+</div>
+
+<div id="view-app" class="hidden">
+  <header class="app-topbar">
+    <a href="/client" class="back-link"><i data-lucide="arrow-left" style="width:1rem;height:1rem;"></i><span>Projects</span></a>
+    <a href="/" class="brand-logo">KYTRON<span>.</span></a>
+  </header>
+
+  <main class="main-content">
+
+    <div class="proj-header">
+      <div class="proj-header-row">
+        <div>
+          <h1 id="proj-name">—</h1>
+          <p class="proj-order" id="proj-order-id">—</p>
+        </div>
+        <span class="badge badge-blue" id="proj-status-badge"><span class="badge-dot"></span><span id="proj-status-text">—</span></span>
+      </div>
+      <dl class="proj-meta-row">
+        <div><dt>Service / Type</dt><dd id="meta-type">—</dd></div>
+        <div><dt>Category</dt><dd id="meta-category">—</dd></div>
+        <div><dt>Expected Completion</dt><dd id="meta-deadline">—</dd></div>
+        <div><dt>Support</dt><dd id="meta-support">—</dd></div>
+      </dl>
+    </div>
+
+    <div class="wiz-inline-notice" id="next-action-banner" style="display:none; margin-bottom:1.5rem;">
+      <i data-lucide="arrow-right-circle"></i><span id="next-action-text"></span>
+    </div>
+
+    <div class="card" style="margin-bottom:1.5rem; overflow-x:auto;">
+      <div class="stepper" id="stepper"></div>
+    </div>
+
+    <div class="tabs" id="tabs">
+      <button class="tab-btn active" data-tab="overview">Overview</button>
+      <button class="tab-btn" data-tab="milestones">Milestones</button>
+      <button class="tab-btn" data-tab="tasks">Tasks</button>
+      <button class="tab-btn" data-tab="requirements">Requirements</button>
+      <button class="tab-btn" data-tab="approvals">Approvals</button>
+      <button class="tab-btn" data-tab="proposals">Proposal</button>
+      <button class="tab-btn" data-tab="changes">Change Requests</button>
+      <button class="tab-btn" data-tab="support">Support</button>
+      <button class="tab-btn" data-tab="payments">Payments</button>
+      <button class="tab-btn" data-tab="files">Files</button>
+      <button class="tab-btn" data-tab="timeline">Timeline</button>
+      <button class="tab-btn" data-tab="messages">Messages</button>
+    </div>
+
+    <section class="tab-panel active" id="tab-overview">
+      <div class="overview-grid">
+        <div>
+          <div class="card" style="margin-bottom:1.25rem;">
+            <h3 style="font-size:0.95rem;font-weight:700;color:#fff;margin-bottom:0.75rem;">Description</h3>
+            <p class="desc-text" id="proj-description">—</p>
+          </div>
+          <div class="card">
+            <h3 style="font-size:0.95rem;font-weight:700;color:#fff;margin-bottom:0.5rem;">Approved deliverables</h3>
+            <div class="chip-list" id="proj-features"></div>
+          </div>
+        </div>
+        <div>
+          <div class="card" style="margin-bottom:1.25rem;">
+            <h3 style="font-size:0.95rem;font-weight:700;color:#fff;margin-bottom:0.85rem;display:flex;align-items:center;gap:0.5rem;"><i data-lucide="indian-rupee" style="width:1rem;height:1rem;color:var(--accent-light);"></i>Payment</h3>
+            <dl id="payment-block"></dl>
+          </div>
+          <div class="card">
+            <h3 style="font-size:0.95rem;font-weight:700;color:#fff;margin-bottom:0.85rem;display:flex;align-items:center;gap:0.5rem;"><i data-lucide="refresh-cw" style="width:1rem;height:1rem;color:var(--accent-light);"></i>Revisions</h3>
+            <div id="revision-block"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="tab-panel" id="tab-milestones"><div class="card" id="milestones-card"></div></section>
+    <section class="tab-panel" id="tab-tasks"><div class="card" id="tasks-card"></div></section>
+
+    <section class="tab-panel" id="tab-requirements">
+      <div style="display:flex; justify-content:flex-end; margin-bottom:1rem;">
+        <button class="btn-secondary btn-sm" id="new-requirement-btn"><i data-lucide="plus" style="width:0.9rem;height:0.9rem;"></i>Submit requirement</button>
+      </div>
+      <div class="card" id="requirements-card"></div>
+    </section>
+
+    <section class="tab-panel" id="tab-approvals"><div class="card" id="approvals-card"></div></section>
+
+    <section class="tab-panel" id="tab-proposals">
+      <div class="card" id="proposal-card"></div>
+    </section>
+
+    <section class="tab-panel" id="tab-changes">
+      <div style="display:flex; justify-content:flex-end; margin-bottom:1rem;">
+        <button class="btn-primary btn-sm" id="new-change-request-btn"><i data-lucide="plus" style="width:0.9rem;height:0.9rem;"></i>New request</button>
+      </div>
+      <div class="card" id="change-requests-card"></div>
+    </section>
+
+    <section class="tab-panel" id="tab-support">
+      <div style="display:flex; justify-content:flex-end; margin-bottom:1rem;">
+        <button class="btn-primary btn-sm" id="new-support-btn"><i data-lucide="plus" style="width:0.9rem;height:0.9rem;"></i>Get help</button>
+      </div>
+      <div class="card" id="support-card"></div>
+    </section>
+
+    <section class="tab-panel" id="tab-payments">
+      <div class="card" style="margin-bottom:1.25rem;">
+        <div class="pay-summary" id="pay-summary-block"></div>
+      </div>
+      <h5 style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-muted);margin-bottom:0.6rem;">Invoices</h5>
+      <div class="card" id="invoices-card" style="margin-bottom:1.25rem;"></div>
+      <h5 style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-muted);margin-bottom:0.6rem;">Payments</h5>
+      <div style="display:flex; justify-content:flex-end; margin-bottom:1rem;">
+        <button class="btn-primary btn-sm" id="report-payment-btn"><i data-lucide="plus" style="width:0.9rem;height:0.9rem;"></i>Report a payment</button>
+      </div>
+      <div class="card" id="transactions-card"></div>
+    </section>
+    <section class="tab-panel" id="tab-files"><div class="card" id="files-card"></div></section>
+    <section class="tab-panel" id="tab-timeline"><div class="card" id="timeline-card"></div></section>
+    <section class="tab-panel" id="tab-messages"><div class="thread-panel" id="messages-card"></div></section>
+
+  </main>
+</div>
+
+<script>
+lucide.createIcons();
+
+/* ==========================================================================
+   BACKEND CONTRACT — same convention as Client.html.
+
+   IMPLEMENTED (used as-is):
+     POST /api/client/projects/authenticate   body {order_id, password}
+     GET  /api/client/projects/session        -> {authenticated, project: serialize_project_full}
+     POST /api/client/projects/revisions      body {order_id, description}
+     POST /api/client/projects/revisions/uploads   (multipart: file)
+     GET  /api/client/documents/<id>/download
+     GET  /api/auth/session
+
+   RECOMMENDED EXTENSION (documented for the backend phase, not invented
+   here as a working endpoint): a unified
+     GET /api/client/projects/<order_id>
+   that accepts EITHER the account-level session (customer_id, with an
+   ownership check — project.customer_id == g.customer.id) OR the existing
+   order-level session (authenticated_order_id), the same dual-check
+   pattern already used by client_download_document() in app.py. Today
+   this page falls back to the real order-login flow whenever the account
+   session alone isn't accepted, so nothing here is faked — it's a real,
+   working (if slightly clunkier) path using only endpoints that exist.
+
+   NOT YET IMPLEMENTED (contract-only, real 404/empty state until built):
+     GET  /api/client/projects/<order_id>/milestones
+     GET  /api/client/projects/<order_id>/tasks
+     GET  /api/client/projects/<order_id>/requirements
+     POST /api/client/projects/<order_id>/requirements   body {note}, multipart file
+     GET  /api/client/projects/<order_id>/approvals
+     POST /api/client/projects/<order_id>/approvals/<id>/approve
+     POST /api/client/projects/<order_id>/approvals/<id>/request-changes  body {comment}
+     GET  /api/client/projects/<order_id>/messages
+     POST /api/client/projects/<order_id>/messages       body {body}
+   ========================================================================== */
+
+const orderId = decodeURIComponent(window.location.pathname.split('/').filter(Boolean).pop() || '');
+
+const API = {
+  authSession: '/api/auth/session',
+  orderAuthenticate: '/api/client/projects/authenticate',
+  orderSession: '/api/client/projects/session',
+  revisions: '/api/client/projects/revisions',
+  revisionUploads: '/api/client/projects/revisions/uploads',
+  milestones: `/api/client/projects/${orderId}/milestones`,
+  tasks: `/api/client/projects/${orderId}/tasks`,
+  requirements: `/api/client/projects/${orderId}/requirements`,
+  approvals: `/api/client/projects/${orderId}/approvals`,
+  payments: `/api/client/projects/${orderId}/payment-transactions`,
+  proposals: `/api/client/projects/${orderId}/proposals`,
+  changeRequests: `/api/client/projects/${orderId}/change-requests`,
+  support: `/api/client/projects/${orderId}/support`,
+  messages: `/api/client/projects/${orderId}/messages`,
+};
+
+let PROJECT = null;
+
+async function api(url, opts = {}) {
+  const isMultipart = opts.body instanceof FormData;
+  const res = await fetch(url, {
+    method: opts.method || 'GET',
+    headers: isMultipart ? {} : { 'Content-Type': 'application/json' },
+    credentials: 'same-origin',
+    body: isMultipart ? opts.body : (opts.body ? JSON.stringify(opts.body) : undefined),
+  });
+  let data = null;
+  try { data = await res.json(); } catch (e) {}
+  if (!res.ok) {
+    const err = new Error((data && data.error && data.error.message) || (data && data.message) || 'Something went wrong.');
+    err.status = res.status; err.payload = data;
+    throw err;
+  }
+  return data;
+}
+
+function escapeHtml(str) { const d = document.createElement('div'); d.textContent = str == null ? '' : String(str); return d.innerHTML; }
+function toast(message, type = 'info') {
+  const stack = document.getElementById('toast-stack');
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  const icon = type === 'success' ? 'check-circle-2' : type === 'error' ? 'alert-circle' : 'info';
+  el.innerHTML = `<i data-lucide="${icon}"></i><p>${escapeHtml(message)}</p><button aria-label="Dismiss"><i data-lucide="x"></i></button>`;
+  stack.appendChild(el); lucide.createIcons({ el });
+  const remove = () => el.remove();
+  el.querySelector('button').addEventListener('click', remove);
+  setTimeout(remove, 5000);
+}
+function emptyState(icon, title, body) { return `<div class="state-block"><i data-lucide="${icon}"></i><h4>${escapeHtml(title)}</h4><p>${escapeHtml(body)}</p></div>`; }
+function errorState(message, retryFn) {
+  const id = 'retry-' + Math.random().toString(36).slice(2, 9);
+  setTimeout(() => { const btn = document.getElementById(id); if (btn) btn.addEventListener('click', retryFn); }, 0);
+  return `<div class="state-block"><i data-lucide="wifi-off"></i><h4>Couldn't load this</h4><p>${escapeHtml(message)}</p><button class="btn-secondary btn-sm" id="${id}">Try again</button></div>`;
+}
+function skeletonRows(n) { return Array.from({ length: n }).map(() => '<div class="skeleton skel-card"></div>').join(''); }
+function renderInto(id, html) { const el = document.getElementById(id); if (el) { el.innerHTML = html; lucide.createIcons({ el }); } }
+function setFieldError(id) { const el = document.getElementById(id); if (el) el.classList.add('has-error'); }
+function clearFieldError(id) { const el = document.getElementById(id); if (el) el.classList.remove('has-error'); }
+function clearAllErrors(form) { form.querySelectorAll('.field').forEach(f => f.classList.remove('has-error')); }
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('[data-close-modal]').forEach(btn => btn.addEventListener('click', () => closeModal(btn.dataset.closeModal)));
+document.querySelectorAll('.modal-overlay').forEach(ov => ov.addEventListener('click', (e) => { if (e.target === ov) closeModal(ov.id); }));
+
+async function boot() {
+  if (!orderId) { showBlocked('Project not found', 'No project identifier was given in the link you followed.'); return; }
+  try {
+    const sess = await api(API.orderSession);
+    if (sess.authenticated && sess.project) { PROJECT = sess.project; showApp(); return; }
+  } catch (e) {
+    if (e.status === 403 && e.payload && e.payload.reason === 'not_approved') {
+      showBlocked("This project isn't ready yet", "Your project has been received and is awaiting approval. You'll be able to view its workspace here once that's complete.");
+      return;
+    }
+  }
+  showOrderLogin();
+}
+
+function showOrderLogin() {
+  document.getElementById('order-id-input').value = orderId;
+  document.getElementById('view-order-login').classList.remove('hidden');
+  document.getElementById('view-app').classList.add('hidden');
+  document.getElementById('view-blocked').classList.add('hidden');
+}
+function showBlocked(title, body) {
+  document.getElementById('blocked-title').textContent = title;
+  document.getElementById('blocked-body').textContent = body;
+  document.getElementById('view-blocked').classList.remove('hidden');
+  document.getElementById('view-app').classList.add('hidden');
+  document.getElementById('view-order-login').classList.add('hidden');
+}
+function showApp() {
+  document.getElementById('view-order-login').classList.add('hidden');
+  document.getElementById('view-blocked').classList.add('hidden');
+  document.getElementById('view-app').classList.remove('hidden');
+  hydrateHeader();
+  loadOverview();
+  loadMilestones();
+  loadTasks();
+  loadRequirements();
+  loadApprovals();
+  loadPayments();
+  loadProposal();
+  loadChangeRequests();
+  loadSupport();
+  loadFiles();
+  loadTimeline();
+  loadMessages();
+}
+
+document.getElementById('order-login-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  clearAllErrors(e.target);
+  document.getElementById('order-login-error').classList.remove('show');
+  const oid = document.getElementById('order-id-input').value.trim().toUpperCase();
+  const pw = document.getElementById('order-password-input').value;
+  let hasError = false;
+  if (!oid) { setFieldError('f-order-id'); hasError = true; }
+  if (!pw) { setFieldError('f-order-password'); hasError = true; }
+  if (hasError) return;
+  const btn = document.getElementById('order-login-submit');
+  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>';
+  try {
+    const data = await api(API.orderAuthenticate, { method: 'POST', body: { order_id: oid, password: pw } });
+    PROJECT = data.project;
+    toast('Signed in.', 'success');
+    showApp();
+  } catch (err) {
+    if (err.status === 403 && err.payload && err.payload.reason === 'not_approved') {
+      showBlocked("This project isn't ready yet", "Your project has been received and is awaiting approval. You'll be able to view its workspace here once that's complete.");
+    } else {
+      document.getElementById('order-login-error-text').textContent = err.message || 'We could not verify those details.';
+      document.getElementById('order-login-error').classList.add('show');
+    }
+  } finally {
+    btn.disabled = false; btn.innerHTML = '<span>View project</span>';
+  }
+});
+
+const STATUS_BADGE = { 'Registered': 'blue', 'Under Process': 'amber', 'Testing Phase': 'purple', 'On Revision': 'amber', 'Ready for Delivery': 'purple', 'Delivered': 'blue', 'Completed': 'green', 'Cancelled': 'red' };
+const LIFECYCLE = ['Registered', 'Under Process', 'Testing Phase', 'Completed'];
+
+function hydrateHeader() {
+  document.getElementById('proj-name').textContent = PROJECT.project_name || 'Untitled project';
+  document.getElementById('proj-order-id').textContent = PROJECT.order_id;
+  document.getElementById('meta-type').textContent = PROJECT.service || PROJECT.project_type || '—';
+  document.getElementById('meta-category').textContent = PROJECT.category || '—';
+  document.getElementById('meta-deadline').textContent = PROJECT.final_deadline || 'Not set yet';
+  document.getElementById('meta-support').textContent = (PROJECT.support && PROJECT.support.status_label) || '—';
+  const badgeColor = STATUS_BADGE[PROJECT.status] || 'gray';
+  document.getElementById('proj-status-badge').className = `badge badge-${badgeColor}`;
+  document.getElementById('proj-status-text').textContent = PROJECT.status_label || PROJECT.status;
+
+  const isCancelled = PROJECT.status === 'Cancelled';
+  const activeIdx = isCancelled ? -1 : (PROJECT.status === 'On Revision' ? LIFECYCLE.indexOf('Testing Phase') : LIFECYCLE.indexOf(PROJECT.status));
+  renderInto('stepper', LIFECYCLE.map((label, i) => {
+    const cls = isCancelled ? '' : i < activeIdx ? 'done' : i === activeIdx ? 'current' : '';
+    return `<div class="step ${cls}"><div class="dot">${i < activeIdx ? '<i data-lucide="check" style="width:0.9rem;height:0.9rem;"></i>' : (i + 1)}</div><div class="line"></div><div class="lbl">${label}${label === 'Testing Phase' && PROJECT.status === 'On Revision' ? ' (Revision)' : ''}</div></div>`;
+  }).join(''));
+  lucide.createIcons();
+}
+
+function loadOverview() {
+  document.getElementById('proj-description').textContent = PROJECT.description || 'No description was provided for this project.';
+  const features = PROJECT.approved_features || [];
+  renderInto('proj-features', features.length ? features.map(f => `<span class="chip">${escapeHtml(f)}</span>`).join('') : '<p style="font-size:0.8rem;color:var(--text-muted);">No deliverables have been approved yet.</p>');
+
+  const banner = document.getElementById('next-action-banner');
+  if (PROJECT.next_action) {
+    document.getElementById('next-action-text').textContent = PROJECT.next_action;
+    banner.style.display = 'flex';
+  } else {
+    banner.style.display = 'none';
+  }
+
+  if (PROJECT.delivered_at) {
+    const existing = document.getElementById('delivery-notice');
+    if (existing) existing.remove();
+    document.getElementById('proj-features').insertAdjacentHTML('afterend', `
+      <div class="wiz-inline-notice" id="delivery-notice" style="margin-top:0.75rem;">
+        <i data-lucide="package-check"></i>
+        <span>Delivered ${escapeHtml(PROJECT.delivered_at)}.${PROJECT.delivery_notes ? ' ' + escapeHtml(PROJECT.delivery_notes) : ''}${PROJECT.handover_url ? ` <a href="${escapeHtml(PROJECT.handover_url)}" target="_blank" style="color:var(--accent-light);">${escapeHtml(PROJECT.handover_url)}</a>` : ''}${PROJECT.handover_notes ? ' — ' + escapeHtml(PROJECT.handover_notes) : ''}</span>
+      </div>
+    `);
+  }
+
+  const p = PROJECT.payment || {};
+  renderInto('payment-block', `
+    <div class="pay-row"><dt>Status</dt><dd>${escapeHtml(p.status_label || 'Pending')}</dd></div>
+    <div class="pay-row"><dt>Total payable</dt><dd>₹${formatINR(p.total_due)}</dd></div>
+    <div class="pay-row"><dt>Paid</dt><dd>₹${formatINR(p.advance_paid)}</dd></div>
+    <div class="pay-row total"><dt>Remaining</dt><dd>₹${formatINR(p.remaining_amount)}</dd></div>
+  `);
+
+  const rev = PROJECT.revision || {};
+  const historyHtml = (rev.history || []).slice(0, 4).map(r => `
+    <div class="entity-row" style="padding:0.75rem;">
+      <p class="desc" style="margin-top:0;color:var(--text-body);">${escapeHtml(r.description)}</p>
+      <div class="meta-line"><span class="badge badge-${r.status === 'accepted' ? 'green' : r.status === 'rejected' ? 'red' : 'amber'}"><span class="badge-dot"></span>${escapeHtml(r.status_label)}</span><span>${escapeHtml(r.requested_at || '')}</span></div>
+    </div>`).join('');
+  renderInto('revision-block', `
+    <p style="font-size:0.825rem;color:var(--text-body);margin-bottom:0.75rem;">${rev.remaining ?? 0} of ${rev.total ?? 0} revisions remaining · ${escapeHtml(rev.window_label || '')}</p>
+    ${historyHtml || '<p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.75rem;">No revisions requested yet.</p>'}
+    <button class="btn-secondary btn-sm" id="open-revision-btn" ${(rev.remaining ?? 0) <= 0 ? 'disabled' : ''} style="width:100%;margin-top:0.5rem;">
+      <i data-lucide="edit-3" style="width:0.9rem;height:0.9rem;"></i>Request a revision
+    </button>
+  `);
+  const btn = document.getElementById('open-revision-btn');
+  if (btn) btn.addEventListener('click', () => {
+    document.getElementById('revision-remaining-note').textContent = `You have ${rev.remaining} revision${rev.remaining === 1 ? '' : 's'} remaining in your ${rev.window_label || 'window'}.`;
+    openModal('modal-revision');
+  });
+}
+function formatINR(n) {
+  n = Number(n || 0);
+  return n.toLocaleString('en-IN', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+}
+
+document.getElementById('revision-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  clearAllErrors(e.target);
+  const desc = document.getElementById('revision-desc').value.trim();
+  if (!desc) { setFieldError('f-revision-desc'); return; }
+  const btn = document.getElementById('revision-submit');
+  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>';
+  try {
+    await api(API.revisions, { method: 'POST', body: { order_id: PROJECT.order_id, description: desc } });
+    toast('Revision request submitted.', 'success');
+    closeModal('modal-revision');
+    e.target.reset();
+    const sess = await api(API.orderSession);
+    if (sess.project) { PROJECT = sess.project; hydrateHeader(); loadOverview(); loadPayments(); loadProposal(); loadChangeRequests(); loadSupport(); }
+  } catch (err) {
+    toast(err.message, 'error');
+  } finally {
+    btn.disabled = false; btn.innerHTML = 'Submit revision request';
+  }
+});
+
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+  });
+});
+
+async function loadMilestones() {
+  renderInto('milestones-card', skeletonRows(3));
+  try {
+    const items = await api(API.milestones);
+    renderInto('milestones-card', items.length ? items.map(milestoneRowHtml).join('') : emptyState('flag', 'No milestones yet', 'Your project team hasn\u2019t added any milestones yet.'));
+  } catch (e) {
+    renderInto('milestones-card', errorState(e.message || 'Could not load milestones.', loadMilestones));
+  }
+}
+function milestoneRowHtml(m) {
+  const statusPct = { completed: 100, in_progress: 50, delayed: 25, upcoming: 0 }[m.status] ?? 0;
+  return `<div class="entity-row">
+    <div class="entity-row-head"><h4>${escapeHtml(m.title)}</h4><span class="badge badge-${m.status === 'completed' ? 'green' : m.status === 'in_progress' ? 'amber' : 'gray'}"><span class="badge-dot"></span>${escapeHtml(m.status_label || m.status)}</span></div>
+    <p class="desc">${escapeHtml(m.description || '')}</p>
+    <div class="milestone-progress"><div class="bar"><span style="width:${statusPct}%;"></span></div><span class="pct">${statusPct}%</span></div>
+    <div class="meta-line"><span><i data-lucide="calendar"></i>${escapeHtml(m.due_date || 'No date set')}</span></div>
+  </div>`;
+}
+
+async function loadTasks() {
+  renderInto('tasks-card', skeletonRows(3));
+  try {
+    const items = await api(API.tasks);
+    renderInto('tasks-card', items.length ? items.map(taskRowHtml).join('') : emptyState('list-checks', 'No tasks yet', 'Tasks tied to this project will appear here.'));
+  } catch (e) {
+    renderInto('tasks-card', errorState(e.message || 'Could not load tasks.', loadTasks));
+  }
+}
+const TASK_BADGE = { todo: 'gray', in_progress: 'amber', done: 'green' };
+function taskRowHtml(t) {
+  return `<div class="entity-row">
+    <div class="entity-row-head"><h4>${escapeHtml(t.title)}</h4><span class="badge badge-${TASK_BADGE[t.status] || 'gray'}"><span class="badge-dot"></span>${escapeHtml(t.status_label || t.status)}</span></div>
+    <p class="desc">${escapeHtml(t.description || '')}</p>
+    <div class="meta-line">
+      <span><i data-lucide="user"></i>${t.assigned_to ? escapeHtml(t.assigned_to) : 'Kytron Team'}</span>
+      <span><i data-lucide="flag"></i>${escapeHtml(t.priority || 'Normal')}</span>
+      <span><i data-lucide="calendar"></i>${escapeHtml(t.due_date || 'No due date')}</span>
+    </div>
+  </div>`;
+}
+
+async function loadRequirements() {
+  renderInto('requirements-card', skeletonRows(3));
+  try {
+    const items = await api(API.requirements);
+    renderInto('requirements-card', items.length ? items.map(requirementRowHtml).join('') : emptyState('clipboard-list', 'No requirements yet', 'Anything the team needs from you will show up here.'));
+  } catch (e) {
+    renderInto('requirements-card', errorState(e.message || 'Could not load requirements.', loadRequirements));
+  }
+}
+const REQ_BADGE = { pending: 'gray', submitted: 'blue', under_review: 'amber', accepted: 'green', revision_required: 'red' };
+function requirementRowHtml(r) {
+  return `<div class="entity-row">
+    <div class="entity-row-head"><h4>${escapeHtml(r.title)}</h4><span class="badge badge-${REQ_BADGE[r.status] || 'gray'}"><span class="badge-dot"></span>${escapeHtml(r.status_label || r.status)}</span></div>
+    <p class="desc">${escapeHtml(r.description || '')}</p>
+    ${r.admin_notes ? `<p class="desc"><strong>Kytron team:</strong> ${escapeHtml(r.admin_notes)}</p>` : ''}
+    <div class="meta-line"><span><i data-lucide="calendar"></i>Requested ${escapeHtml(r.requested_at || '')}</span></div>
+  </div>`;
+}
+document.getElementById('new-requirement-btn').addEventListener('click', () => openModal('modal-requirement'));
+document.getElementById('requirement-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const note = document.getElementById('req-note').value.trim();
+  const fileInput = document.getElementById('req-file');
+  const btn = document.getElementById('requirement-submit');
+  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>';
+  try {
+    const fd = new FormData();
+    fd.append('note', note);
+    if (fileInput.files[0]) fd.append('file', fileInput.files[0]);
+    await api(API.requirements, { method: 'POST', body: fd });
+    toast('Requirement submitted.', 'success');
+    closeModal('modal-requirement'); e.target.reset();
+    loadRequirements();
+  } catch (err) {
+    toast(err.message || 'Could not submit requirement.', 'error');
+  } finally {
+    btn.disabled = false; btn.innerHTML = 'Submit';
+  }
+});
+
+async function loadApprovals() {
+  renderInto('approvals-card', skeletonRows(3));
+  try {
+    const items = await api(API.approvals);
+    renderInto('approvals-card', items.length ? items.map(approvalRowHtml).join('') : emptyState('check-square', 'Nothing to approve', 'Items awaiting your review will appear here.'));
+    attachApprovalClicks();
+  } catch (e) {
+    renderInto('approvals-card', errorState(e.message || 'Could not load approvals.', loadApprovals));
+  }
+}
+function approvalRowHtml(a) {
+  return `<div class="entity-row">
+    <div class="entity-row-head"><h4>${escapeHtml(a.item_title)}</h4><span class="badge badge-${a.status === 'approved' ? 'green' : a.status === 'changes_requested' ? 'amber' : 'gray'}"><span class="badge-dot"></span>${escapeHtml(a.status_label || a.status)}</span></div>
+    ${a.item_description ? `<p class="desc">${escapeHtml(a.item_description)}</p>` : ''}
+    <p class="desc">Submitted ${escapeHtml(a.submitted_at || '')}</p>
+    ${a.status === 'pending' ? `<div class="entity-actions"><button class="btn-primary btn-sm" data-approve="${a.id}"><i data-lucide="check" style="width:0.85rem;height:0.85rem;"></i>Approve</button><button class="btn-secondary btn-sm" data-changes="${a.id}"><i data-lucide="message-square" style="width:0.85rem;height:0.85rem;"></i>Request changes</button></div>` : ''}
+  </div>`;
+}
+function attachApprovalClicks() {
+  document.querySelectorAll('[data-approve]').forEach(btn => btn.addEventListener('click', async () => {
+    try { await api(`${API.approvals}/${btn.dataset.approve}/approve`, { method: 'POST' }); toast('Approved.', 'success'); loadApprovals(); }
+    catch (e) { toast(e.message || 'Could not approve.', 'error'); }
+  }));
+  document.querySelectorAll('[data-changes]').forEach(btn => btn.addEventListener('click', async () => {
+    const comment = window.prompt('What changes would you like?');
+    if (!comment) return;
+    try { await api(`${API.approvals}/${btn.dataset.changes}/request-changes`, { method: 'POST', body: { comment } }); toast('Change request sent.', 'success'); loadApprovals(); }
+    catch (e) { toast(e.message || 'Could not send change request.', 'error'); }
+  }));
+}
+
+async function loadPayments() {
+  const p = (PROJECT && PROJECT.payment) || {};
+  renderInto('pay-summary-block', `
+    <div class="pay-summary-item"><span>Total payable</span><strong>₹${formatINR(p.total_due)}</strong></div>
+    <div class="pay-summary-item"><span>Paid</span><strong style="color:#86EFAC;">₹${formatINR(p.advance_paid)}</strong></div>
+    <div class="pay-summary-item"><span>Remaining</span><strong style="color:${(p.remaining_amount || 0) > 0 ? '#FCD34D' : '#86EFAC'};">₹${formatINR(p.remaining_amount)}</strong></div>
+  `);
+  renderInvoices();
+  const card = document.getElementById('transactions-card');
+  if (!card) return;
+  renderInto('transactions-card', skeletonRows(2));
+  try {
+    const items = await api(API.payments);
+    renderInto('transactions-card', items.length ? items.map(txnRowHtml).join('') : emptyState('receipt', 'No payments reported yet', 'Once you report a payment, it\u2019ll show up here with its verification status.'));
+  } catch (e) {
+    renderInto('transactions-card', errorState(e.message || 'Could not load payments.', loadPayments));
+  }
+}
+const INVOICE_PAYSTATUS_COLOR = { unpaid: 'gray', partially_paid: 'amber', paid: 'green', overdue: 'red' };
+function renderInvoices() {
+  const card = document.getElementById('invoices-card');
+  if (!card) return;
+  const invoices = (PROJECT && PROJECT.invoices) || [];
+  if (!invoices.length) {
+    renderInto('invoices-card', emptyState('file-text', 'No invoices yet', 'Formal invoices from Kytron will appear here.'));
+    return;
+  }
+  renderInto('invoices-card', invoices.map(inv => `
+    <div class="entity-row">
+      <div class="entity-row-head"><h4>${escapeHtml(inv.title)}</h4><span class="badge badge-${INVOICE_PAYSTATUS_COLOR[inv.payment_status] || 'gray'}"><span class="badge-dot"></span>${escapeHtml(inv.payment_status_label)}</span></div>
+      <div class="meta-line">
+        <span><i data-lucide="hash"></i>${escapeHtml(inv.invoice_number)}</span>
+        <span><i data-lucide="indian-rupee"></i>${escapeHtml(inv.amount_formatted)}</span>
+        ${inv.due_date ? `<span><i data-lucide="calendar"></i>Due ${escapeHtml(inv.due_date)}</span>` : ''}
+      </div>
+      ${inv.notes ? `<p class="desc">${escapeHtml(inv.notes)}</p>` : ''}
+      <div class="entity-actions"><a class="btn-secondary btn-sm" href="/api/client/invoices/${inv.id}/view" target="_blank"><i data-lucide="eye" style="width:0.85rem;height:0.85rem;"></i>View invoice</a></div>
+    </div>
+  `).join(''));
+}
+function txnRowHtml(t) {
+  const statusColor = t.status === 'verified' ? 'green' : t.status === 'rejected' ? 'red' : 'amber';
+  const statusNote = t.status === 'submitted' ? 'Waiting for Kytron to verify this payment.' : t.status === 'rejected' ? (t.review_note || 'This payment could not be verified.') : '';
+  return `<div class="entity-row">
+    <div class="entity-row-head"><h4>₹${formatINR(t.amount)}</h4><span class="badge badge-${statusColor}"><span class="badge-dot"></span>${escapeHtml(t.status_label)}</span></div>
+    <div class="meta-line">
+      <span><i data-lucide="credit-card"></i>${escapeHtml(t.method_label)}</span>
+      ${t.reference ? `<span><i data-lucide="hash"></i>${escapeHtml(t.reference)}</span>` : ''}
+      <span><i data-lucide="calendar"></i>${escapeHtml(t.payment_date || t.submitted_at)}</span>
+    </div>
+    ${statusNote ? `<p class="desc">${escapeHtml(statusNote)}</p>` : ''}
+    ${t.status === 'verified' ? `<div class="entity-actions"><a class="btn-secondary btn-sm" href="/api/client/payment-transactions/${t.id}/receipt" target="_blank"><i data-lucide="receipt" style="width:0.85rem;height:0.85rem;"></i>View receipt</a></div>` : ''}
+  </div>`;
+}
+
+document.getElementById('report-payment-btn').addEventListener('click', () => {
+  document.getElementById('pay-amount').value = '';
+  document.getElementById('pay-method').value = 'upi';
+  document.getElementById('pay-reference').value = '';
+  document.getElementById('pay-date').value = '';
+  document.getElementById('pay-proof').value = '';
+  document.getElementById('pay-note').value = '';
+  clearFieldError('f-pay-amount'); clearFieldError('f-pay-method');
+  openModal('modal-payment');
+});
+document.getElementById('payment-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  clearFieldError('f-pay-amount'); clearFieldError('f-pay-method');
+  const amount = document.getElementById('pay-amount').value;
+  const method = document.getElementById('pay-method').value;
+  let ok = true;
+  if (!amount || Number(amount) <= 0) { setFieldError('f-pay-amount'); ok = false; }
+  if (!method) { setFieldError('f-pay-method'); ok = false; }
+  if (!ok) return;
+
+  const btn = document.getElementById('payment-submit'); btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>';
+  try {
+    const fd = new FormData();
+    fd.append('amount', amount);
+    fd.append('method', method);
+    fd.append('reference', document.getElementById('pay-reference').value.trim());
+    fd.append('payment_date', document.getElementById('pay-date').value);
+    fd.append('note', document.getElementById('pay-note').value.trim());
+    const proofFile = document.getElementById('pay-proof').files[0];
+    if (proofFile) fd.append('proof', proofFile);
+
+    const res = await fetch(API.payments, { method: 'POST', credentials: 'same-origin', body: fd });
+    const data = await res.json();
+    if (!res.ok) throw new Error((data && data.error && data.error.message) || (data && data.message) || 'Could not submit payment.');
+
+    toast('Payment reported \u2014 we\u2019ll verify it shortly.', 'success');
+    closeModal('modal-payment');
+    loadPayments();
+  } catch (err) {
+    toast(err.message, 'error');
+  } finally {
+    btn.disabled = false; btn.textContent = 'Submit for verification';
+  }
+});
+
+/* ---- Proposal (Phase 5) ---- */
+const PROPOSAL_STATUS_COLOR = { sent: 'blue', viewed: 'amber', changes_requested: 'amber', accepted: 'green', rejected: 'red', expired: 'red', superseded: 'gray' };
+let CURRENT_PROPOSAL = null;
+let PROPOSAL_COMMENT_MODE = null; // 'changes' | 'reject'
+
+async function loadProposal() {
+  const card = document.getElementById('proposal-card');
+  if (!card) return;
+  renderInto('proposal-card', skeletonRows(2));
+  try {
+    const items = await api(API.proposals);
+    if (!items.length) {
+      renderInto('proposal-card', emptyState('file-text', 'No proposal yet', 'Kytron will share a proposal here once your project request has been reviewed.'));
+      return;
+    }
+    // Show the latest version per proposal_number; API already returns newest-version-first per number.
+    const latestByNumber = new Map();
+    items.forEach(p => { if (!latestByNumber.has(p.proposal_number)) latestByNumber.set(p.proposal_number, p); });
+    const current = [...latestByNumber.values()][0];
+    const detail = await api(`${API.proposals}/${current.proposal_number}`);
+    CURRENT_PROPOSAL = detail;
+    renderProposalCard(detail);
+  } catch (e) {
+    renderInto('proposal-card', errorState(e.message || 'Could not load your proposal.', loadProposal));
+  }
+}
+function renderProposalCard(p) {
+  const linesHtml = (p.lines || []).map(l => `
+    <div class="pay-row"><dt>${escapeHtml(l.title)}${l.quantity && l.quantity !== 1 ? ` &times;${l.quantity}` : ''}</dt><dd>${escapeHtml(l.line_total_formatted)}</dd></div>
+  `).join('');
+
+  renderInto('proposal-card', `
+    <div class="entity-row-head" style="margin-bottom:0.75rem;"><h4>${escapeHtml(p.title)}</h4><span class="badge badge-${PROPOSAL_STATUS_COLOR[p.status] || 'gray'}"><span class="badge-dot"></span>${escapeHtml(p.status_label)}</span></div>
+    <p class="desc" style="margin-bottom:1rem;">Proposal ${escapeHtml(p.proposal_number)} (v${p.version})${p.validity_date ? ` &middot; valid until ${escapeHtml(p.validity_date)}` : ''}</p>
+    ${p.scope_summary ? `<div class="sec"><h5>What we'll build</h5><p class="desc">${escapeHtml(p.scope_summary)}</p></div>` : ''}
+    ${p.deliverables ? `<div class="sec"><h5>Deliverables</h5><p class="desc" style="white-space:pre-wrap;">${escapeHtml(p.deliverables)}</p></div>` : ''}
+    <div class="sec"><h5>Pricing</h5>${linesHtml}<div class="pay-row total"><dt>Total</dt><dd>${escapeHtml(p.total_formatted)}</dd></div></div>
+    ${p.timeline_label ? `<div class="pay-row"><dt>Timeline</dt><dd>${escapeHtml(p.timeline_label)}</dd></div>` : ''}
+    ${p.revision_count != null ? `<div class="pay-row"><dt>Included revisions</dt><dd>${p.revision_count}${p.revision_window_label ? ' — ' + escapeHtml(p.revision_window_label) : ''}</dd></div>` : ''}
+    ${p.additional_revision_note ? `<div class="pay-row"><dt>Extra revisions</dt><dd>${escapeHtml(p.additional_revision_note)}</dd></div>` : ''}
+    ${p.payment_terms_summary ? `<div class="sec"><h5>Payment terms</h5><p class="desc">${escapeHtml(p.payment_terms_summary)}</p></div>` : ''}
+    ${p.support_duration_label ? `<div class="pay-row"><dt>Support</dt><dd>${escapeHtml(p.support_duration_label)}</dd></div>` : ''}
+    ${p.exclusions ? `<div class="sec"><h5>Not included</h5><p class="desc">${escapeHtml(p.exclusions)}</p></div>` : ''}
+    ${p.customer_comment && p.status !== 'accepted' ? `<div class="sec"><h5>Your note</h5><p class="desc">${escapeHtml(p.customer_comment)}</p></div>` : ''}
+
+    <div class="entity-actions" style="margin-top:1.25rem;">
+      <a class="btn-secondary btn-sm" href="/api/client/proposals/${p.id}/view" target="_blank"><i data-lucide="eye" style="width:0.85rem;height:0.85rem;"></i>View full proposal</a>
+      ${(p.status === 'sent' || p.status === 'viewed') ? `
+        <button class="btn-primary btn-sm" id="proposal-accept-btn"><i data-lucide="check" style="width:0.85rem;height:0.85rem;"></i>Accept</button>
+        <button class="btn-secondary btn-sm" id="proposal-changes-btn"><i data-lucide="message-square" style="width:0.85rem;height:0.85rem;"></i>Request changes</button>
+        <button class="btn-danger btn-sm" id="proposal-reject-btn"><i data-lucide="x" style="width:0.85rem;height:0.85rem;"></i>Reject</button>
+      ` : ''}
+    </div>
+    ${p.status === 'accepted' ? `<div class="wiz-inline-notice" style="margin-top:1rem;"><i data-lucide="check-circle-2"></i><span>You've accepted this proposal. Kytron will follow up to move your project forward — nothing is charged automatically.</span></div>` : ''}
+  `);
+
+  const acceptBtn = document.getElementById('proposal-accept-btn');
+  if (acceptBtn) acceptBtn.addEventListener('click', async () => {
+    if (!window.confirm(`Accept this proposal for ${p.total_formatted}? Kytron will follow up on next steps.`)) return;
+    try {
+      await api(`${API.proposals}/${p.proposal_number}/accept`, { method: 'POST', body: {} });
+      toast('Proposal accepted.', 'success');
+      loadProposal();
+    } catch (e) { toast(e.message, 'error'); }
+  });
+  const changesBtn = document.getElementById('proposal-changes-btn');
+  if (changesBtn) changesBtn.addEventListener('click', () => openProposalCommentModal('changes'));
+  const rejectBtn = document.getElementById('proposal-reject-btn');
+  if (rejectBtn) rejectBtn.addEventListener('click', () => openProposalCommentModal('reject'));
+
+  lucide.createIcons({ el: document.getElementById('proposal-card') });
+}
+
+function openProposalCommentModal(mode) {
+  PROPOSAL_COMMENT_MODE = mode;
+  document.getElementById('proposal-comment-title').textContent = mode === 'reject' ? 'Reject proposal' : 'Request changes';
+  document.getElementById('proposal-comment-sub').textContent = mode === 'reject'
+    ? 'Optional — let Kytron know why, it helps for next time.' : 'Let Kytron know what you\u2019d like adjusted.';
+  document.getElementById('proposal-comment-label').textContent = mode === 'reject' ? 'Reason (optional)' : 'What would you like changed?';
+  document.getElementById('proposal-comment-text').value = '';
+  document.getElementById('proposal-comment-submit').textContent = mode === 'reject' ? 'Reject proposal' : 'Send';
+  clearFieldError('f-proposal-comment');
+  openModal('modal-proposal-comment');
+}
+document.getElementById('proposal-comment-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const comment = document.getElementById('proposal-comment-text').value.trim();
+  clearFieldError('f-proposal-comment');
+  if (PROPOSAL_COMMENT_MODE === 'changes' && !comment) { setFieldError('f-proposal-comment'); return; }
+
+  const btn = document.getElementById('proposal-comment-submit'); btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>';
+  try {
+    const endpoint = PROPOSAL_COMMENT_MODE === 'reject' ? 'reject' : 'request-changes';
+    await api(`${API.proposals}/${CURRENT_PROPOSAL.proposal_number}/${endpoint}`, { method: 'POST', body: { comment } });
+    toast(PROPOSAL_COMMENT_MODE === 'reject' ? 'Proposal rejected.' : 'Your changes have been sent to Kytron.', 'success');
+    closeModal('modal-proposal-comment');
+    loadProposal();
+  } catch (err) {
+    toast(err.message, 'error');
+  } finally {
+    btn.disabled = false; btn.textContent = PROPOSAL_COMMENT_MODE === 'reject' ? 'Reject proposal' : 'Send';
+  }
+});
+
+/* ---- Change Requests (Phase 6) ---- */
+const CR_STATUS_COLOR = { submitted: 'blue', under_review: 'amber', proposal_required: 'amber', approved: 'green', rejected: 'red', implemented: 'green', cancelled: 'gray' };
+
+async function loadChangeRequests() {
+  const card = document.getElementById('change-requests-card');
+  if (!card) return;
+  renderInto('change-requests-card', skeletonRows(2));
+  try {
+    const items = await api(API.changeRequests);
+    renderInto('change-requests-card', items.length
+      ? items.map(changeRequestRowHtml).join('')
+      : emptyState('git-pull-request', 'No change requests yet', 'Need something added or changed? Submit a request and Kytron will review it.'));
+    lucide.createIcons({ el: document.getElementById('change-requests-card') });
+  } catch (e) {
+    renderInto('change-requests-card', errorState(e.message || 'Could not load your requests.', loadChangeRequests));
+  }
+}
+function changeRequestRowHtml(cr) {
+  return `<div class="entity-row">
+    <div class="entity-row-head"><h4>${escapeHtml(cr.title)}</h4><span class="badge badge-${CR_STATUS_COLOR[cr.status] || 'gray'}"><span class="badge-dot"></span>${escapeHtml(cr.status_label)}</span></div>
+    <div class="meta-line"><span><i data-lucide="tag"></i>${escapeHtml(cr.type_label)}</span><span><i data-lucide="calendar"></i>${escapeHtml(cr.created_at)}</span></div>
+    <p class="desc">${escapeHtml(cr.description)}</p>
+    ${cr.admin_response ? `<div class="sec" style="margin-top:0.5rem;"><h5>Kytron's response</h5><p class="desc">${escapeHtml(cr.admin_response)}</p></div>` : ''}
+    ${cr.impact === 'chargeable' ? `<div class="wiz-inline-notice" style="background:rgba(245,158,11,0.08); border-color:rgba(245,158,11,0.3);"><i data-lucide="indian-rupee" style="color:#FCD34D;"></i><span>This is outside the agreed scope${cr.estimated_cost_formatted ? ` — estimated additional cost ${escapeHtml(cr.estimated_cost_formatted)}` : ''}.${cr.proposal_number ? ' See the Proposal tab to review and accept the updated terms.' : ''}</span></div>` : ''}
+    ${cr.impact === 'included' ? `<div class="wiz-inline-notice"><i data-lucide="check-circle-2"></i><span>Included in your agreed terms — no additional charge.</span></div>` : ''}
+  </div>`;
+}
+
+document.getElementById('new-change-request-btn').addEventListener('click', () => {
+  document.getElementById('cr-title').value = '';
+  document.getElementById('cr-type').value = 'additional_feature';
+  document.getElementById('cr-description').value = '';
+  clearFieldError('f-cr-title'); clearFieldError('f-cr-description');
+  openModal('modal-change-request');
+});
+document.getElementById('change-request-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  clearFieldError('f-cr-title'); clearFieldError('f-cr-description');
+  const title = document.getElementById('cr-title').value.trim();
+  const description = document.getElementById('cr-description').value.trim();
+  let ok = true;
+  if (!title) { setFieldError('f-cr-title'); ok = false; }
+  if (!description) { setFieldError('f-cr-description'); ok = false; }
+  if (!ok) return;
+
+  const btn = document.getElementById('cr-submit'); btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>';
+  try {
+    await api(API.changeRequests, { method: 'POST', body: { title, description, type: document.getElementById('cr-type').value } });
+    toast('Request submitted \u2014 Kytron will review it.', 'success');
+    closeModal('modal-change-request');
+    loadChangeRequests();
+  } catch (err) {
+    toast(err.message, 'error');
+  } finally {
+    btn.disabled = false; btn.textContent = 'Submit request';
+  }
+});
+
+/* ---- Support (Phase 9) ---- */
+const SUPPORT_STATUS_COLOR = { submitted: 'blue', open: 'blue', acknowledged: 'blue', in_progress: 'amber', waiting_for_customer: 'amber', resolved: 'green', closed: 'gray', reopened: 'red' };
+
+async function loadSupport() {
+  const card = document.getElementById('support-card');
+  if (!card) return;
+  const tickets = (PROJECT && PROJECT.support_tickets) || [];
+  if (!tickets.length) {
+    renderInto('support-card', emptyState('life-buoy', 'No support requests', 'Need help with something on this project? Tap Get Help above.'));
+    return;
+  }
+  renderInto('support-card', tickets.map(t => `
+    <div class="entity-row">
+      <div class="entity-row-head"><h4>${escapeHtml(t.title || 'Support request')}</h4><span class="badge badge-${SUPPORT_STATUS_COLOR[t.status] || 'gray'}"><span class="badge-dot"></span>${escapeHtml(t.status_label)}</span></div>
+      <div class="meta-line"><span><i data-lucide="calendar"></i>${escapeHtml(t.created_at)}</span>${t.category_label ? `<span><i data-lucide="tag"></i>${escapeHtml(t.category_label)}</span>` : ''}</div>
+      <p class="desc">${escapeHtml(t.message)}</p>
+      ${t.admin_response ? `<div class="sec" style="margin-top:0.5rem;"><h5>Kytron's response</h5><p class="desc">${escapeHtml(t.admin_response)}</p></div>` : ''}
+      ${t.converted_change_request_id ? `<p class="desc" style="color:var(--text-muted);">This became change request ${escapeHtml(t.converted_change_request_id)} — see the Change Requests tab.</p>` : ''}
+      ${['resolved', 'closed'].includes(t.status) ? `<div class="entity-actions"><button class="btn-secondary btn-sm support-reopen-btn" data-id="${t.id}"><i data-lucide="refresh-ccw" style="width:0.8rem;height:0.8rem;"></i>Still an issue? Reopen</button></div>` : ''}
+    </div>
+  `).join(''));
+  document.querySelectorAll('.support-reopen-btn').forEach(btn => btn.addEventListener('click', async () => {
+    if (!window.confirm('Reopen this support request?')) return;
+    try {
+      await api(`/api/client/support/${btn.dataset.id}/reopen`, { method: 'POST', body: {} });
+      toast('Reopened — Kytron will take another look.', 'success');
+      const sess = await api(API.orderSession);
+      if (sess.project) { PROJECT = sess.project; loadSupport(); }
+    } catch (e) { toast(e.message, 'error'); }
+  }));
+  lucide.createIcons({ el: document.getElementById('support-card') });
+}
+
+document.getElementById('new-support-btn').addEventListener('click', () => {
+  document.getElementById('support-title').value = '';
+  document.getElementById('support-message').value = '';
+  clearFieldError('f-support-title'); clearFieldError('f-support-message');
+  openModal('modal-support-new');
+});
+document.getElementById('support-new-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  clearFieldError('f-support-title'); clearFieldError('f-support-message');
+  const title = document.getElementById('support-title').value.trim();
+  const message = document.getElementById('support-message').value.trim();
+  let ok = true;
+  if (!title) { setFieldError('f-support-title'); ok = false; }
+  if (!message) { setFieldError('f-support-message'); ok = false; }
+  if (!ok) return;
+
+  const btn = document.getElementById('support-new-submit'); btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>';
+  try {
+    await api(API.support, { method: 'POST', body: { title, message } });
+    toast('Request submitted \u2014 Kytron will get back to you.', 'success');
+    closeModal('modal-support-new');
+    const sess = await api(API.orderSession);
+    if (sess.project) { PROJECT = sess.project; loadSupport(); }
+  } catch (err) {
+    toast(err.message, 'error');
+  } finally {
+    btn.disabled = false; btn.textContent = 'Submit';
+  }
+});
+
+
+function loadFiles() {
+  const docs = PROJECT.documents || [];
+  renderInto('files-card', docs.length ? docs.map(fileRowHtml).join('') : emptyState('file-x', 'No files yet', 'Files shared on this project will appear here.'));
+}
+function fileRowHtml(f) {
+  return `<a class="file-row" href="${f.download_url}" style="text-decoration:none;">
+    <div class="file-icon"><i data-lucide="file-text"></i></div>
+    <div class="file-body"><p class="name">${escapeHtml(f.file_name)}</p><p class="meta"><span>${escapeHtml(f.category)}</span><span>${escapeHtml(f.upload_date || '')}</span></p></div>
+    <i data-lucide="download" style="width:1.1rem;height:1.1rem;color:var(--text-muted);flex-shrink:0;"></i>
+  </a>`;
+}
+
+function loadTimeline() {
+  const events = PROJECT.timeline || [];
+  renderInto('timeline-card', events.length ? events.map(timelineRowHtml).join('') : emptyState('history', 'No activity yet', 'A history of what happens on this project will appear here.'));
+}
+function timelineRowHtml(e) {
+  return `<div class="timeline-item"><div class="timeline-dot"></div><div><p class="t-title">${escapeHtml(e.title)}</p>${e.description ? `<p class="t-desc">${escapeHtml(e.description)}</p>` : ''}<p class="t-time">${escapeHtml(e.timestamp || '')}</p></div></div>`;
+}
+
+async function loadMessages() {
+  renderInto('messages-card', `<div class="thread-body">${skeletonRows(2)}</div>`);
+  try {
+    const messages = await api(API.messages);
+    const bodyHtml = messages.length
+      ? messages.map(m => `<div class="msg-bubble ${m.mine ? 'mine' : 'theirs'}">${escapeHtml(m.body)}<span class="time">${escapeHtml(m.timestamp || '')}</span></div>`).join('')
+      : emptyState('message-square', 'No messages yet', 'Start the conversation with the Kytron team below.');
+    renderInto('messages-card', `<div class="thread-body">${bodyHtml}</div><div class="thread-input"><input type="text" id="msg-input" placeholder="Write a message..."><button class="btn-primary btn-sm" id="msg-send"><i data-lucide="send"></i></button></div>`);
+    document.getElementById('msg-send').addEventListener('click', sendMessage);
+  } catch (e) {
+    renderInto('messages-card', errorState(e.message || 'Could not load messages.', loadMessages));
+  }
+}
+async function sendMessage() {
+  const input = document.getElementById('msg-input');
+  const text = input.value.trim();
+  if (!text) return;
+  input.disabled = true;
+  try {
+    await api(API.messages, { method: 'POST', body: { body: text } });
+    input.value = '';
+    toast('Message sent.', 'success');
+    loadMessages();
+  } catch (e) {
+    toast(e.message || 'Could not send message.', 'error');
+  } finally {
+    input.disabled = false;
+  }
+}
+
+boot();
+</script>
+</body>
+</html>

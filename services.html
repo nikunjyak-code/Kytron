@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Services | Kytron Solutions - Digital Engineering</title>
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* RESET & BASE STYLES */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #0B0F19;
+            color: #F3F4F6;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* DESKTOP TOP NAV BAR */
+        .desktop-header {
+            display: none;
+        }
+
+        @media (min-width: 768px) {
+            .desktop-header {
+                display: flex;
+                position: sticky;
+                top: 0;
+                z-index: 50;
+                background-color: rgba(11, 15, 25, 0.85);
+                backdrop-filter: blur(12px);
+                border-bottom: 1px solid #1F2937;
+                padding: 1rem 2rem;
+                align-items: center;
+                justify-content: space-between;
+            }
+        }
+
+        .brand-logo {
+            font-size: 1.5rem;
+            font-weight: 900;
+            letter-spacing: 0.05em;
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .brand-logo span {
+            color: #3B82F6;
+        }
+
+        .desktop-nav {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #D1D5DB;
+        }
+
+        .desktop-nav a:hover, .desktop-nav a.active {
+            color: #60A5FA;
+            transition: color 0.2s ease;
+        }
+
+        .btn-primary {
+            background-color: #2563EB;
+            color: #FFFFFF;
+            padding: 0.5rem 1.25rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.2);
+            transition: background-color 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #1D4ED8;
+        }
+
+        /* MOBILE TOP BAR */
+        .mobile-topbar {
+            display: flex;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background-color: rgba(11, 15, 25, 0.9);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid #1F2937;
+            padding: 1rem 1.5rem;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        @media (min-width: 768px) {
+            .mobile-topbar {
+                display: none;
+            }
+        }
+
+        .mobile-start-btn {
+            background-color: #2563EB;
+            color: #FFFFFF;
+            font-size: 0.75rem;
+            padding: 0.375rem 0.75rem;
+            border-radius: 0.25rem;
+            font-weight: 600;
+        }
+
+        /* MAIN CONTENT AREA */
+        main {
+            flex-grow: 1;
+        }
+
+        /* SERVICES PAGE STATIC HEADER (NO CANVAS) */
+        .services-hero-static {
+            padding: 5rem 1.5rem 3rem 1.5rem;
+            text-align: center;
+            background-color: #0B0F19;
+            border-bottom: 1px solid #1F2937;
+        }
+
+        .services-hero-content {
+            max-width: 55rem;
+            margin: 0 auto;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.3rem 0.75rem;
+            background: rgba(37, 99, 235, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 9999px;
+            color: #60A5FA;
+            font-size: 0.65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 1rem;
+        }
+
+        .services-hero-static h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #FFFFFF;
+            margin-bottom: 1rem;
+            letter-spacing: -0.03em;
+        }
+
+        @media (min-width: 768px) {
+            .services-hero-static h1 {
+                font-size: 3.5rem;
+            }
+        }
+
+        .services-hero-static h1 span {
+            background: linear-gradient(135deg, #3B82F6 0%, #60A5FA 50%, #9333EA 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .services-hero-static p {
+            font-size: 1rem;
+            color: #94A3B8;
+            line-height: 1.6;
+        }
+
+        @media (min-width: 768px) {
+            .services-hero-static p {
+                font-size: 1.15rem;
+            }
+        }
+
+        /* CAPABILITY DIRECTORY CONTAINER */
+        .capabilities-directory {
+            max-width: 75rem;
+            margin: 4rem auto 6rem auto;
+            padding: 0 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 4rem;
+        }
+
+        .category-block {
+            background-color: #111827;
+            border: 1px solid #1F2937;
+            border-radius: 1.25rem;
+            padding: 2.5rem 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .category-block {
+                padding: 3rem;
+            }
+        }
+
+        .category-header {
+            max-width: 50rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .category-header h2 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: #FFFFFF;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.02em;
+        }
+
+        @media (min-width: 768px) {
+            .category-header h2 {
+                font-size: 2.125rem;
+            }
+        }
+
+        .category-tagline {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #60A5FA;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .category-description {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: #9CA3AF;
+        }
+
+        /* SERVICES GRID UNDER CATEGORY */
+        .services-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .services-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        /* ACCORDION SERVICE CARD */
+        .service-accordion-card {
+            background-color: #0B0F19;
+            border: 1px solid #374151;
+            border-radius: 0.875rem;
+            overflow: hidden;
+            transition: border-color 0.3s ease;
+        }
+
+        .service-accordion-card:hover {
+            border-color: #3B82F6;
+        }
+
+        .service-card-trigger {
+            width: 100%;
+            background: transparent;
+            border: none;
+            padding: 1.5rem;
+            text-align: left;
+            color: #FFFFFF;
+            font-size: 1.125rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            gap: 1rem;
+        }
+
+        .service-card-trigger-left {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .service-card-trigger-left i {
+            color: #3B82F6;
+            width: 1.25rem;
+            height: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .chevron-icon {
+            color: #9CA3AF;
+            width: 1.25rem;
+            height: 1.25rem;
+            flex-shrink: 0;
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .service-accordion-card.active .chevron-icon {
+            transform: rotate(180deg);
+            color: #60A5FA;
+        }
+
+        /* DROP-DOWN CONTENT CONTAINER */
+        .service-dropdown-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1), padding 0.35s ease;
+            padding: 0 1.5rem;
+            background-color: rgba(17, 24, 39, 0.5);
+            border-top: 1px solid transparent;
+        }
+
+        .service-accordion-card.active .service-dropdown-content {
+            max-height: 25rem; /* Sufficient height to reveal list items */
+            padding: 1.25rem 1.5rem 1.5rem 1.5rem;
+            border-top-color: #1F2937;
+        }
+
+        .service-features-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .service-features-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.625rem;
+            font-size: 0.8125rem;
+            line-height: 1.5;
+            color: #D1D5DB;
+        }
+
+        .service-features-list li i {
+            color: #3B82F6;
+            width: 1rem;
+            height: 1rem;
+            flex-shrink: 0;
+            margin-top: 0.125rem;
+        }
+
+        /* CTA BANNER */
+        .cta-banner {
+            max-width: 75rem;
+            margin: 0 auto 7rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .cta-banner-box {
+            background: linear-gradient(135deg, #111827 0%, #1E293B 100%);
+            border: 1px solid #374151;
+            border-radius: 1.25rem;
+            padding: 3rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        @media (min-width: 768px) {
+            .cta-banner-box {
+                padding: 5rem 3rem;
+            }
+        }
+
+        .cta-banner-box h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #FFFFFF;
+            margin-bottom: 1rem;
+        }
+
+        @media (min-width: 768px) {
+            .cta-banner-box h2 {
+                font-size: 3rem;
+            }
+        }
+
+        .cta-banner-box p {
+            color: #9CA3AF;
+            font-size: 1rem;
+            max-width: 36rem;
+            margin: 0 auto 2rem auto;
+        }
+
+        /* FLOATING AI CHATBOT ICON */
+        .ai-chatbot-float {
+            position: fixed;
+            bottom: 5rem;
+            right: 1.5rem;
+            z-index: 100;
+            background-color: #2563EB;
+            color: #FFFFFF;
+            width: 3.5rem;
+            height: 3.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 25px -3px rgba(37, 99, 235, 0.5);
+            transition: transform 0.2s ease, background-color 0.2s ease;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .ai-chatbot-float:hover {
+            transform: scale(1.1);
+            background-color: #1D4ED8;
+        }
+
+        @media (min-width: 768px) {
+            .ai-chatbot-float {
+                bottom: 2rem;
+                right: 2rem;
+            }
+        }
+
+        /* FOOTER */
+        footer {
+            background-color: #111827;
+            border-top: 1px solid #1F2937;
+            color: #9CA3AF;
+            padding: 3rem 1.5rem;
+            margin-bottom: 4rem;
+        }
+
+        @media (min-width: 768px) {
+            footer {
+                padding: 3rem 4rem;
+                margin-bottom: 0;
+            }
+        }
+
+        .footer-container {
+            max-width: 80rem;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .footer-container {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        .footer-col h3, .footer-col h4 {
+            color: #FFFFFF;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .footer-col h4 {
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .footer-col p {
+            font-size: 0.875rem;
+            line-height: 1.5;
+            color: #9CA3AF;
+            margin-bottom: 1rem;
+        }
+
+        .operational-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.125rem 0.5rem;
+            border-radius: 9999px;
+            background-color: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            font-size: 0.75rem;
+            color: #34D399;
+            margin-left: 0.5rem;
+        }
+
+        .pulse-dot {
+            width: 0.375rem;
+            height: 0.375rem;
+            border-radius: 9999px;
+            background-color: #10B981;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .footer-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .footer-links a:hover {
+            color: #FFFFFF;
+            transition: color 0.2s ease;
+        }
+
+        .support-info {
+            font-size: 0.75rem;
+            color: #9CA3AF;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .support-info strong {
+            color: #D1D5DB;
+        }
+
+        .social-icon {
+            color: #9CA3AF;
+            display: inline-flex;
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+
+        .social-icon:hover {
+            color: #60A5FA;
+        }
+
+        .footer-bottom {
+            max-width: 80rem;
+            margin: 0 auto;
+            padding-top: 2rem;
+            border-top: 1px solid #1F2937;
+            font-size: 0.75rem;
+            text-align: center;
+            color: #6B7280;
+        }
+
+        /* MOBILE BOTTOM NAV BAR */
+        .mobile-bottom-nav {
+            display: flex;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 50;
+            background-color: rgba(17, 24, 39, 0.95);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid #1F2937;
+            padding: 0.75rem 1rem;
+            justify-content: space-around;
+            align-items: center;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #9CA3AF;
+        }
+
+        @media (min-width: 768px) {
+            .mobile-bottom-nav {
+                display: none;
+            }
+        }
+
+        .mobile-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .mobile-nav-item:hover, .mobile-nav-item.active {
+            color: #60A5FA;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- DESKTOP TOP NAV BAR -->
+    <header class="desktop-header">
+        <a href="/" class="brand-logo">
+            KYTRON<span>.</span>
+        </a>
+        <nav class="desktop-nav">
+            <a href="/">Home</a>
+            <a href="/services" class="active">Services</a>
+            <a href="/portfolio">Portfolio</a>
+            <a href="/client">Client Portal</a>
+            <a href="/consultant">Consultant</a>
+        </nav>
+        <div>
+            <a href="/client" class="btn-primary">Launch Project</a>
+        </div>
+    </header>
+
+    <!-- MOBILE TOP BAR (Brand Only) -->
+    <header class="mobile-topbar">
+        <a href="/" class="brand-logo" style="font-size: 1.25rem;">
+            KYTRON<span>.</span>
+        </a>
+        <a href="/client" class="mobile-start-btn">Launch</a>
+    </header>
+
+    <!-- MAIN CONTENT AREA -->
+    <main>
+        <!-- STATIC SERVICES HEADER (NO CANVAS) -->
+        <section class="services-hero-static">
+            <div class="services-hero-content">
+                <div class="hero-badge">
+                    <i data-lucide="cpu" style="width: 0.75rem; height: 0.75rem;"></i>
+                    <span>Digital Engineering Capabilities</span>
+                </div>
+                <h1>End-to-End <span>Digital Engineering</span></h1>
+                <p>From foundational architecture to proactive maintenance and advanced AI implementation, we engineer high-performance technology solutions tailored for elite scale and security.</p>
+            </div>
+        </section>
+
+        <!-- CAPABILITIES DIRECTORY WITH EXCLUSIVE ACCORDION CARDS -->
+        <div class="capabilities-directory">
+
+            <!-- CATEGORY 1 -->
+            <div class="category-block">
+                <div class="category-header">
+                    <div class="category-tagline">Core Web & Frontend Engineering</div>
+                    <h2>Immersive interfaces engineered for speed, responsiveness, and conversion.</h2>
+                    <p class="category-description">We manufacture high-velocity digital storefronts and platforms. Our frontend architecture focuses on pixel-perfect responsiveness, instant loading times, and intuitive user journeys designed to maximize engagement and SEO performance.</p>
+                </div>
+                <div class="services-grid">
+                    <!-- Accordion Card 1 -->
+                    <div class="service-accordion-card">
+                        <button class="service-card-trigger" aria-expanded="false">
+                            <div class="service-card-trigger-left">
+                                <i data-lucide="layout"></i>
+                                <span>Enterprise Web Architecture</span>
+                            </div>
+                            <i data-lucide="chevron-down" class="chevron-icon"></i>
+                        </button>
+                        <div class="service-dropdown-content">
+                            <ul class="service-features-list">
+                                <li><i data-lucide="check-circle-2"></i> Custom modular component systems (React/Vue/Vanilla JS)</li>
+                                <li><i data-lucide="check-circle-2"></i> Server-Side Rendering (SSR) for optimal SEO</li>
+                                <li><i data-lucide="check-circle-2"></i> Progressive Web App (PWA) capabilities</li>
+                                <li><i data-lucide="check-circle-2"></i> Optimized asset delivery networks (CDN) integration</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- Accordion Card 2 -->
+                    <div class="service-accordion-card">
+                        <button class="service-card-trigger" aria-expanded="false">
+                            <div class="service-card-trigger-left">
+                                <i data-lucide="code-2"></i>
+                                <span>Full-Stack Application Dev</span>
+                            </div>
+                            <i data-lucide="chevron-down" class="chevron-icon"></i>
+                        </button>
+                        <div class="service-dropdown-content">
+                            <ul class="service-features-list">
+                                <li><i data-lucide="check-circle-2"></i> End-to-end development from database to UI</li>
+                                <li><i data-lucide="check-circle-2"></i> RESTful and GraphQL API design</li>
+                                <li><i data-lucide="check-circle-2"></i> Real-time data synchronization (WebSockets)</li>
+                                <li><i data-lucide="check-circle-2"></i> Complex state management systems</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- Accordion Card 3 -->
+                    <div class="service-accordion-card">
+                        <button class="service-card-trigger" aria-expanded="false">
+                            <div class="service-card-trigger-left">
+                                <i data-lucide="file-code"></i>
+                                <span>Headless CMS & Architectures</span>
+                            </div>
+                            <i data-lucide="chevron-down" class="chevron-icon"></i>
+                        </button>
+                        <div class="service-dropdown-content">
+                            <ul class="service-features-list">
+                                <li><i data-lucide="check-circle-2"></i> Decoupled frontends powered by robust platforms</li>
+                                <li><i data-lucide="check-circle-2"></i> Flexible schema design for multi-channel content</li>
+                                <li><i data-lucide="check-circle-2"></i> Instantaneous preview environments</li>
+                                <li><i data-lucide="check-circle-2"></i> Rapid content deployment workflows</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CATEGORY 2 -->
+            <div class="category-block">
+                <div class="category-header">
+                    <div class="category-tagline">Scalable Cloud & Backend Systems</div>
+                    <h2>Resilient infrastructure and intelligent automation powering your platform logic.</h2>
+                    <p class="category-description">The backbone of your digital asset is critical. We build secure, efficient, and infinitely scalable backend systems utilizing Python and modern cloud tech to ensure peak performance under heavy load.</p>
+                </div>
+                <div class="services-grid">
+                    <div class="service-accordion-card">
+                        <button class="service-card-trigger" aria-expanded="false">
+                            <div class="service-card-trigger-left">
+                                <i data-lucide="server"></i>
+                                <span>Automated Python Backends</span>
+                            </div>
+                            <i data-lucide="chevron-down" class="chevron-icon"></i>
+                        </button>
+                        <div class="service-dropdown-content">
+                            <ul class="service-features-list">
+                                <li><i data-lucide="check-circle-2"></i> High-performance asynchronous frameworks (FastAPI/Django)</li>
+                                <li><i data-lucide="check-circle-2"></i> Automated database migration & backups</li>
+                                <li><i data-lucide="check-circle-2"></i> Asynchronous background task queues (Celery/Redis)</li>
+                                <li><i data-lucide="check-circle-2"></i> Centralized exception tracking & logging</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="service-accordion-card">
+                        <button class="service-card-trigger" aria-expanded="false">
+                            <div class="service-card-trigger-left">
+                                <i data-lucide="cloud"></i>
+                                <span>Cloud Infrastructure & DevOps</span>
+                            </div>
+                            <i data-lucide="chevron-down" class="chevron-icon"></i>
+                        </button>
+                        <div class="service-dropdown-content">
+                            <ul class="service-features-list">
+                                <li><i data-lucide="check-circle-2"></i> Infrastructure as Code (IaC) deployment</li>
+                                <li><i data-lucide="check-circle-2"></i> Containerization (Docker) & orchestration</li>
+                                <li><i data-lucide="check-circle-2"></i> CI/CD pipeline setup (GitHub Actions)</li>
+                                <li><i data-lucide="check-circle-2"></i> Serverless function deployment</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="service-accordion-card">
+                        <button class="service-card-trigger" aria-expanded="false">
+                            <div class="service-card-trigger-left">
+                                <i data-lucide="wifi"></i>
+                                <span>Real-Time Communication Systems</span>
+                            </div>
+                            <i data-lucide="chevron-down" class="chevron-icon"></i>
+                        </button>
+                        <div class="service-dropdown-content">
+                            <ul class="service-features-list">
+                                <li><i data-lucide="check-circle-2"></i> Dedicated architecture for live chat & streaming</li>
+                                <li><i data-lucide="check-circle-2"></i> Low-latency WebSocket connections</li>
+                                <li><i data-lucide="check-circle-2"></i> Event-driven messaging backbones</li>
+                                <li><i data-lucide="check-circle-2"></i> Collaborative workspace syncing</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CATEGORY 3 -->
+            <div class="category-block">
+                <div class="category-header">
+                    <div class="category-tagline">Enterprise Security & Isolated Portals</div>
+                    <h2>Bank-grade digital fortification for sensitive data and client trust.</h2>
+                    <p class="category-description">We implement a "security-first" mindset across all layers of your infrastructure. From tenant isolation to encrypted data transfer, we build environments where your business operations and client data remain private.</p>
+                </div>
+                <div class="services-grid">
+                    <div class="service-accordion-card">
+                        <button class="service-card-trigger" aria-expanded="false">
+                            <div class="service-card-trigger-left">
+                                <i data-lucide="shield"></i>
+                                <span>Isolated Client Portals</span>
+                            </div>
+                            <i data-lucide="chevron-down" class="chevron-icon"></i>
+                        </button>
+                        <div class="service-dropdown-content">
+                            <ul class="service-features-list">
+                                <li><i data-lucide="check-circle-2"></i> Tenant-isolated database architecture (SaaS)</li>
+                                <li><i data-lucide="check-circle-2"></i> Role-Based Access Control (RBAC)</li>
+                                <li><i data-lucide="check-circle-2"></i> Encrypted client file storage systems</li>
+                                <li><i data-lucide="check-circle-2"></i> Automated audit logging of actions</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="service-accordion-card">
+                        <button class="service-card-trigger" aria-expanded="false">
+                            <div class="service-card-trigger-left">
+                                <i data-lucide="lock"></i>
+                                <span>Encryption & Compliance</span>
+                            </div>
+                            <i data-lucide="chevron-down" class="chevron-icon"></i>
+                        </button>
+                        <div class="service-dropdown-content">
+                            <ul class="service-features-list">
+                                <li><i data-lucide="check-circle-2"></i> AES-256 encryption for data-at-rest</li>
+                                <li><i data-lucide="check-circle-2"></i> TLS/SSL protocols for data-in-transit</li>
+                                <li><i data-lucide="check-circle-2"></i> Secrets management & credential storage</li>
+                                <li><i data-lucide="check-circle-2"></i> GDPR/CCPA technical compliance support</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="service-accordion-card">
+                        <button class="service-card-trigger" aria-expanded="false">
+                            <div class="service-card-trigger-left">
+                                <i data-lucide="key"></i>
+                                <span>Identity & Access (IAM)</span>
+                            </div>
+                            <i data-lucide="chevron-down" class="chevron-icon"></i>
+                        </button>
+                        <div class="service-dropdown-content">
+                            <ul class="service-features-list">
+                                <li><i data-lucide="check-circle-2"></i> Secure enterprise auth flows (OAuth2/OIDC)</li>
+                                <li><i data-lucide="check-circle-2"></i> Multi-factor authentication enforcement</li>
+                                <li><i data-lucide="check-circle-2"></i> Session management & token revocation</li>
+                                <li><i data-lucide="check-circle-2"></i> Single Sign-On (SSO) integrations</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CATEGORY 4 -->
+            <div class="category-block">
+                <div class="category-header">
+                    <div class="category-tagline">System Maintenance, Health Checks & Audits</div>
+                    <h2>Proactive diagnostics and continuous optimization to keep assets running at peak velocity.</h2>
+                    <p class="category-description">Engineering doesn't end at deployment. Our maintenance and audit services ensure your digital footprint remains secure, blazing fast, and entirely error-free 365 days a year.</p>
+                </div>
+                <div class="services-grid">
+                    <div class="service-accordion-card">
+                        <button class="service-card-trigger" aria-expanded="false">
+                            <div class="service-card-trigger-left">
+                                <i data-lucide="activity"></i>
+                                <span>24/7 Server Health Monitoring</span>
+                            </div>
+                            <i data-lucide="chevron-down" class="chevron-icon"></i>
+                        </button>
+                        <div class="service-dropdown-content">
+                            <ul class="service-features-list">
+                                <li><i data-lucide="check-circle-2"></i> Continuous uptime tracking & telemetry</li>
+                                <li><i data-lucide="check-circle-2"></i> Automated diagnostic alert systems</li>
+                                <li><i data-lucide="check-circle-2"></i> Real-time performance resource tracking</li>
+                                <li><i data-lucide="check-circle-2"></i> Instant incident response protocols</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="service-accordion-card">
+                        <button class="service-card-trigger" aria-expanded="false">
+                            <div class="service-card-trigger-left">
+                                <i data-lucide="zap"></i>
+                                <span>Performance Audits & Tuning</span>
+                            </div>
+                            <i data-lucide="chevron-down" class="chevron-icon"></i>
+                        </button>
+                        <div class="service-dropdown-content">
+                            <ul class="service-features-list">
+                                <li><i data-lucide="check-circle-2"></i> Core Web Vitals analysis & remediation</li>
+                                <li><i data-lucide="check-circle-2"></i> Database query optimization & indexing</li>
+                                <li><i data-lucide="check-circle-2"></i> Asset payload bloat reduction</li>
+                                <li><i data-lucide="check-circle-2"></i> Render-blocking script elimination</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="service-accordion-card">
+                        <button class="service-card-trigger" aria-expanded="false">
+                            <div class="service-card-trigger-left">
+                                <i data-lucide="shield-alert"></i>
+                                <span>Security Vulnerability Audits</span>
+                            </div>
+                            <i data-lucide="chevron-down" class="chevron-icon"></i>
+                        </button>
+                        <div class="service-dropdown-content">
+                            <ul class="service-features-list">
+                                <li><i data-lucide="check-circle-2"></i> Routine penetration testing simulations</li>
+                                <li><i data-lucide="check-circle-2"></i> Automated dependency patch management</li>
+                                <li><i data-lucide="check-circle-2"></i> Access log reviews & anomaly checks</li>
+                                <li><i data-lucide="check-circle-2"></i> Firewall rule hardening</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CATEGORY 5 -->
+            <div class="category-block">
+                <div class="category-header">
+                    <div class="category-tagline">AI & Agentic Infrastructure</div>
+                    <h2>Intelligent automation and autonomous agents embedded into your workflow.</h2>
+                    <p class="category-description">Move beyond simple AI chat. We integrate advanced AI capabilities, vector databases, and autonomous agents directly into your digital stack to streamline complex business operations.</p>
+                </div>
+                <div class="services-grid">
+                    <div class="service-accordion-card">
+                        <button class="service-card-trigger" aria-expanded="false">
+                            <div class="service-card-trigger-left">
+                                <i data-lucide="bot"></i>
+                                <span>Conversational AI Assistants</span>
+                            </div>
+                            <i data-lucide="chevron-down" class="chevron-icon"></i>
+                        </button>
+                        <div class="service-dropdown-content">
+                            <ul class="service-features-list">
+                                <li><i data-lucide="check-circle-2"></i> Custom LLM integration (OpenAI/Anthropic)</li>
+                                <li><i data-lucide="check-circle-2"></i> RAG implementation for precise data referencing</li>
+                                <li><i data-lucide="check-circle-2"></i> Multi-channel support bot deployment</li>
+                                <li><i data-lucide="check-circle-2"></i> Context-aware dialogue management</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="service-accordion-card">
+                        <button class="service-card-trigger" aria-expanded="false">
+                            <div class="service-card-trigger-left">
+                                <i data-lucide="database"></i>
+                                <span>Vector DB & Memory Systems</span>
+                            </div>
+                            <i data-lucide="chevron-down" class="chevron-icon"></i>
+                        </button>
+                        <div class="service-dropdown-content">
+                            <ul class="service-features-list">
+                                <li><i data-lucide="check-circle-2"></i> Setup of vector databases (Pinecone/Milvus)</li>
+                                <li><i data-lucide="check-circle-2"></i> Long-term memory embedding for AI</li>
+                                <li><i data-lucide="check-circle-2"></i> Semantic search index configuration</li>
+                                <li><i data-lucide="check-circle-2"></i> High-speed embedding pipelines</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="service-accordion-card">
+                        <button class="service-card-trigger" aria-expanded="false">
+                            <div class="service-card-trigger-left">
+                                <i data-lucide="git-merge"></i>
+                                <span>Agentic Workflow Automation</span>
+                            </div>
+                            <i data-lucide="chevron-down" class="chevron-icon"></i>
+                        </button>
+                        <div class="service-dropdown-content">
+                            <ul class="service-features-list">
+                                <li><i data-lucide="check-circle-2"></i> Agent orchestration frameworks (LangChain)</li>
+                                <li><i data-lucide="check-circle-2"></i> Intelligent task routing & decision nodes</li>
+                                <li><i data-lucide="check-circle-2"></i> Sandboxed execution layers for safety</li>
+                                <li><i data-lucide="check-circle-2"></i> Automated error-recovery loops</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CATEGORY 6 -->
+            <div class="category-block">
+                <div class="category-header">
+                    <div class="category-tagline">Mobile & Cross-Platform Engineering</div>
+                    <h2>Native-grade mobile experiences built for seamless multi-device engagement.</h2>
+                    <p class="category-description">Extend your digital footprint beyond the browser. We engineer high-performance mobile applications built to deliver buttery-smooth interfaces, native hardware integration, and unified codebases across iOS and Android.</p>
+                </div>
+                <div class="services-grid">
+                    <div class="service-accordion-card">
+                        <button class="service-card-trigger" aria-expanded="false">
+                            <div class="service-card-trigger-left">
+                                <i data-lucide="smartphone"></i>
+                                <span>Cross-Platform App Development</span>
+                            </div>
+                            <i data-lucide="chevron-down" class="chevron-icon"></i>
+                        </button>
+                        <div class="service-dropdown-content">
+                            <ul class="service-features-list">
+                                <li><i data-lucide="check-circle-2"></i> High-velocity builds (React Native / Flutter)</li>
+                                <li><i data-lucide="check-circle-2"></i> Unified codebase reducing maintenance overhead</li>
+                                <li><i data-lucide="check-circle-2"></i> Native bridge configuration for mobile APIs</li>
+                                <li><i data-lucide="check-circle-2"></i> Optimized app store deployment pipelines</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="service-accordion-card">
+                        <button class="service-card-trigger" aria-expanded="false">
+                            <div class="service-card-trigger-left">
+                                <i data-lucide="tablet"></i>
+                                <span>Mobile UI/UX & Touch Optimization</span>
+                            </div>
+                            <i data-lucide="chevron-down" class="chevron-icon"></i>
+                        </button>
+                        <div class="service-dropdown-content">
+                            <ul class="service-features-list">
+                                <li><i data-lucide="check-circle-2"></i> Gesture-driven fluid mobile navigation</li>
+                                <li><i data-lucide="check-circle-2"></i> Offline-first local storage patterns</li>
+                                <li><i data-lucide="check-circle-2"></i> Adaptive layouts for diverse device ratios</li>
+                                <li><i data-lucide="check-circle-2"></i> High frame-rate touch interaction design</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CATEGORY 7 -->
+            <div class="category-block">
+                <div class="category-header">
+                    <div class="category-tagline">Enterprise Consulting & Tech Architecture</div>
+                    <h2>Strategic technology roadmapping and deep systems analysis for high-growth enterprises.</h2>
+                    <p class="category-description">Before a single line of code is written, proper architecture ensures long-term viability. We provide high-level technical consulting, tech-stack evaluation, and architectural blueprinting to future-proof your digital operations.</p>
+                </div>
+                <div class="services-grid">
+                    <div class="service-accordion-card">
+                        <button class="service-card-trigger" aria-expanded="false">
+                            <div class="service-card-trigger-left">
+                                <i data-lucide="compass"></i>
+                                <span>Tech Stack Assessment & Migration</span>
+                            </div>
+                            <i data-lucide="chevron-down" class="chevron-icon"></i>
+                        </button>
+                        <div class="service-dropdown-content">
+                            <ul class="service-features-list">
+                                <li><i data-lucide="check-circle-2"></i> Evaluation of legacy systems with clear roadmaps</li>
+                                <li><i data-lucide="check-circle-2"></i> Technology selection tailored to scale/budget</li>
+                                <li><i data-lucide="check-circle-2"></i> Risk analysis & phased migration planning</li>
+                                <li><i data-lucide="check-circle-2"></i> Zero-downtime transition strategies</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="service-accordion-card">
+                        <button class="service-card-trigger" aria-expanded="false">
+                            <div class="service-card-trigger-left">
+                                <i data-lucide="layers"></i>
+                                <span>Scalable System Architecture</span>
+                            </div>
+                            <i data-lucide="chevron-down" class="chevron-icon"></i>
+                        </button>
+                        <div class="service-dropdown-content">
+                            <ul class="service-features-list">
+                                <li><i data-lucide="check-circle-2"></i> Microservices vs. Monolith trade-off analysis</li>
+                                <li><i data-lucide="check-circle-2"></i> High-availability disaster recovery planning</li>
+                                <li><i data-lucide="check-circle-2"></i> Database sharding & caching strategies</li>
+                                <li><i data-lucide="check-circle-2"></i> Bottleneck identification & elimination</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- BOTTOM CONVERSION BANNER -->
+        <section class="cta-banner">
+            <div class="cta-banner-box">
+                <h2>Ready to Engineer Your Digital Future?</h2>
+                <p>Initialize your project specs, define your tech stack parameters, and begin live tracking within the secure Kytron Client Portal.</p>
+                <a href="/client" class="btn-primary" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.875rem 2rem; font-size: 1rem;">
+                    <span>Initialize Client Portal</span>
+                    <i data-lucide="terminal" style="width: 1.25rem; height: 1.25rem;"></i>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <!-- FLOATING AI CHATBOT ICON — links to the AI Consultant route;
+         this page has no embedded chat widget/drawer of its own. -->
+    <a href="/consultant" class="ai-chatbot-float" aria-label="AI Assistant">
+        <i data-lucide="bot" style="width: 1.75rem; height: 1.75rem;"></i>
+    </a>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-col">
+                <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                    <h3 style="margin-bottom: 0;">KYTRON<span>.</span></h3>
+                    <div class="operational-badge">
+                        <span class="pulse-dot"></span>
+                        <span>Operational</span>
+                    </div>
+                </div>
+                <p>
+                    High-performance web and app manufacturing, design, and deployment engineered for elite scale.
+                </p>
+                <div class="support-info">
+                    <p><strong>Support:</strong> support@kytronsolutions.com</p>
+                    <p><strong>Hours:</strong> Mon-Fri, 9:00 AM - 6:00 PM</p>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul class="footer-links">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/services">Services</a></li>
+                    <li><a href="/portfolio">Portfolio</a></li>
+                    <li><a href="/client">Client Portal</a></li>
+                    <li><a href="/consultant">AI Consultant</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Company & Legal</h4>
+                <ul class="footer-links">
+                    <li><a href="/about">About Us</a></li>
+                    <li><a href="/terms">Terms & Conditions</a></li>
+                    <li><a href="/privacy">Privacy Policy</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Connect & Action</h4>
+                <p>Ready to engineer your digital asset? Let's connect.</p>
+                <div style="margin-bottom: 1rem;">
+                    <!-- Instagram Handle Link using Lucide Icon -->
+                    <a href="https://instagram.com/kytron_solutions" target="_blank" class="social-icon" aria-label="Instagram">
+                        <i data-lucide="instagram"></i>
+                    </a>
+                </div>
+                <a href="/contact" class="btn-primary" style="display: inline-block; background-color: #FFFFFF; color: #111827;">Contact Us</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 Kytron Solutions. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- MOBILE BOTTOM NAV BAR -->
+    <nav class="mobile-bottom-nav">
+        <a href="/" class="mobile-nav-item">
+            <i data-lucide="home"></i>
+            <span>Home</span>
+        </a>
+        <a href="/services" class="mobile-nav-item active">
+            <i data-lucide="layers"></i>
+            <span>Services</span>
+        </a>
+        <a href="/portfolio" class="mobile-nav-item">
+            <i data-lucide="briefcase"></i>
+            <span>Portfolio</span>
+        </a>
+        <a href="/client" class="mobile-nav-item">
+            <i data-lucide="users"></i>
+            <span>Client</span>
+        </a>
+        <a href="/consultant" class="mobile-nav-item">
+            <i data-lucide="bot"></i>
+            <span>Consultant</span>
+        </a>
+    </nav>
+
+    <!-- Initialize Lucide Icons & Exclusive Accordion Drop-Down Script -->
+    <script>
+        lucide.createIcons();
+
+        // Exclusive Accordion Logic: Only one card open at a time across the entire page
+        const accordionCards = document.querySelectorAll('.service-accordion-card');
+
+        accordionCards.forEach(card => {
+            const trigger = card.querySelector('.service-card-trigger');
+
+            trigger.addEventListener('click', () => {
+                const isActive = card.classList.contains('active');
+
+                // Close all cards first
+                accordionCards.forEach(otherCard => {
+                    otherCard.classList.remove('active');
+                    otherCard.querySelector('.service-card-trigger').setAttribute('aria-expanded', 'false');
+                });
+
+                // If the clicked card wasn't active before, open it now
+                if (!isActive) {
+                    card.classList.add('active');
+                    trigger.setAttribute('aria-expanded', 'true');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

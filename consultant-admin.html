@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Consultant | Kytron Admin</title>
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+:root{
+  --bg:#0B0F19; --surface:#111827; --border:#1F2937; --border-strong:#374151;
+  --text:#F3F4F6; --text-muted:#9CA3AF; --accent:#3B82F6; --accent-strong:#2563EB;
+  --green:#22C55E; --amber:#F59E0B; --red:#EF4444; --radius-md:0.875rem;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg); color:var(--text); font-family:system-ui,-apple-system,sans-serif; padding:1.5rem; max-width:60rem; margin:0 auto;}
+h1{font-size:1.25rem; font-weight:800; margin-bottom:0.25rem; display:flex; align-items:center; gap:0.5rem;}
+p.sub{color:var(--text-muted); font-size:0.85rem; margin-bottom:1.5rem;}
+.grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(11rem,1fr)); gap:0.9rem; margin-bottom:1.5rem;}
+.card{background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md); padding:1rem;}
+.card .label{font-size:0.72rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.04em; margin-bottom:0.4rem;}
+.card .value{font-size:1.4rem; font-weight:800;}
+.pill{display:inline-flex; align-items:center; gap:0.35rem; font-size:0.75rem; padding:0.3rem 0.7rem; border-radius:999px; font-weight:600;}
+.pill.ok{background:rgba(34,197,94,0.12); color:#86EFAC;}
+.pill.warn{background:rgba(245,158,11,0.12); color:#FCD34D;}
+.pill.off{background:rgba(156,163,175,0.12); color:#D1D5DB;}
+.toggle-row{display:flex; align-items:center; justify-content:space-between; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md); padding:0.9rem 1rem; margin-bottom:1.5rem;}
+.switch{position:relative; width:2.6rem; height:1.5rem; background:var(--border-strong); border-radius:999px; cursor:pointer; border:none;}
+.switch.on{background:var(--accent-strong);}
+.switch::after{content:''; position:absolute; top:0.15rem; left:0.15rem; width:1.2rem; height:1.2rem; background:#fff; border-radius:50%; transition:transform .15s ease;}
+.switch.on::after{transform:translateX(1.1rem);}
+table{width:100%; border-collapse:collapse; font-size:0.82rem;}
+th{text-align:left; color:var(--text-muted); font-weight:600; padding:0.5rem 0.6rem; border-bottom:1px solid var(--border); font-size:0.72rem; text-transform:uppercase;}
+td{padding:0.6rem; border-bottom:1px solid var(--border); max-width:16rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.muted{color:var(--text-muted);}
+#err{color:var(--red); font-size:0.85rem; margin-bottom:1rem;}
+</style>
+</head>
+<body>
+<h1><i data-lucide="sparkles"></i> AI Consultant — Admin</h1>
+<p class="sub">Basic visibility into availability, provider usage, and fallback state. Read-only.</p>
+<div id="err" class="hidden"></div>
+
+<div class="toggle-row">
+  <div>
+    <div style="font-weight:700;font-size:0.9rem;">Consultant enabled</div>
+    <div class="muted" style="font-size:0.78rem;">Turn off to take the Consultant offline site-wide.</div>
+  </div>
+  <button class="switch" id="enabled-switch"></button>
+</div>
+
+<div class="grid" id="stat-grid"></div>
+
+<h3 style="margin-bottom:0.6rem;font-size:0.95rem;">Provider chain (in priority order)</h3>
+<table style="margin-bottom:1.5rem;">
+  <thead><tr><th>Provider</th><th>API Key</th><th>Model</th><th>Status</th><th>Calls (24h)</th><th>Errors (24h)</th></tr></thead>
+  <tbody id="provider-body"></tbody>
+</table>
+
+<h3 style="margin-bottom:0.6rem;font-size:0.95rem;">Recent conversations</h3>
+<table>
+  <thead><tr><th>Started</th><th>First message</th><th>Channel</th><th>Status</th><th>Order</th><th>Escalated</th><th>Messages</th></tr></thead>
+  <tbody id="conv-body"></tbody>
+</table>
+
+<script>
+lucide.createIcons();
+const err = document.getElementById('err');
+
+// SECURITY: every value below can, directly or indirectly, trace back to
+// text a customer typed (conversation title is derived from their first
+// chat message — see engine.py's _save_message). This admin page renders
+// via innerHTML template literals for convenience, so EVERY interpolated
+// value — not just the ones provably user-controlled today — is escaped
+// before insertion.
+//
+// escapeHtml() escapes &, <, >, ", and ' explicitly (not via a
+// textContent->innerHTML round-trip): per the WHATWG HTML serialization
+// spec, that round-trip trick only escapes &/</> for TEXT NODE content —
+// it does NOT escape quote characters, because quotes are only
+// syntactically significant inside an ATTRIBUTE VALUE, not a text node.
+// Several values below (e.g. the "title" tooltip attribute on the
+// conversations table) are interpolated into an attribute context, so a
+// text-node-only escaper is NOT safe here: a customer message like
+// `x" onmouseover="alert(1)` would close the attribute early and inject
+// a live event handler. Escaping quotes explicitly makes the output safe
+// in BOTH text-node and attribute-value contexts, regardless of where a
+// given call site happens to use it — a genuine, confirmed vulnerability
+// in this file's earlier version, not a theoretical one.
+function escapeHtml(value){
+  const s = value === null || value === undefined ? '' : String(value);
+  return s
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function pill(ok, label){ return `<span class="pill ${ok===null?'off':ok?'ok':'warn'}">${escapeHtml(label)}</span>`; }
+
+async function load(){
+  try{
+    const [statusRes, convRes] = await Promise.all([
+      fetch('/api/admin/consultant/status'),
+      fetch('/api/admin/consultant/conversations'),
+    ]);
+    if (statusRes.status === 401 || convRes.status === 401){
+      err.textContent = 'Admin session required — please log in to the admin panel first.';
+      err.classList.remove('hidden');
+      return;
+    }
+    const status = await statusRes.json();
+    const conversations = await convRes.json();
+
+    const sw = document.getElementById('enabled-switch');
+    sw.classList.toggle('on', status.consultant_enabled);
+    sw.onclick = async () => {
+      const next = !sw.classList.contains('on');
+      await fetch('/api/admin/consultant/settings', {
+        method: 'PATCH', headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({consultant_enabled: next}),
+      });
+      sw.classList.toggle('on', next);
+    };
+
+    const p = status.provider;
+    document.getElementById('stat-grid').innerHTML = `
+      <div class="card"><div class="label">Active provider</div><div class="value">${pill(p.any_provider_available, p.active_provider || 'None available')}</div></div>
+      <div class="card"><div class="label">Calls (24h)</div><div class="value">${escapeHtml(p.calls_last_24h)}</div></div>
+      <div class="card"><div class="label">Errors (24h)</div><div class="value">${escapeHtml(p.errors_last_24h)}</div></div>
+      <div class="card"><div class="label">Provider fallbacks (24h)</div><div class="value">${escapeHtml(p.provider_fallbacks_last_24h)}</div></div>
+      <div class="card"><div class="label">Cooldown skips (24h)</div><div class="value">${escapeHtml(p.fallback_skips_last_24h)}</div></div>
+      <div class="card"><div class="label">Active conversations</div><div class="value">${escapeHtml(status.conversations_active)}</div></div>
+      <div class="card"><div class="label">Escalated</div><div class="value">${escapeHtml(status.conversations_escalated)}</div></div>
+      <div class="card"><div class="label">Cache entries</div><div class="value">${escapeHtml(status.cache.entries)}</div></div>
+    `;
+
+    document.getElementById('provider-body').innerHTML = p.providers.map(pv => `
+      <tr>
+        <td>${escapeHtml(pv.name)}</td>
+        <td>${pill(pv.configured, pv.configured ? 'Yes' : 'No')}</td>
+        <td>${
+          !pv.configured ? '<span class="muted">—</span>'
+          : pv.model_configured === false
+            ? `<span title="${escapeHtml(pv.model_issue || '')}">${pill(false, 'Invalid')}</span>`
+            : pill(true, 'OK')
+        }</td>
+        <td>${pv.configured ? pill(!pv.in_cooldown, pv.in_cooldown ? 'Cooling down' : 'Healthy') : '<span class="muted">—</span>'}</td>
+        <td class="muted">${escapeHtml(pv.calls_last_24h)}</td>
+        <td class="muted">${escapeHtml(pv.errors_last_24h)}</td>
+      </tr>
+    `).join('');
+
+    document.getElementById('conv-body').innerHTML = conversations.slice(0, 50).map(c => `
+      <tr>
+        <td class="muted">${escapeHtml(new Date(c.started_at).toLocaleString())}</td>
+        <td title="${escapeHtml(c.title || '')}">${escapeHtml(c.title || '—')}</td>
+        <td>${escapeHtml(c.channel)}</td>
+        <td>${escapeHtml(c.status)}</td>
+        <td class="muted">${escapeHtml(c.verified_order_id || '—')}</td>
+        <td>${c.escalated ? pill(false,'Yes') : '<span class="muted">No</span>'}</td>
+        <td class="muted">${escapeHtml(c.message_count)}</td>
+      </tr>
+    `).join('') || '<tr><td colspan="7" class="muted">No conversations yet.</td></tr>';
+  } catch(e){
+    err.textContent = 'Could not load Consultant status.';
+    err.classList.remove('hidden');
+  }
+}
+load();
+</script>
+</body>
+</html>

@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms & Conditions | Kytron Solutions - Digital Engineering</title>
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* RESET & BASE STYLES */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0B0F19;
+            --bg-surface: #111827;
+            --bg-surface-hover: #1F2937;
+            --border-color: #1F2937;
+            --border-hover: #374151;
+            --text-main: #F3F4F6;
+            --text-muted: #9CA3AF;
+            --text-accent: #60A5FA;
+            --accent-primary: #2563EB;
+            --accent-hover: #1D4ED8;
+            --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            font-family: var(--font-sans);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            line-height: 1.7;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* SITE HEADER NAVIGATION */
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background-color: rgba(11, 15, 25, 0.9);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        @media (min-width: 768px) {
+            .site-header {
+                padding: 1rem 3rem;
+            }
+        }
+
+        .brand-logo {
+            font-size: 1.35rem;
+            font-weight: 900;
+            letter-spacing: 0.05em;
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .brand-logo span {
+            color: #3B82F6;
+        }
+
+        .nav-links {
+            display: none;
+        }
+
+        @media (min-width: 1024px) {
+            .nav-links {
+                display: flex;
+                align-items: center;
+                gap: 2rem;
+                font-size: 0.875rem;
+                font-weight: 500;
+                color: var(--text-muted);
+            }
+            .nav-links a:hover, .nav-links a.active {
+                color: var(--text-accent);
+                transition: color 0.2s ease;
+            }
+        }
+
+        .btn-primary {
+            background-color: var(--accent-primary);
+            color: #FFFFFF;
+            padding: 0.5rem 1.25rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.2);
+            transition: background-color 0.2s ease;
+            cursor: pointer;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-hover);
+        }
+
+        /* PAGE LAYOUT CONTAINER */
+        .legal-page-container {
+            max-width: 84rem;
+            margin: 3rem auto;
+            padding: 0 1.5rem;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 3rem;
+            width: 100%;
+        }
+
+        @media (min-width: 1024px) {
+            .legal-page-container {
+                grid-template-columns: 18rem 1fr;
+                padding: 0 3rem;
+                gap: 4rem;
+                align-items: start;
+            }
+        }
+
+        /* STICKY TABLE OF CONTENTS SIDEBAR */
+        .legal-sidebar {
+            display: none;
+        }
+
+        @media (min-width: 1024px) {
+            .legal-sidebar {
+                display: block;
+                position: sticky;
+                top: 6rem;
+                max-height: calc(100vh - 8rem);
+                overflow-y: auto;
+                background-color: var(--bg-surface);
+                border: 1px solid var(--border-color);
+                border-radius: 1rem;
+                padding: 1.5rem;
+                scrollbar-width: thin;
+                scrollbar-color: var(--border-hover) transparent;
+            }
+
+            .legal-sidebar::-webkit-scrollbar {
+                width: 4px;
+            }
+            .legal-sidebar::-webkit-scrollbar-thumb {
+                background: var(--border-hover);
+                border-radius: 4px;
+            }
+        }
+
+        .sidebar-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-accent);
+            margin-bottom: 1rem;
+        }
+
+        .toc-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .toc-item a {
+            font-size: 0.8125rem;
+            color: var(--text-muted);
+            display: block;
+            padding: 0.35rem 0.5rem;
+            border-radius: 0.375rem;
+            transition: all 0.2s ease;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .toc-item a:hover, .toc-item a.active {
+            color: #FFFFFF;
+            background-color: rgba(59, 130, 246, 0.1);
+        }
+
+        /* MOBILE TOC SELECTOR */
+        .mobile-toc-bar {
+            display: block;
+            margin-bottom: 2rem;
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1rem;
+        }
+
+        @media (min-width: 1024px) {
+            .mobile-toc-bar {
+                display: none;
+            }
+        }
+
+        .mobile-toc-select {
+            width: 100%;
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-hover);
+            color: #FFFFFF;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.9rem;
+            font-family: inherit;
+            outline: none;
+        }
+
+        /* MAIN LEGAL DOCUMENT CONTENT */
+        .legal-content-wrapper {
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 1.25rem;
+            padding: 2rem 1.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .legal-content-wrapper {
+                padding: 3.5rem;
+            }
+        }
+
+        .legal-header {
+            margin-bottom: 3rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 2rem;
+        }
+
+        .legal-header h1 {
+            font-size: 2rem;
+            font-weight: 900;
+            color: #FFFFFF;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.02em;
+        }
+
+        @media (min-width: 768px) {
+            .legal-header h1 {
+                font-size: 2.75rem;
+            }
+        }
+
+        .legal-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            font-size: 0.8125rem;
+            color: var(--text-accent);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .legal-chapter {
+            margin-bottom: 2.5rem;
+            scroll-margin-top: 6rem;
+        }
+
+        .legal-chapter h2 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #FFFFFF;
+            margin-bottom: 1rem;
+            letter-spacing: -0.01em;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-left: 3px solid var(--accent-primary);
+            padding-left: 0.75rem;
+        }
+
+        .legal-chapter p {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            text-align: left;
+        }
+
+        .legal-chapter p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* FOOTER */
+        footer {
+            background-color: var(--bg-surface);
+            border-top: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 3rem 1.5rem;
+            margin-top: 6rem;
+        }
+
+        @media (min-width: 768px) {
+            footer {
+                padding: 3rem 4rem;
+            }
+        }
+
+        .footer-container {
+            max-width: 80rem;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .footer-container {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        .footer-col h3, .footer-col h4 {
+            color: #FFFFFF;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .footer-col h4 {
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .footer-col p {
+            font-size: 0.875rem;
+            line-height: 1.5;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .operational-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.125rem 0.5rem;
+            border-radius: 9999px;
+            background-color: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            font-size: 0.75rem;
+            color: #34D399;
+            margin-left: 0.5rem;
+        }
+
+        .pulse-dot {
+            width: 0.375rem;
+            height: 0.375rem;
+            border-radius: 9999px;
+            background-color: #10B981;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .footer-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .footer-links a:hover {
+            color: #FFFFFF;
+            transition: color 0.2s ease;
+        }
+
+        .support-info {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .support-info strong {
+            color: #D1D5DB;
+        }
+
+        .social-icon {
+            color: var(--text-muted);
+            display: inline-flex;
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+
+        .social-icon:hover {
+            color: var(--text-accent);
+        }
+
+        .footer-bottom {
+            max-width: 80rem;
+            margin: 0 auto;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.75rem;
+            text-align: center;
+            color: #6B7280;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SITE HEADER NAVIGATION -->
+    <header class="site-header">
+        <a href="/" class="brand-logo">
+            KYTRON<span>.</span>
+        </a>
+        <nav class="nav-links">
+            <a href="/">Home</a>
+            <a href="/services">Services</a>
+            <a href="/portfolio">Portfolio</a>
+            <a href="/client">Client Portal</a>
+            <a href="/consultant">AI Consultant</a>
+        </nav>
+        <div>
+            <a href="/contact" class="btn-primary">Contact Us</a>
+        </div>
+    </header>
+
+    <!-- LEGAL DOCUMENT CONTAINER WITH STICKY SIDEBAR -->
+    <div class="legal-page-container">
+        
+        <!-- SIDEBAR TOC (Desktop) -->
+        <aside class="legal-sidebar">
+            <div class="sidebar-title">Table of Contents</div>
+            <ul class="toc-list" id="desktop-toc">
+                <li class="toc-item"><a href="#section-1">1. About These Terms</a></li>
+                <li class="toc-item"><a href="#section-2">2. Eligibility</a></li>
+                <li class="toc-item"><a href="#section-3">3. Kytron Services</a></li>
+                <li class="toc-item"><a href="#section-4">4. Project Registration</a></li>
+                <li class="toc-item"><a href="#section-5">5. Project Information & Review</a></li>
+                <li class="toc-item"><a href="#section-6">6. Project Price</a></li>
+                <li class="toc-item"><a href="#section-7">7. Currency</a></li>
+                <li class="toc-item"><a href="#section-8">8. Payment</a></li>
+                <li class="toc-item"><a href="#section-9">9. Advance & Milestone Payments</a></li>
+                <li class="toc-item"><a href="#section-10">10. Payment Failure & Chargeback</a></li>
+                <li class="toc-item"><a href="#section-11">11. Commencement & Deadlines</a></li>
+                <li class="toc-item"><a href="#section-12">12. Client Responsibilities</a></li>
+                <li class="toc-item"><a href="#section-13">13. Client Materials</a></li>
+                <li class="toc-item"><a href="#section-14">14. Legal Compliance of Content</a></li>
+                <li class="toc-item"><a href="#section-15">15. Prohibited Projects</a></li>
+                <li class="toc-item"><a href="#section-16">16. Change Requests</a></li>
+                <li class="toc-item"><a href="#section-17">17. Client Review & Acceptance</a></li>
+                <li class="toc-item"><a href="#section-18">18. Acceptance vs. Financial Completion</a></li>
+                <li class="toc-item"><a href="#section-19">19. Final Completion</a></li>
+                <li class="toc-item"><a href="#section-20">20. Domain</a></li>
+                <li class="toc-item"><a href="#section-21">21. Domain Non-Renewal & Hosting</a></li>
+                <li class="toc-item"><a href="#section-22">22. Delivery</a></li>
+                <li class="toc-item"><a href="#section-23">23. Source Code & IP</a></li>
+                <li class="toc-item"><a href="#section-24">24. Pre-existing Technology</a></li>
+                <li class="toc-item"><a href="#section-25">25. Third-Party & Open-Source</a></li>
+                <li class="toc-item"><a href="#section-26">26. Client Data & Content</a></li>
+                <li class="toc-item"><a href="#section-27">27. Handover & Transfer</a></li>
+                <li class="toc-item"><a href="#section-28">28. Reuse by Kytron</a></li>
+                <li class="toc-item"><a href="#section-29">29. Copyright Enforcement</a></li>
+                <li class="toc-item"><a href="#section-30">30. Final Legal Package</a></li>
+                <li class="toc-item"><a href="#section-31">31. Signatures & Electronic Records</a></li>
+                <li class="toc-item"><a href="#section-32">32. Copyright Assignment Execution</a></li>
+                <li class="toc-item"><a href="#section-33">33. Support & Maintenance</a></li>
+                <li class="toc-item"><a href="#section-34">34. Testing</a></li>
+                <li class="toc-item"><a href="#section-35">35. AI Services</a></li>
+                <li class="toc-item"><a href="#section-36">36. Third-Party Services</a></li>
+                <li class="toc-item"><a href="#section-37">37. Confidentiality</a></li>
+                <li class="toc-item"><a href="#section-38">38. Account Security & Platform Use</a></li>
+                <li class="toc-item"><a href="#section-39">39. Security</a></li>
+                <li class="toc-item"><a href="#section-40">40. Client Warranties</a></li>
+                <li class="toc-item"><a href="#section-41">41. Kytron's Commitments</a></li>
+                <li class="toc-item"><a href="#section-42">42. Portfolio & Credit</a></li>
+                <li class="toc-item"><a href="#section-43">43. Testimonials</a></li>
+                <li class="toc-item"><a href="#section-44">44. Cancellation, Refunds & Termination</a></li>
+                <li class="toc-item"><a href="#section-45">45. Project Inactivity & Abandonment</a></li>
+                <li class="toc-item"><a href="#section-46">46. Account Termination</a></li>
+                <li class="toc-item"><a href="#section-47">47. Project Closure & Portal Access</a></li>
+                <li class="toc-item"><a href="#section-48">48. Client Data Requests</a></li>
+                <li class="toc-item"><a href="#section-49">49. Privacy</a></li>
+                <li class="toc-item"><a href="#section-50">50. Formal Notices</a></li>
+                <li class="toc-item"><a href="#section-51">51. Electronic Records & Communications</a></li>
+                <li class="toc-item"><a href="#section-52">52. Legal Requests</a></li>
+                <li class="toc-item"><a href="#section-53">53. Liability</a></li>
+                <li class="toc-item"><a href="#section-54">54. Force Majeure</a></li>
+                <li class="toc-item"><a href="#section-55">55. International Clients</a></li>
+                <li class="toc-item"><a href="#section-56">56. Governing Law & Jurisdiction</a></li>
+                <li class="toc-item"><a href="#section-57">57. Complaints & Grievances</a></li>
+                <li class="toc-item"><a href="#section-58">58. Terms Versioning</a></li>
+                <li class="toc-item"><a href="#section-59">59. Entire Agreement & Priority</a></li>
+                <li class="toc-item"><a href="#section-60">60. Waiver, Severability & Survival</a></li>
+                <li class="toc-item"><a href="#section-61">61. Assignment</a></li>
+                <li class="toc-item"><a href="#section-62">62. Acceptance</a></li>
+                <li class="toc-item"><a href="#section-63">63. Contact</a></li>
+            </ul>
+        </aside>
+
+        <!-- CONTENT AREA -->
+        <main class="legal-content-wrapper">
+            
+            <!-- MOBILE TOC DROPDOWN -->
+            <div class="mobile-toc-bar">
+                <select class="mobile-toc-select" id="mobile-toc-jump" aria-label="Table of Contents Jump Menu">
+                    <option value="" disabled selected>Jump to section...</option>
+                    <option value="#section-1">1. About These Terms</option>
+                    <option value="#section-2">2. Eligibility</option>
+                    <option value="#section-3">3. Kytron Services</option>
+                    <option value="#section-4">4. Project Registration</option>
+                    <option value="#section-5">5. Project Information & Review</option>
+                    <option value="#section-6">6. Project Price</option>
+                    <option value="#section-7">7. Currency</option>
+                    <option value="#section-8">8. Payment</option>
+                    <option value="#section-9">9. Advance & Milestone Payments</option>
+                    <option value="#section-10">10. Payment Failure & Chargeback</option>
+                    <option value="#section-11">11. Commencement & Deadlines</option>
+                    <option value="#section-12">12. Client Responsibilities</option>
+                    <option value="#section-13">13. Client Materials</option>
+                    <option value="#section-14">14. Legal Compliance of Content</option>
+                    <option value="#section-15">15. Prohibited Projects</option>
+                    <option value="#section-16">16. Change Requests</option>
+                    <option value="#section-17">17. Client Review & Acceptance</option>
+                    <option value="#section-18">18. Acceptance vs. Financial Completion</option>
+                    <option value="#section-19">19. Final Completion</option>
+                    <option value="#section-20">20. Domain</option>
+                    <option value="#section-21">21. Domain Non-Renewal & Hosting</option>
+                    <option value="#section-22">22. Delivery</option>
+                    <option value="#section-23">23. Source Code & IP</option>
+                    <option value="#section-24">24. Pre-existing Technology</option>
+                    <option value="#section-25">25. Third-Party & Open-Source</option>
+                    <option value="#section-26">26. Client Data & Content</option>
+                    <option value="#section-27">27. Handover & Transfer</option>
+                    <option value="#section-28">28. Reuse by Kytron</option>
+                    <option value="#section-29">29. Copyright Enforcement</option>
+                    <option value="#section-30">30. Final Legal Package</option>
+                    <option value="#section-31">31. Signatures & Electronic Records</option>
+                    <option value="#section-32">32. Copyright Assignment Execution</option>
+                    <option value="#section-33">33. Support & Maintenance</option>
+                    <option value="#section-34">34. Testing</option>
+                    <option value="#section-35">35. AI Services</option>
+                    <option value="#section-36">36. Third-Party Services</option>
+                    <option value="#section-37">37. Confidentiality</option>
+                    <option value="#section-38">38. Account Security & Platform Use</option>
+                    <option value="#section-39">39. Security</option>
+                    <option value="#section-40">40. Client Warranties</option>
+                    <option value="#section-41">41. Kytron's Commitments</option>
+                    <option value="#section-42">42. Portfolio & Credit</option>
+                    <option value="#section-43">43. Testimonials</option>
+                    <option value="#section-44">44. Cancellation, Refunds & Termination</option>
+                    <option value="#section-45">45. Project Inactivity & Abandonment</option>
+                    <option value="#section-46">46. Account Termination</option>
+                    <option value="#section-47">47. Project Closure & Portal Access</option>
+                    <option value="#section-48">48. Client Data Requests</option>
+                    <option value="#section-49">49. Privacy</option>
+                    <option value="#section-50">50. Formal Notices</option>
+                    <option value="#section-51">51. Electronic Records & Communications</option>
+                    <option value="#section-52">52. Legal Requests</option>
+                    <option value="#section-53">53. Liability</option>
+                    <option value="#section-54">54. Force Majeure</option>
+                    <option value="#section-55">55. International Clients</option>
+                    <option value="#section-56">56. Governing Law & Jurisdiction</option>
+                    <option value="#section-57">57. Complaints & Grievances</option>
+                    <option value="#section-58">58. Terms Versioning</option>
+                    <option value="#section-59">59. Entire Agreement & Priority</option>
+                    <option value="#section-60">60. Waiver, Severability & Survival</option>
+                    <option value="#section-61">61. Assignment</option>
+                    <option value="#section-62">62. Acceptance</option>
+                    <option value="#section-63">63. Contact</option>
+                </select>
+            </div>
+
+            <!-- DOCUMENT HEADER -->
+            <div class="legal-header">
+                <h1>Terms & Conditions</h1>
+                <div class="legal-meta">
+                    <span>KYTRON</span>
+                    <span>Last Updated: August 22, 2026</span>
+                    <span>Effective From: August 22, 2026</span>
+                </div>
+            </div>
+
+            <!-- CHAPTERS -->
+            <section id="section-1" class="legal-chapter">
+                <h2>1. ABOUT THESE TERMS</h2>
+                <p>These Terms & Conditions ("Terms") govern access to and use of the Kytron website, client portal, project-registration system, technology services, and related services provided by Kytron ("Kytron", "we", "us", or "our").</p>
+                <p>Kytron is operated by Nitin Kumar.</p>
+                <p>By accessing the Kytron website, creating or using a Kytron account, registering a project, accepting a project proposal or project modification through the Kytron platform, making a payment, or otherwise using Kytron's services, you agree to these Terms to the extent applicable to your interaction with Kytron.</p>
+                <p>If you do not agree with these Terms, you must not use Kytron's services.</p>
+                <p>These Terms operate together with project-specific terms, approved project records, invoices, agreements, policies, certificates, and other documents expressly incorporated into a particular project.</p>
+            </section>
+
+            <section id="section-2" class="legal-chapter">
+                <h2>2. ELIGIBILITY</h2>
+                <p>Kytron's services are available only to persons 18 years of age or older.</p>
+                <p>By using Kytron, you represent that you are at least 18 years old, have legal capacity to enter into applicable agreements, the information you provide is accurate and complete, and, where you act on behalf of an entity, you have authority to do so.</p>
+            </section>
+
+            <section id="section-3" class="legal-chapter">
+                <h2>3. KYTRON SERVICES</h2>
+                <p>Kytron may provide consultation, website and web-application development, e-commerce development, software development, frontend/backend/full-stack development, API development and integration, AI integration, mobile application development, UI/UX design, testing, hosting, deployment, domain-related services, maintenance, support, and related technology services.</p>
+            </section>
+
+            <section id="section-4" class="legal-chapter">
+                <h2>4. PROJECT REGISTRATION</h2>
+                <p>Projects may be registered through the Kytron website/client portal without an existing Kytron account. Following successful registration, Kytron may create the applicable client/project account and send access instructions. Projects may also be registered by authorized Kytron personnel on behalf of a client. Registration does not itself constitute final approval, commencement, price acceptance, or IP transfer.</p>
+            </section>
+
+            <section id="section-5" class="legal-chapter">
+                <h2>5. PROJECT INFORMATION AND REVIEW</h2>
+                <p>Clients are responsible for accurate, complete and clear project information. Kytron may approve, request clarification, request modifications, or reject a project. A proposed modification requiring client approval becomes effective only after explicit acceptance through the applicable Kytron mechanism.</p>
+            </section>
+
+            <section id="section-6" class="legal-chapter">
+                <h2>6. PROJECT PRICE</h2>
+                <p>The client may provide a budget range during registration. The final price may be determined during review and negotiation based on scope, complexity, requirements, integrations, deadline and other circumstances. The final agreed project price is recorded in the project/payment record. Separately identified third-party or optional costs are not included unless stated.</p>
+            </section>
+
+            <section id="section-7" class="legal-chapter">
+                <h2>7. CURRENCY</h2>
+                <p>Kytron's project and invoice currency is Indian Rupees (INR / ₹).</p>
+            </section>
+
+            <section id="section-8" class="legal-chapter">
+                <h2>8. PAYMENT</h2>
+                <p>Kytron may accept payment methods made available from time to time. Payment is considered received after successful verification by Kytron or the relevant payment provider/system. Kytron may record transaction/reference ID, payment status, payment date, amount, and necessary accounting information.</p>
+            </section>
+
+            <section id="section-9" class="legal-chapter">
+                <h2>9. ADVANCE AND MILESTONE PAYMENTS</h2>
+                <p>An advance may be required and may vary by project, including 0%. Where required, work normally begins after successful receipt of the advance and the applicable deadline begins from that date. Some projects may use milestone payments.</p>
+            </section>
+
+            <section id="section-10" class="legal-chapter">
+                <h2>10. PAYMENT FAILURE, REVERSAL AND CHARGEBACK</h2>
+                <p>If a payment fails, is reversed, cancelled, charged back, refunded by a provider, or is unauthorized, Kytron may pause or suspend the project/service, withhold applicable delivery or handover obligations, withhold IP-transfer documentation, require settlement, recover legitimate charges where applicable, and terminate for fraud or repeated payment abuse, subject to applicable law.</p>
+            </section>
+
+            <section id="section-11" class="legal-chapter">
+                <h2>11. PROJECT COMMENCEMENT AND DEADLINES</h2>
+                <p>A project generally begins after approval, finalization of applicable requirements/commercial terms, and receipt of any required advance. Deadlines may change because of client requests, Kytron requests, client delays, delayed approvals/information/payments/access, domain/hosting delays, technical or third-party issues, approved scope changes, or other circumstances affecting delivery. The current deadline may replace the previous deadline.</p>
+            </section>
+
+            <section id="section-12" class="legal-chapter">
+                <h2>12. CLIENT RESPONSIBILITIES</h2>
+                <p>The client must provide accurate information, lawful materials, access/credentials, timely feedback and approvals, payments, testing/acceptance, and reasonable cooperation, and must comply with applicable law and maintain account security.</p>
+            </section>
+
+            <section id="section-13" class="legal-chapter">
+                <h2>13. CLIENT MATERIALS</h2>
+                <p>The client represents that it has the necessary rights, licences, permissions and authority for materials supplied to Kytron. Kytron may refuse or refrain from using material where it reasonably suspects infringement, illegality, malicious content, or serious legal risk.</p>
+            </section>
+
+            <section id="section-14" class="legal-chapter">
+                <h2>14. LEGAL COMPLIANCE OF CLIENT CONTENT</h2>
+                <p>The client is responsible for the legality, accuracy and completeness of its business content, policies, claims, product information and regulatory disclosures. Technical implementation by Kytron is not legal advice or a guarantee of compliance with every applicable law.</p>
+            </section>
+
+            <section id="section-15" class="legal-chapter">
+                <h2>15. PROHIBITED PROJECTS</h2>
+                <p>Kytron may refuse, suspend or terminate projects involving unlawful activity, fraud, scams, phishing, credential theft, malware, unauthorized access, IP infringement, financial fraud, deceptive impersonation, unlawful surveillance, malicious systems, or other prohibited activity.</p>
+            </section>
+
+            <section id="section-16" class="legal-chapter">
+                <h2>16. CHANGE REQUESTS</h2>
+                <p>Changes should be submitted through the applicable Kytron mechanism. Kytron may classify them as minor changes, corrections, additional features, substantial scope changes, technically infeasible work, or a separate project. Minor changes may be free at Kytron's discretion. Changes affecting scope, price or deadline require the applicable approval.</p>
+            </section>
+
+            <section id="section-17" class="legal-chapter">
+                <h2>17. CLIENT REVIEW AND ACCEPTANCE</h2>
+                <p>When a project is ready for review, the client may accept it, report a correction relating to an agreed requirement, or request a modification. Minor modifications may be free at Kytron's discretion; substantial modifications may incur charges. Kytron may use an Acceptance Verification mechanism whose exact form may change over time.</p>
+            </section>
+
+            <section id="section-18" class="legal-chapter">
+                <h2>18. ACCEPTANCE IS NOT FINAL FINANCIAL COMPLETION</h2>
+                <p>Client acceptance does not itself mean all financial obligations are fulfilled. A project may remain Accepted — Payment Pending until required payments are received.</p>
+            </section>
+
+            <section id="section-19" class="legal-chapter">
+                <h2>19. FINAL COMPLETION</h2>
+                <p>A project may be marked Completed/Closed after completion, acceptance, agreed corrections, required payments, and applicable final documentation.</p>
+            </section>
+
+            <section id="section-20" class="legal-chapter">
+                <h2>20. DOMAIN</h2>
+                <p>Where a domain is required, a project may initially use a temporary deployment URL/subdomain. The client's actual domain may be purchased after applicable conditions are satisfied. Domain costs may be separate. The client may buy the domain directly or provide funds to Kytron to buy it on the client's behalf. The client is responsible for renewals.</p>
+            </section>
+
+            <section id="section-21" class="legal-chapter">
+                <h2>21. DOMAIN NON-RENEWAL AND HOSTING</h2>
+                <p>If applicable domain fees are not paid, Kytron may discontinue the affected domain and, where possible, continue using a temporary deployment URL. Hosting may be included or separately charged. If applicable hosting charges are not paid, Kytron may suspend hosted services. Hosting-account access is not automatically provided.</p>
+            </section>
+
+            <section id="section-22" class="legal-chapter">
+                <h2>22. DELIVERY</h2>
+                <p>A live project may be published for review. Publication for review is not final handover or IP transfer. Unless expressly included, Kytron does not automatically provide hosting access, database access, Git repositories, design source files, API credentials, internal infrastructure, or other internal assets.</p>
+            </section>
+
+            <section id="section-23" class="legal-chapter">
+                <h2>23. SOURCE CODE AND INTELLECTUAL PROPERTY</h2>
+                <p>Source-code delivery and ownership are not automatically included. If source-code ownership/delivery is required, it must be expressly identified in project terms. Where Kytron retains source-code ownership, usage/licensing rights are project-specific. Any copyright transfer is governed by the applicable Copyright/IP Assignment Agreement.</p>
+            </section>
+
+            <section id="section-24" class="legal-chapter">
+                <h2>24. KYTRON PRE-EXISTING TECHNOLOGY</h2>
+                <p>Kytron retains ownership of pre-existing and general-purpose technology, including reusable code, frameworks, templates, components, libraries, scripts, internal tools, deployment systems, methods, workflows, know-how, and AI-assisted workflows, unless expressly transferred.</p>
+            </section>
+
+            <section id="section-25" class="legal-chapter">
+                <h2>25. THIRD-PARTY AND OPEN-SOURCE COMPONENTS</h2>
+                <p>Third-party/open-source components remain subject to their original licences and terms. Kytron does not transfer ownership of materials it does not own. Clients must comply with applicable third-party licences. Third-party subscription/licence costs are not included unless stated. Kytron may replace dependencies where reasonably necessary.</p>
+            </section>
+
+            <section id="section-26" class="legal-chapter">
+                <h2>26. CLIENT DATA AND CONTENT</h2>
+                <p>Where legally owned by the client, client data and content remain the client's property, including customer databases, customer accounts, orders, business information, private documents and proprietary information. Kytron does not claim ownership merely because it stores or processes such information.</p>
+            </section>
+
+            <section id="section-27" class="legal-chapter">
+                <h2>27. HANDOVER AND TRANSFER</h2>
+                <p>After applicable payment and IP-transfer conditions are satisfied, the client may exercise rights granted or transferred under the project/IP documents. Transfer of the client's contractual relationship with Kytron is subject to project terms and verification/documentation requirements.</p>
+            </section>
+
+            <section id="section-28" class="legal-chapter">
+                <h2>28. REUSE BY KYTRON</h2>
+                <p>Where Kytron retains rights in underlying source code, reusable technology, general-purpose components or know-how, Kytron may continue to use those materials. Kytron will not intentionally reproduce client-protected project-specific content, confidential information or distinctive project materials contrary to applicable project terms.</p>
+            </section>
+
+            <section id="section-29" class="legal-chapter">
+                <h2>29. COPYRIGHT ENFORCEMENT</h2>
+                <p>After an applicable IP transfer, the client is generally responsible for enforcing transferred rights against third parties. Kytron may provide reasonable technical cooperation. Kytron retains enforcement rights over IP it continues to own.</p>
+            </section>
+
+            <section id="section-30" class="legal-chapter">
+                <h2>30. FINAL LEGAL/HANDOVER PACKAGE</h2>
+                <p>After completion and payment conditions are satisfied, Kytron may generate one archival PDF containing separate documents, such as Final Project Acceptance, Copyright/IP Assignment, Project Handover Certificate, Maintenance/Support Agreement where applicable, and SLA where applicable. Each remains a distinct document. The package may contain project ID, client details, project details, dates, document identifiers and version information.</p>
+            </section>
+
+            <section id="section-31" class="legal-chapter">
+                <h2>31. SIGNATURES AND ELECTRONIC RECORDS</h2>
+                <p>Kytron may use electronic signing mechanisms where execution is required. A document must not be represented as electronically signed merely because a typed name or the words "electronically signed" appear. Client signatures are not required on every document by default; where a document legally or contractually requires execution, the applicable method will apply. Portal approvals and acceptance may be recorded separately.</p>
+            </section>
+
+            <section id="section-32" class="legal-chapter">
+                <h2>32. COPYRIGHT ASSIGNMENT EXECUTION</h2>
+                <p>Where copyright is assigned, the applicable Copyright/IP Assignment Agreement will identify the work and rights being assigned and specify applicable duration, territorial extent and consideration as required by law. The assignment will be executed by the applicable copyright owner or duly authorized agent.</p>
+            </section>
+
+            <section id="section-33" class="legal-chapter">
+                <h2>33. SUPPORT AND MAINTENANCE</h2>
+                <p>Each project may have its own support period, stated in the project record and/or final documents. Kytron-caused defects during that period may be corrected without additional charge. Client-caused or neutral/third-party issues may be chargeable depending on cause, impact and work required. After support, Kytron may offer continued maintenance, a new maintenance project, case-by-case work, or other arrangements then available.</p>
+            </section>
+
+            <section id="section-34" class="legal-chapter">
+                <h2>34. TESTING</h2>
+                <p>Kytron tests according to agreed scope and available environments. Testing does not guarantee discovery of every bug, vulnerability, compatibility issue, performance issue, third-party failure, or future technical problem. The client remains responsible for final business/user acceptance testing.</p>
+            </section>
+
+            <section id="section-35" class="legal-chapter">
+                <h2>35. AI SERVICES</h2>
+                <p>AI output may be inaccurate, incomplete, unsuitable, non-unique or erroneous. Kytron does not guarantee AI output is error-free. Third-party AI providers may have separate terms. Clients are responsible for reviewing and approving AI output used in their business and for having rights to data submitted to AI services. Kytron may use AI-assisted tools internally. Kytron is not responsible for decisions made solely on AI output. Project-specific AI arrangements may be separately specified.</p>
+            </section>
+
+            <section id="section-36" class="legal-chapter">
+                <h2>36. THIRD-PARTY SERVICES</h2>
+                <p>Projects may depend on hosting, domains, payment services, APIs, AI providers, cloud platforms, email providers, analytics, open-source software, CDNs and other external services. These operate under their own terms. Kytron does not control their availability, pricing, policies, APIs, outages, discontinuation or security. Kytron may recommend alternatives where reasonably necessary. Applicable third-party costs are the client's responsibility where not included.</p>
+            </section>
+
+            <section id="section-37" class="legal-chapter">
+                <h2>37. CONFIDENTIALITY</h2>
+                <p>Each party must keep confidential information received from the other party confidential and use it only for legitimate project purposes. Confidential information includes business plans, private documents, credentials, source code, customer information, proprietary technology, commercial information, unreleased features, internal communications and information reasonably understood to be confidential. Exclusions include information publicly available without breach, lawfully known beforehand, independently developed, lawfully obtained elsewhere, or required to be disclosed by law.</p>
+            </section>
+
+            <section id="section-38" class="legal-chapter">
+                <h2>38. ACCOUNT SECURITY AND PLATFORM USE</h2>
+                <p>Clients must keep credentials confidential, avoid account sharing, maintain reasonable security, report suspected unauthorized access, and cooperate with security investigations. Users must not bypass authentication, attempt unauthorized access, reverse engineer Kytron's platform, scrape without authorization, upload malware, abuse APIs, interfere with infrastructure, impersonate others, use another person's account, conduct unlawful activity, circumvent access/payment controls, access internal/admin functions without authorization, or use Kytron systems to attack another system. Kytron may suspend/block access where necessary.</p>
+            </section>
+
+            <section id="section-39" class="legal-chapter">
+                <h2>39. SECURITY</h2>
+                <p>Kytron uses reasonable technical and organisational measures appropriate to the services. Measures may include access controls, password security, restricted access, security monitoring, audit logs, backups and incident response. No internet-connected system is guaranteed completely secure.</p>
+            </section>
+
+            <section id="section-40" class="legal-chapter">
+                <h2>40. CLIENT WARRANTIES</h2>
+                <p>The client represents that provided information is accurate to the best of its knowledge, it has authority to enter the arrangement, it has rights to supplied materials, requested use is lawful, it will not knowingly use the project unlawfully, will comply with applicable laws, will not knowingly provide malicious files/code, will cooperate with requirements, and will make payments as agreed.</p>
+            </section>
+
+            <section id="section-41" class="legal-chapter">
+                <h2>41. KYTRON'S COMMITMENTS</h2>
+                <p>Kytron will use reasonable professional care, make reasonable efforts to deliver agreed work, correct Kytron-caused defects during the applicable support period, protect confidential information, use reasonable security measures, and not knowingly introduce malicious code. Kytron does not guarantee uninterrupted availability, complete absence of bugs, uninterrupted third-party services, business results, search rankings, or complete protection against every cyberattack.</p>
+            </section>
+
+            <section id="section-42" class="legal-chapter">
+                <h2>42. PORTFOLIO AND CREDIT</h2>
+                <p>Kytron may display completed projects in its portfolio by default, including screenshots, descriptions, links, project names and attribution, unless restricted by applicable project terms or confidentiality. Kytron may place a reasonable "Built by Kytron" or "Developed by Kytron" credit/link by default; the client may request removal.</p>
+            </section>
+
+            <section id="section-43" class="legal-chapter">
+                <h2>43. TESTIMONIALS</h2>
+                <p>Kytron may use client testimonials, reviews or feedback for marketing only with appropriate permission.</p>
+            </section>
+
+            <section id="section-44" class="legal-chapter">
+                <h2>44. CANCELLATION, REFUNDS AND TERMINATION</h2>
+                <p>A client may cancel subject to applicable project terms. Refunds are determined case-by-case based on work completed, project stage, cancellation timing, costs, third-party commitments and other circumstances. Substantially or fully completed projects may result in no refund. Kytron rejection/termination consequences depend on the circumstances, work performed, client conduct, costs and applicable terms. Refunds are subject to applicable law.</p>
+            </section>
+
+            <section id="section-45" class="legal-chapter">
+                <h2>45. PROJECT INACTIVITY AND ABANDONMENT</h2>
+                <p>A project may become inactive where the client misses a project-specific deadline, fails to provide information/materials, fails to approve/reject a decision, fails to make a required payment, or otherwise prevents progress. Kytron may issue reminders/notices and eventually close/dismiss the project. Resumption may require a revised deadline, additional charges, or a new project.</p>
+            </section>
+
+            <section id="section-46" class="legal-chapter">
+                <h2>46. ACCOUNT TERMINATION</h2>
+                <p>Kytron may suspend/terminate accounts for Terms violations, fraud, illegal activity, abuse/harassment, security threats, non-payment, prolonged inactivity, false/misleading information, platform misuse, or other legitimate legal/security reasons. Surviving obligations remain effective.</p>
+            </section>
+
+            <section id="section-47" class="legal-chapter">
+                <h2>47. PROJECT CLOSURE AND PORTAL ACCESS</h2>
+                <p>After completion, acceptance, payment and applicable handover requirements, a project may be marked Completed/Closed. Later work is handled through maintenance/support where available or a new project. Kytron may provide continued portal access but may restrict/discontinue it where reasonably necessary while preserving/providing records the client is legally or contractually entitled to receive.</p>
+            </section>
+
+            <section id="section-48" class="legal-chapter">
+                <h2>48. CLIENT DATA REQUESTS</h2>
+                <p>Clients may request information they are legally entitled to access. Kytron is not required to provide its source code, database architecture, internal schemas, algorithms, security systems, proprietary infrastructure or other proprietary platform information merely because client project information is stored there.</p>
+            </section>
+
+            <section id="section-49" class="legal-chapter">
+                <h2>49. PRIVACY</h2>
+                <p>Kytron's collection and processing of personal information is governed by the Kytron Privacy Policy.</p>
+            </section>
+
+            <section id="section-50" class="legal-chapter">
+                <h2>50. FORMAL NOTICES</h2>
+                <p>Formal legal notices must be sent to the client's registered email address. Ordinary project communications may be handled through the client portal.</p>
+            </section>
+
+            <section id="section-51" class="legal-chapter">
+                <h2>51. ELECTRONIC RECORDS AND COMMUNICATIONS</h2>
+                <p>Kytron may retain records of project approvals, modifications, acceptance, payments, Terms acceptance, communications, project versions and other important actions. Records may include user/account identity, date/time, project ID, relevant version, action and technical audit information. Subject to applicable law, such records may be used as evidence. Relevant portal messages, client instructions, approvals, change requests and emails may be retained for project management, dispute resolution, security, legal/compliance purposes and project history.</p>
+            </section>
+
+            <section id="section-52" class="legal-chapter">
+                <h2>52. LEGAL REQUESTS</h2>
+                <p>Kytron may disclose information or take action in response to valid court, regulator, government or law-enforcement requirements where legally required or permitted. Where legally permitted, Kytron may notify affected users.</p>
+            </section>
+
+            <section id="section-53" class="legal-chapter">
+                <h2>53. LIABILITY</h2>
+                <p>To the maximum extent permitted by law, Kytron is not responsible for losses primarily caused by client actions/omissions, third-party services, hosting/domain providers, external APIs, client modifications, incorrect client information, force majeure, or circumstances outside Kytron's reasonable control. To the maximum extent permitted by law, Kytron is not liable for indirect, incidental, special or consequential losses including loss of profits, business opportunities or anticipated revenue. Any project-specific liability cap will be stated in the applicable project agreement. Nothing excludes liability that cannot lawfully be excluded.</p>
+            </section>
+
+            <section id="section-54" class="legal-chapter">
+                <h2>54. FORCE MAJEURE</h2>
+                <p>Kytron is not responsible for delay/failure caused to the extent resulting from circumstances beyond reasonable control, including natural disasters, war, civil unrest, government restrictions, major infrastructure failures, widespread outages, third-party provider failures, domain-registry failures, major cyber incidents, power failures, strikes and similar events. Deadlines/obligations may be extended or suspended as reasonably necessary.</p>
+            </section>
+
+            <section id="section-55" class="legal-chapter">
+                <h2>55. INTERNATIONAL CLIENTS</h2>
+                <p>Kytron may serve international clients. Currency remains INR. International clients are responsible for applicable taxes, regulatory requirements, currency conversion costs, payment charges and other obligations applicable to them unless agreed otherwise. Kytron does not represent automatic compliance with every foreign jurisdiction.</p>
+            </section>
+
+            <section id="section-56" class="legal-chapter">
+                <h2>56. GOVERNING LAW AND JURISDICTION</h2>
+                <p>These Terms are governed by the laws of India, subject to mandatory applicable law. Subject to applicable law, courts having appropriate jurisdiction in Bhopal, Madhya Pradesh shall have jurisdiction. Parties should make reasonable efforts to resolve disputes directly before formal proceedings.</p>
+            </section>
+
+            <section id="section-57" class="legal-chapter">
+                <h2>57. COMPLAINTS AND GRIEVANCES</h2>
+                <p>Clients may raise complaints regarding project/service quality, billing, payments, support, privacy, IP, accounts, staff conduct or other services through Kytron's designated contact mechanism. Privacy/data complaints are additionally handled under the Privacy Policy. Current contact information is available through Kytron's official Contact page.</p>
+            </section>
+
+            <section id="section-58" class="legal-chapter">
+                <h2>58. TERMS VERSIONING</h2>
+                <p>Kytron may update these Terms. Material changes affecting existing consent-based arrangements or requiring renewed acceptance will be handled appropriately. Project-specific terms already accepted will not be silently overridden by later general updates. Kytron may maintain historical versions.</p>
+            </section>
+
+            <section id="section-59" class="legal-chapter">
+                <h2>59. ENTIRE AGREEMENT AND PRIORITY</h2>
+                <p>A project may include these Terms, project registration, finalized details, approved modifications, payment terms, maintenance/support terms, SLA, IP Assignment, Handover Certificate, acceptance record and other expressly incorporated documents. Where applicable, a specific executed document governing an issue takes precedence, followed by project-specific approved terms, these Terms, then general portal information.</p>
+            </section>
+
+            <section id="section-60" class="legal-chapter">
+                <h2>60. WAIVER, SEVERABILITY AND SURVIVAL</h2>
+                <p>Failure to enforce a provision once does not waive it later. If a provision is invalid or unenforceable, it will be modified/interpreted to the minimum extent necessary where possible and the remaining provisions continue. Payment, IP, confidentiality, privacy, liability, dispute and other provisions that by nature survive termination continue.</p>
+            </section>
+
+            <section id="section-61" class="legal-chapter">
+                <h2>61. ASSIGNMENT</h2>
+                <p>A client may transfer project/contractual rights where permitted by applicable project/IP terms, subject to verification/documentation. Kytron may, subject to applicable law, assign/transfer rights and obligations to a successor or related entity in connection with restructuring, incorporation, business expansion or other legitimate purposes without reducing rights already acquired by the client.</p>
+            </section>
+
+            <section id="section-62" class="legal-chapter">
+                <h2>62. ACCEPTANCE</h2>
+                <p>Kytron may require electronic acceptance of these Terms. Kytron may record account identity, timestamp, Terms version, IP/device information where collected, and related acceptance information. Electronic acceptance may constitute acceptance to the extent permitted by law.</p>
+            </section>
+
+            <section id="section-63" class="legal-chapter">
+                <h2>63. CONTACT</h2>
+                <p>Current Kytron contact information is available through the official Contact page of the Kytron website.</p>
+            </section>
+
+        </main>
+
+    </div>
+
+    <!-- SITE FOOTER -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-col">
+                <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                    <h3 style="margin-bottom: 0;">KYTRON<span>.</span></h3>
+                    <div class="operational-badge">
+                        <span class="pulse-dot"></span>
+                        <span>Operational</span>
+                    </div>
+                </div>
+                <p>
+                    High-performance web and app manufacturing, design, and deployment engineered for elite scale.
+                </p>
+                <div class="support-info">
+                    <p><strong>Support:</strong> support@kytronsolutions.com</p>
+                    <p><strong>Hours:</strong> Mon-Fri, 9:00 AM - 6:00 PM</p>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul class="footer-links">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/services">Services</a></li>
+                    <li><a href="/portfolio">Portfolio</a></li>
+                    <li><a href="/client">Client Portal</a></li>
+                    <li><a href="/consultant">AI Consultant</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Company & Legal</h4>
+                <ul class="footer-links">
+                    <li><a href="/about">About Us</a></li>
+                    <li><a href="/terms">Terms & Conditions</a></li>
+                    <li><a href="/privacy">Privacy Policy</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Connect & Action</h4>
+                <p>Ready to engineer your digital asset? Let's connect.</p>
+                <div style="margin-bottom: 1rem;">
+                    <a href="https://instagram.com/kytron_solutions" target="_blank" class="social-icon" aria-label="Instagram">
+                        <i data-lucide="instagram"></i>
+                    </a>
+                </div>
+                <a href="/contact" class="btn-primary" style="display: inline-block; background-color: #FFFFFF; color: #111827; padding: 0.5rem 1.25rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 600;">Contact Us</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 Kytron Solutions. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- INTERACTION SCRIPTS: Mobile jump menu & desktop TOC active highlights -->
+    <script>
+        lucide.createIcons();
+
+        // Mobile dropdown jump menu
+        const mobileSelect = document.getElementById('mobile-toc-jump');
+        if (mobileSelect) {
+            mobileSelect.addEventListener('change', (e) => {
+                const target = document.querySelector(e.target.value);
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        }
+
+        // Active state highlighting for Desktop TOC
+        const chapters = document.querySelectorAll('.legal-chapter');
+        const tocLinks = document.querySelectorAll('.toc-item a');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            chapters.forEach(chap => {
+                const chapTop = chap.offsetTop;
+                if (window.scrollY >= (chapTop - 150)) {
+                    current = chap.getAttribute('id');
+                }
+            });
+
+            tocLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

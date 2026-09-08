@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio | Kytron Solutions - Digital Engineering</title>
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* RESET & BASE STYLES */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #0B0F19;
+            color: #F3F4F6;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* DESKTOP TOP NAV BAR */
+        .desktop-header {
+            display: none;
+        }
+
+        @media (min-width: 768px) {
+            .desktop-header {
+                display: flex;
+                position: sticky;
+                top: 0;
+                z-index: 50;
+                background-color: rgba(11, 15, 25, 0.85);
+                backdrop-filter: blur(12px);
+                border-bottom: 1px solid #1F2937;
+                padding: 1rem 2rem;
+                align-items: center;
+                justify-content: space-between;
+            }
+        }
+
+        .brand-logo {
+            font-size: 1.5rem;
+            font-weight: 900;
+            letter-spacing: 0.05em;
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .brand-logo span {
+            color: #3B82F6;
+        }
+
+        .desktop-nav {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #D1D5DB;
+        }
+
+        .desktop-nav a:hover, .desktop-nav a.active {
+            color: #60A5FA;
+            transition: color 0.2s ease;
+        }
+
+        .btn-primary {
+            background-color: #2563EB;
+            color: #FFFFFF;
+            padding: 0.5rem 1.25rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.2);
+            transition: background-color 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #1D4ED8;
+        }
+
+        /* MOBILE TOP BAR */
+        .mobile-topbar {
+            display: flex;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background-color: rgba(11, 15, 25, 0.9);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid #1F2937;
+            padding: 1rem 1.5rem;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        @media (min-width: 768px) {
+            .mobile-topbar {
+                display: none;
+            }
+        }
+
+        .mobile-start-btn {
+            background-color: #2563EB;
+            color: #FFFFFF;
+            font-size: 0.75rem;
+            padding: 0.375rem 0.75rem;
+            border-radius: 0.25rem;
+            font-weight: 600;
+        }
+
+        /* MAIN CONTENT AREA */
+        main {
+            flex-grow: 1;
+        }
+
+        /* PORTFOLIO PAGE STATIC HEADER */
+        .portfolio-hero-static {
+            padding: 5rem 1.5rem 3rem 1.5rem;
+            text-align: center;
+            background-color: #0B0F19;
+            border-bottom: 1px solid #1F2937;
+        }
+
+        .portfolio-hero-content {
+            max-width: 55rem;
+            margin: 0 auto;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.3rem 0.75rem;
+            background: rgba(37, 99, 235, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 9999px;
+            color: #60A5FA;
+            font-size: 0.65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 1rem;
+        }
+
+        .portfolio-hero-static h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #FFFFFF;
+            margin-bottom: 1rem;
+            letter-spacing: -0.03em;
+        }
+
+        @media (min-width: 768px) {
+            .portfolio-hero-static h1 {
+                font-size: 3.5rem;
+            }
+        }
+
+        .portfolio-hero-static h1 span {
+            background: linear-gradient(135deg, #3B82F6 0%, #60A5FA 50%, #9333EA 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .portfolio-hero-static p {
+            font-size: 1rem;
+            color: #94A3B8;
+            line-height: 1.6;
+        }
+
+        @media (min-width: 768px) {
+            .portfolio-hero-static p {
+                font-size: 1.15rem;
+            }
+        }
+
+        /* PORTFOLIO SHOWCASE CONTAINER */
+        .portfolio-container {
+            max-width: 75rem;
+            margin: 4rem auto 6rem auto;
+            padding: 0 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+        }
+
+        .project-card {
+            background-color: #111827;
+            border: 1px solid #1F2937;
+            border-radius: 1.25rem;
+            padding: 2.5rem 2rem;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            transition: border-color 0.3s ease;
+        }
+
+        @media (min-width: 768px) {
+            .project-card {
+                grid-template-columns: 1.2fr 1fr;
+                padding: 3rem;
+                align-items: center;
+            }
+        }
+
+        .project-card:hover {
+            border-color: #3B82F6;
+        }
+
+        .project-info h2 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: #FFFFFF;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.02em;
+        }
+
+        .project-tagline {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #60A5FA;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .project-description {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: #9CA3AF;
+            margin-bottom: 1.5rem;
+        }
+
+        .project-tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .tech-pill {
+            background-color: rgba(37, 99, 235, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            color: #60A5FA;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+        }
+
+        .project-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: #FFFFFF;
+            border: 1px solid #374151;
+            padding: 0.5rem 1.25rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn-secondary:hover {
+            border-color: #3B82F6;
+            background-color: rgba(59, 130, 246, 0.05);
+        }
+
+        /* LIVE WEBSITE PREVIEW */
+        .project-live-preview {
+            position: relative;
+            background-color: #0B0F19;
+            border: 1px solid #374151;
+            border-radius: 0.875rem;
+            overflow: hidden;
+            min-height: 0;
+            box-shadow: 0 18px 45px rgba(0, 0, 0, 0.35);
+        }
+
+        .project-live-preview-bar {
+            height: 2.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0 0.75rem;
+            background: #111827;
+            border-bottom: 1px solid #374151;
+        }
+
+        .preview-dot {
+            width: 0.55rem;
+            height: 0.55rem;
+            border-radius: 50%;
+            background: #374151;
+        }
+
+        .preview-url {
+            flex: 1;
+            margin-left: 0.35rem;
+            padding: 0.25rem 0.65rem;
+            border: 1px solid #374151;
+            border-radius: 999px;
+            color: #9CA3AF;
+            font-size: 0.65rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .project-live-preview-frame {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+            background: #0B0F19;
+        }
+
+        .project-live-preview iframe {
+            display: block;
+            width: 1000px;
+            height: 700px;
+            border: 0;
+            background: #FFFFFF;
+            transform-origin: top left;
+        }
+
+        .live-badge {
+            position: absolute;
+            top: 2.75rem;
+            right: 0.75rem;
+            z-index: 2;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.3rem 0.6rem;
+            border-radius: 999px;
+            background: rgba(17, 24, 39, 0.88);
+            border: 1px solid rgba(52, 211, 153, 0.35);
+            color: #34D399;
+            font-size: 0.65rem;
+            font-weight: 700;
+            backdrop-filter: blur(8px);
+        }
+
+        .live-badge-dot {
+            width: 0.4rem;
+            height: 0.4rem;
+            border-radius: 50%;
+            background: #34D399;
+            box-shadow: 0 0 8px rgba(52, 211, 153, 0.7);
+        }
+       
+
+        /* CTA BANNER */
+        .cta-banner {
+            max-width: 75rem;
+            margin: 0 auto 7rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .cta-banner-box {
+            background: linear-gradient(135deg, #111827 0%, #1E293B 100%);
+            border: 1px solid #374151;
+            border-radius: 1.25rem;
+            padding: 3rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        @media (min-width: 768px) {
+            .cta-banner-box {
+                padding: 5rem 3rem;
+            }
+        }
+
+        .cta-banner-box h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #FFFFFF;
+            margin-bottom: 1rem;
+        }
+
+        @media (min-width: 768px) {
+            .cta-banner-box h2 {
+                font-size: 3rem;
+            }
+        }
+
+        .cta-banner-box p {
+            color: #9CA3AF;
+            font-size: 1rem;
+            max-width: 36rem;
+            margin: 0 auto 2rem auto;
+        }
+
+        /* FLOATING AI CHATBOT ICON */
+        .ai-chatbot-float {
+            position: fixed;
+            bottom: 5rem;
+            right: 1.5rem;
+            z-index: 100;
+            background-color: #2563EB;
+            color: #FFFFFF;
+            width: 3.5rem;
+            height: 3.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 25px -3px rgba(37, 99, 235, 0.5);
+            transition: transform 0.2s ease, background-color 0.2s ease;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .ai-chatbot-float:hover {
+            transform: scale(1.1);
+            background-color: #1D4ED8;
+        }
+
+        @media (min-width: 768px) {
+            .ai-chatbot-float {
+                bottom: 2rem;
+                right: 2rem;
+            }
+        }
+
+        /* FOOTER */
+        footer {
+            background-color: #111827;
+            border-top: 1px solid #1F2937;
+            color: #9CA3AF;
+            padding: 3rem 1.5rem;
+            margin-bottom: 4rem;
+        }
+
+        @media (min-width: 768px) {
+            footer {
+                padding: 3rem 4rem;
+                margin-bottom: 0;
+            }
+        }
+
+        .footer-container {
+            max-width: 80rem;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .footer-container {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        .footer-col h3, .footer-col h4 {
+            color: #FFFFFF;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .footer-col h4 {
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .footer-col p {
+            font-size: 0.875rem;
+            line-height: 1.5;
+            color: #9CA3AF;
+            margin-bottom: 1rem;
+        }
+
+        .operational-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.125rem 0.5rem;
+            border-radius: 9999px;
+            background-color: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            font-size: 0.75rem;
+            color: #34D399;
+            margin-left: 0.5rem;
+        }
+
+        .pulse-dot {
+            width: 0.375rem;
+            height: 0.375rem;
+            border-radius: 9999px;
+            background-color: #10B981;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .footer-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .footer-links a:hover {
+            color: #FFFFFF;
+            transition: color 0.2s ease;
+        }
+
+        .support-info {
+            font-size: 0.75rem;
+            color: #9CA3AF;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .support-info strong {
+            color: #D1D5DB;
+        }
+
+        .social-icon {
+            color: #9CA3AF;
+            display: inline-flex;
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+
+        .social-icon:hover {
+            color: #60A5FA;
+        }
+
+        .footer-bottom {
+            max-width: 80rem;
+            margin: 0 auto;
+            padding-top: 2rem;
+            border-top: 1px solid #1F2937;
+            font-size: 0.75rem;
+            text-align: center;
+            color: #6B7280;
+        }
+
+        /* MOBILE BOTTOM NAV BAR */
+        .mobile-bottom-nav {
+            display: flex;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 50;
+            background-color: rgba(17, 24, 39, 0.95);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid #1F2937;
+            padding: 0.75rem 1rem;
+            justify-content: space-around;
+            align-items: center;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #9CA3AF;
+        }
+
+        @media (min-width: 768px) {
+            .mobile-bottom-nav {
+                display: none;
+            }
+        }
+
+        .mobile-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .mobile-nav-item:hover, .mobile-nav-item.active {
+            color: #60A5FA;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- DESKTOP TOP NAV BAR -->
+    <header class="desktop-header">
+        <a href="/" class="brand-logo">
+            KYTRON<span>.</span>
+        </a>
+        <nav class="desktop-nav">
+            <a href="/">Home</a>
+            <a href="/services">Services</a>
+            <a href="/portfolio" class="active">Portfolio</a>
+            <a href="/client">Client Portal</a>
+            <a href="/consultant">Consultant</a>
+        </nav>
+        <div>
+            <a href="/client" class="btn-primary">Launch Project</a>
+        </div>
+    </header>
+
+    <!-- MOBILE TOP BAR (Brand Only) -->
+    <header class="mobile-topbar">
+        <a href="/" class="brand-logo" style="font-size: 1.25rem;">
+            KYTRON<span>.</span>
+        </a>
+        <a href="/client" class="mobile-start-btn">Launch</a>
+    </header>
+
+    <!-- MAIN CONTENT AREA -->
+    <main>
+        <!-- PORTFOLIO STATIC HEADER -->
+        <section class="portfolio-hero-static">
+            <div class="portfolio-hero-content">
+                <div class="hero-badge">
+                    <i data-lucide="briefcase" style="width: 0.75rem; height: 0.75rem;"></i>
+                    <span>Engineered Case Studies</span>
+                </div>
+                <h1>Featured <span>Portfolio</span></h1>
+                <p>Explore our high-performance digital architecture, secure cloud implementations, and elite platform deployments.</p>
+            </div>
+        </section>
+
+        <!-- PORTFOLIO CONTAINER (1 Demo Project Structure Ready for Copy-Pasting) -->
+        <div class="portfolio-container">
+
+            <!-- DEMO PROJECT CARD 1 -->
+            <div class="project-card">
+                <div class="project-info">
+                    <div class="project-tagline">BUNK Cafe</div>
+                    <h2>A premium cafe website evolved into a complete digital ordering experience.</h2>
+                    <p class="project-description">A full-featured cafe experience spanning the brand homepage, promotional offers, digital menu, gallery, franchise information, cart, ordering, checkout, and customer contact.</p>
+                    <div class="project-tech-stack">
+                        <span class="tech-pill">Cafe Experience</span>
+                        <span class="tech-pill">Digital Menu</span>
+                        <span class="tech-pill">Online Ordering</span>
+                        <span class="tech-pill">Checkout Flow</span>
+                    </div>
+                    <div class="project-actions">
+                        <a href="https://recreate02.vercel.app/" class="btn-secondary">
+                            <span>Open Live Website</span>
+                            <i data-lucide="external-link" style="width: 1rem; height: 1rem;"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="project-live-preview">
+
+                    <div class="project-live-preview-bar" aria-hidden="true">
+                        <span class="preview-dot"></span>
+                        <span class="preview-dot"></span>
+                        <span class="preview-dot"></span>
+                        <span class="preview-url">
+            https://recreate02.vercel.app/
+                        </span>
+                    </div>
+
+                    <div class="live-badge">
+                        <span class="live-badge-dot"></span>
+                        <span>LIVE</span>
+                    </div>
+
+                    <div class="project-live-preview-frame">
+                        <iframe src="https://recreate02.vercel.app/" title="Live preview of the redesigned Cafe Website" loading="lazy" allow="fullscreen">
+                        </iframe>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- DEMO PROJECT CARD 2 -->
+            <div class="project-card">
+                <div class="project-info">
+                    <div class="project-tagline">MeraGym</div>
+                    <h2>A modern fitness discovery platform designed around gyms, memberships, trainers, and transformation.</h2>
+                    <p class="project-description">A complete multi-page fitness experience combining gym discovery, search and filtering, membership plans, trainer profiles, fitness specialties, transformations, FAQs, and contact interactions.</p>
+                    <div class="project-tech-stack">
+                        <span class="tech-pill">Fitness Platform</span>
+                        <span class="tech-pill">Gym Discovery</span>
+                        <span class="tech-pill">Membership UX</span>
+                        <span class="tech-pill">Trainer Profiles</span>
+                    </div>
+                    <div class="project-actions">
+                        <a href="https://recreate01.vercel.app/" class="btn-secondary">
+                            <span>Open Live Website</span>
+                            <i data-lucide="external-link" style="width: 1rem; height: 1rem;"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="project-live-preview">
+
+                    <div class="project-live-preview-bar" aria-hidden="true">
+                        <span class="preview-dot"></span>
+                        <span class="preview-dot"></span>
+                        <span class="preview-dot"></span>
+                        <span class="preview-url">
+            https://recreate01.vercel.app/
+                        </span>
+                    </div>
+
+                    <div class="live-badge">
+                        <span class="live-badge-dot"></span>
+                        <span>LIVE</span>
+                    </div>
+
+                    <div class="project-live-preview-frame">
+                        <iframe src="https://recreate01.vercel.app/" title="Live preview of the redesigned Cafe Website" loading="lazy" allow="fullscreen">
+                        </iframe>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- DEMO PROJECT CARD 3 -->
+            <div class="project-card">
+                <div class="project-info">
+                    <div class="project-tagline">Digital Portfolio</div>
+                    <h2>A premium personal portfolio engineered to showcase digital products, design capability, and development work.</h2>
+                    <p class="project-description">A custom-built portfolio experience designed to present projects through immersive live previews, structured project storytelling, responsive layouts, and a cohesive visual identity.</p>
+                    <div class="project-tech-stack">
+                        <span class="tech-pill">Premium UI/UX</span>
+                        <span class="tech-pill">Interactive Showcase</span>
+                        <span class="tech-pill">Responsive Design</span>
+                        <span class="tech-pill">Live Project Previews</span>
+                    </div>
+                    <div class="project-actions">
+                        <a href="https://portfolio-demo-1-pi.vercel.app/" class="btn-secondary">
+                            <span>Open Live Website</span>
+                            <i data-lucide="external-link" style="width: 1rem; height: 1rem;"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="project-live-preview">
+
+                    <div class="project-live-preview-bar" aria-hidden="true">
+                        <span class="preview-dot"></span>
+                        <span class="preview-dot"></span>
+                        <span class="preview-dot"></span>
+                        <span class="preview-url">
+            https://portfolio-demo-1-pi.vercel.app/
+                        </span>
+                    </div>
+
+                    <div class="live-badge">
+                        <span class="live-badge-dot"></span>
+                        <span>LIVE</span>
+                    </div>
+
+                    <div class="project-live-preview-frame">
+                        <iframe src="https://portfolio-demo-1-pi.vercel.app/" title="Live preview of the redesigned Cafe Website" loading="lazy" allow="fullscreen">
+                        </iframe>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- DEMO PROJECT CARD 4 -->
+            <div class="project-card">
+                <div class="project-info">
+                    <div class="project-tagline">Ambika & Vaibhav — Wedding Invitation</div>
+                    <h2>An immersive digital wedding invitation designed as an interactive celebration experience.</h2>
+                    <p class="project-description">A personalized wedding experience combining elegant storytelling, event details, photo galleries, video highlights, venue information, countdowns, music, and an interactive blessings wall.</p>
+                    <div class="project-tech-stack">
+                        <span class="tech-pill">Interactive Invitation</span>
+                        <span class="tech-pill">Event Experience</span>
+                        <span class="tech-pill">Firebase Guestbook</span>
+                        <span class="tech-pill">Responsive Design</span>
+                    </div>
+                    <div class="project-actions">
+                        <a href="https://wedding-invitation-demo-1.vercel.app/" class="btn-secondary">
+                            <span>Open Live Website</span>
+                            <i data-lucide="external-link" style="width: 1rem; height: 1rem;"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="project-live-preview">
+
+                    <div class="project-live-preview-bar" aria-hidden="true">
+                        <span class="preview-dot"></span>
+                        <span class="preview-dot"></span>
+                        <span class="preview-dot"></span>
+                        <span class="preview-url">
+            https://wedding-invitation-demo-1.vercel.app/
+                        </span>
+                    </div>
+
+                    <div class="live-badge">
+                        <span class="live-badge-dot"></span>
+                        <span>LIVE</span>
+                    </div>
+
+                    <div class="project-live-preview-frame">
+                        <iframe src="https://wedding-invitation-demo-1.vercel.app/" title="Live preview of the redesigned Cafe Website" loading="lazy" allow="fullscreen">
+                        </iframe>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- DEMO PROJECT CARD 5 -->
+            <div class="project-card">
+                <div class="project-info">
+                    <div class="project-tagline">Royal Wedding Invitation</div>
+                    <h2>A cinematic, multi-page wedding invitation built around a guided digital journey.</h2>
+                    <p class="project-description">A structured wedding experience that guides guests from the opening invitation through the couple, events, venues, dress code, RSVP, and final thank-you.</p>
+                    <div class="project-tech-stack">
+                        <span class="tech-pill">Multi-Page Experience</span>
+                        <span class="tech-pill">Event Timeline</span>
+                        <span class="tech-pill">RSVP Flow</span>
+                        <span class="tech-pill">Interactive Design</span>
+                    </div>
+                    <div class="project-actions">
+                        <a href="https://wedding-invitation-demo-2.vercel.app/" class="btn-secondary">
+                            <span>Open Live Website</span>
+                            <i data-lucide="external-link" style="width: 1rem; height: 1rem;"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="project-live-preview">
+
+                    <div class="project-live-preview-bar" aria-hidden="true">
+                        <span class="preview-dot"></span>
+                        <span class="preview-dot"></span>
+                        <span class="preview-dot"></span>
+                        <span class="preview-url">
+            https://wedding-invitation-demo-2.vercel.app/
+                        </span>
+                    </div>
+
+                    <div class="live-badge">
+                        <span class="live-badge-dot"></span>
+                        <span>LIVE</span>
+                    </div>
+
+                    <div class="project-live-preview-frame">
+                        <iframe src="https://wedding-invitation-demo-2.vercel.app/" title="Live preview of the redesigned Cafe Website" loading="lazy" allow="fullscreen">
+                        </iframe>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- DEMO PROJECT CARD 6 -->
+            <div class="project-card">
+                <div class="project-info">
+                    <div class="project-tagline">Isolara — Luxury Resort Experience</div>
+                    <h2>A premium hospitality experience designed around a cliffside retreat in Varkala, Kerala.</h2>
+                    <p class="project-description">An immersive resort website combining accommodation discovery, dining, wellness, curated Kerala experiences, special offers, destination exploration, and a complete interactive reservation journey.</p>
+                    <div class="project-tech-stack">
+                        <span class="tech-pill">Luxury Hospitality</span>
+                        <span class="tech-pill">Room Discovery</span>
+                        <span class="tech-pill">Experience Booking</span>
+                        <span class="tech-pill">Reservation Flow</span>
+                    </div>
+                    <div class="project-actions">
+                        <a href="https://hotel-demo-01.vercel.app/" class="btn-secondary">
+                            <span>Open Live Website</span>
+                            <i data-lucide="external-link" style="width: 1rem; height: 1rem;"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="project-live-preview">
+
+                    <div class="project-live-preview-bar" aria-hidden="true">
+                        <span class="preview-dot"></span>
+                        <span class="preview-dot"></span>
+                        <span class="preview-dot"></span>
+                        <span class="preview-url">
+            https://hotel-demo-01.vercel.app/
+                        </span>
+                    </div>
+
+                    <div class="live-badge">
+                        <span class="live-badge-dot"></span>
+                        <span>LIVE</span>
+                    </div>
+
+                    <div class="project-live-preview-frame">
+                        <iframe src="https://hotel-demo-01.vercel.app/" title="Live preview of the redesigned Cafe Website" loading="lazy" allow="fullscreen">
+                        </iframe>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- DEMO PROJECT CARD 7 -->
+            <div class="project-card">
+                <div class="project-info">
+                    <div class="project-tagline">Neon Pulse — Anika Live in Mumbai</div>
+                    <h2>A high-energy concert experience designed to turn a live event into a complete digital journey.</h2>
+                    <p class="project-description">A fully interactive concert website combining artist discovery, live countdowns, music previews, event experiences, venue information, ticket selection, merchandise, food & beverage discovery, travel guidance, and a complete multi-step checkout experience.</p>
+                    <div class="project-tech-stack">
+                        <span class="tech-pill">Concert Experience</span>
+                        <span class="tech-pill">Interactive Event UI</span>
+                        <span class="tech-pill">Ticketing & Checkout</span>
+                        <span class="tech-pill">Responsive Design</span>
+                    </div>
+                    <div class="project-actions">
+                        <a href="https://event-demo-01.vercel.app/" class="btn-secondary">
+                            <span>Open Live Website</span>
+                            <i data-lucide="external-link" style="width: 1rem; height: 1rem;"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="project-live-preview">
+
+                    <div class="project-live-preview-bar" aria-hidden="true">
+                        <span class="preview-dot"></span>
+                        <span class="preview-dot"></span>
+                        <span class="preview-dot"></span>
+                        <span class="preview-url">
+            https://event-demo-01.vercel.app/
+                        </span>
+                    </div>
+
+                    <div class="live-badge">
+                        <span class="live-badge-dot"></span>
+                        <span>LIVE</span>
+                    </div>
+
+                    <div class="project-live-preview-frame">
+                        <iframe src="https://event-demo-01.vercel.app/" title="Live preview of the redesigned Cafe Website" loading="lazy" allow="fullscreen">
+                        </iframe>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <!-- BOTTOM CONVERSION BANNER -->
+        <section class="cta-banner">
+            <div class="cta-banner-box">
+                <h2>Ready to Engineer Your Digital Future?</h2>
+                <p>Initialize your project specs, define your tech stack parameters, and begin live tracking within the secure Kytron Client Portal.</p>
+                <a href="/client" class="btn-primary" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.875rem 2rem; font-size: 1rem;">
+                    <span>Initialize Client Portal</span>
+                    <i data-lucide="terminal" style="width: 1.25rem; height: 1.25rem;"></i>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <!-- FLOATING AI CHATBOT ICON — links to the AI Consultant route;
+         this page has no embedded chat widget/drawer of its own. -->
+    <a href="/consultant" class="ai-chatbot-float" aria-label="AI Assistant">
+        <i data-lucide="bot" style="width: 1.75rem; height: 1.75rem;"></i>
+    </a>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-col">
+                <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                    <h3 style="margin-bottom: 0;">KYTRON<span>.</span></h3>
+                    <div class="operational-badge">
+                        <span class="pulse-dot"></span>
+                        <span>Operational</span>
+                    </div>
+                </div>
+                <p>
+                    High-performance web and app manufacturing, design, and deployment engineered for elite scale.
+                </p>
+                <div class="support-info">
+                    <p><strong>Support:</strong> support@kytronsolutions.com</p>
+                    <p><strong>Hours:</strong> Mon-Fri, 9:00 AM - 6:00 PM</p>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul class="footer-links">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/services">Services</a></li>
+                    <li><a href="/portfolio">Portfolio</a></li>
+                    <li><a href="/client">Client Portal</a></li>
+                    <li><a href="/consultant">AI Consultant</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Company & Legal</h4>
+                <ul class="footer-links">
+                    <li><a href="/about">About Us</a></li>
+                    <li><a href="/terms">Terms & Conditions</a></li>
+                    <li><a href="/privacy">Privacy Policy</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Connect & Action</h4>
+                <p>Ready to engineer your digital asset? Let's connect.</p>
+                <div style="margin-bottom: 1rem;">
+                    <!-- Instagram Handle Link using Lucide Icon -->
+                    <a href="https://instagram.com/kytron_solutions" target="_blank" class="social-icon" aria-label="Instagram">
+                        <i data-lucide="instagram"></i>
+                    </a>
+                </div>
+                <a href="/contact" class="btn-primary" style="display: inline-block; background-color: #FFFFFF; color: #111827;">Contact Us</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 Kytron Solutions. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- MOBILE BOTTOM NAV BAR -->
+    <nav class="mobile-bottom-nav">
+        <a href="/" class="mobile-nav-item">
+            <i data-lucide="home"></i>
+            <span>Home</span>
+        </a>
+        <a href="/services" class="mobile-nav-item">
+            <i data-lucide="layers"></i>
+            <span>Services</span>
+        </a>
+        <a href="/portfolio" class="mobile-nav-item active">
+            <i data-lucide="briefcase"></i>
+            <span>Portfolio</span>
+        </a>
+        <a href="/client" class="mobile-nav-item">
+            <i data-lucide="users"></i>
+            <span>Client</span>
+        </a>
+        <a href="/consultant" class="mobile-nav-item">
+            <i data-lucide="bot"></i>
+            <span>Consultant</span>
+        </a>
+    </nav>
+
+    <!-- Initialize Lucide Icons Script -->
+    <script>
+        function scaleLivePreview() {
+            document.querySelectorAll('.project-live-preview-frame').forEach(frame => {
+                const iframe = frame.querySelector('iframe');
+
+                const baseWidth = 1000;
+                const baseHeight = 620;
+
+                const availableWidth = frame.clientWidth;
+                const scale = availableWidth / baseWidth;
+
+                iframe.style.transform = `scale(${scale})`;
+
+                frame.style.height = `${baseHeight * scale}px`;
+            });
+        }
+
+        window.addEventListener('load', scaleLivePreview);
+        window.addEventListener('resize', scaleLivePreview);
+
+        if (window.ResizeObserver) {
+            const observer = new ResizeObserver(scaleLivePreview);
+            document.querySelectorAll('.project-live-preview-frame').forEach(frame => observer.observe(frame));
+        }
+
+        lucide.createIcons();
+
+    </script>
+</body>
+</html>

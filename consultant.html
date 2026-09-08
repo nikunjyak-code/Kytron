@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Consultant | Kytron Solutions</title>
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+:root{
+  --bg:#0B0F19; --surface:#111827; --surface-2:#0B0F19;
+  --border:#1F2937; --border-strong:#374151;
+  --text:#F3F4F6; --text-strong:#FFFFFF; --text-muted:#9CA3AF; --text-body:#D1D5DB;
+  --accent:#3B82F6; --accent-strong:#2563EB; --accent-light:#60A5FA;
+  --green:#22C55E; --amber:#F59E0B; --red:#EF4444; --purple:#A855F7;
+  --radius-sm:0.5rem; --radius-md:0.875rem; --radius-lg:1.25rem;
+  --header-h:64px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;}
+body{
+  background-color:var(--bg); color:var(--text);
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;
+  -webkit-font-smoothing:antialiased; min-height:100vh; overflow-x:hidden;
+  display:flex; flex-direction:column;
+}
+a{text-decoration:none;color:inherit;}
+button{font-family:inherit;}
+.hidden{display:none !important;}
+:focus-visible{outline:2px solid var(--accent-light);outline-offset:2px;border-radius:4px;}
+
+header{
+  height:var(--header-h); flex-shrink:0; display:flex; align-items:center; justify-content:space-between;
+  padding:0 1.25rem; border-bottom:1px solid var(--border); background:var(--surface-2);
+}
+.brand{display:flex; align-items:center; gap:0.6rem; font-weight:800; color:#fff;}
+.brand .dot{width:2rem; height:2rem; border-radius:0.6rem; background:linear-gradient(135deg,var(--accent),var(--purple)); display:flex; align-items:center; justify-content:center;}
+.brand span.sub{color:var(--text-muted); font-weight:600; font-size:0.8rem; margin-left:0.35rem;}
+.header-actions{display:flex; align-items:center; gap:0.6rem;}
+.btn-secondary{
+  background:transparent; color:#fff; border:1px solid var(--border-strong);
+  padding:0.5rem 0.9rem; border-radius:var(--radius-sm); font-size:0.8125rem; font-weight:600;
+  cursor:pointer; transition:all .2s ease; display:inline-flex; align-items:center; gap:0.4rem;
+}
+.btn-secondary:hover{border-color:var(--accent); background-color:rgba(59,130,246,0.05);}
+
+main{flex:1; display:flex; flex-direction:column; max-width:46rem; width:100%; margin:0 auto; min-height:0;}
+.status-bar{
+  display:flex; align-items:center; gap:0.4rem; font-size:0.75rem; color:var(--text-muted);
+  padding:0.6rem 1rem; border-bottom:1px solid var(--border);
+}
+.status-dot{width:0.4rem; height:0.4rem; border-radius:50%; background:var(--green);}
+.status-dot.fallback{background:var(--amber);}
+
+#log{flex:1; overflow-y:auto; padding:1.25rem 1rem; display:flex; flex-direction:column; gap:0.9rem;}
+.msg{max-width:80%; padding:0.7rem 0.95rem; border-radius:var(--radius-md); font-size:0.875rem; line-height:1.5; white-space:pre-wrap;}
+.msg.user{align-self:flex-end; background:var(--accent-strong); color:#fff; border-bottom-right-radius:0.25rem;}
+.msg.assistant{align-self:flex-start; background:var(--surface); border:1px solid var(--border); color:var(--text-body); border-bottom-left-radius:0.25rem;}
+.msg-source{font-size:0.65rem; color:var(--text-muted); margin-top:0.3rem; text-transform:uppercase; letter-spacing:0.04em;}
+.typing{align-self:flex-start; display:flex; gap:0.3rem; padding:0.7rem 0.95rem;}
+.typing span{width:0.4rem; height:0.4rem; border-radius:50%; background:var(--text-muted); animation:blink 1.2s infinite;}
+.typing span:nth-child(2){animation-delay:.2s;} .typing span:nth-child(3){animation-delay:.4s;}
+@keyframes blink{0%,80%,100%{opacity:0.25;} 40%{opacity:1;}}
+
+.option-block{align-self:flex-start; max-width:92%; background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--radius-md); padding:0.85rem; display:flex; flex-direction:column; gap:0.6rem;}
+.option-block .q-text{font-size:0.85rem; font-weight:600; color:#fff;}
+.option-list{display:flex; flex-direction:column; gap:0.45rem;}
+.option-item{
+  display:flex; align-items:center; gap:0.6rem; padding:0.6rem 0.75rem; border-radius:var(--radius-sm);
+  border:1px solid var(--border-strong); background:var(--surface-2); cursor:pointer; font-size:0.82rem;
+  color:var(--text-body); transition:all .15s ease; min-height:2.5rem;
+}
+.option-item:hover{border-color:var(--accent);}
+.option-item.selected{border-color:var(--accent); background:rgba(59,130,246,0.12); color:#fff;}
+.option-item .mark{width:1.1rem; height:1.1rem; border-radius:50%; border:1.5px solid var(--border-strong); flex-shrink:0; display:flex; align-items:center; justify-content:center;}
+.option-item.selected .mark{border-color:var(--accent); background:var(--accent-strong);}
+.option-list.multi .mark{border-radius:0.3rem;}
+.option-other-input{
+  margin-top:0.3rem; background:var(--surface-2); border:1px solid var(--border-strong); color:#fff;
+  padding:0.55rem 0.7rem; border-radius:var(--radius-sm); font-size:0.8rem; width:100%;
+}
+.option-actions{display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:0.2rem;}
+.option-actions button{
+  font-size:0.78rem; font-weight:600; padding:0.5rem 0.9rem; border-radius:var(--radius-sm); cursor:pointer;
+  border:1px solid var(--border-strong); background:transparent; color:var(--text-body); transition:all .15s ease;
+}
+.option-actions button.primary{background:var(--accent-strong); border-color:var(--accent-strong); color:#fff;}
+.option-actions button.primary:hover{background:#1D4ED8;}
+.option-actions button:hover{border-color:var(--accent); color:#fff;}
+.option-actions button:disabled{opacity:0.4; cursor:not-allowed;}
+.nav-bar{display:flex; gap:0.5rem; padding:0 0 0.4rem;}
+.nav-bar button{font-size:0.72rem; padding:0.35rem 0.7rem; border-radius:999px; border:1px solid var(--border-strong);
+  background:var(--surface-2); color:var(--text-muted); cursor:pointer;}
+.nav-bar button:hover{color:#fff; border-color:var(--accent);}
+
+.verify-box{margin:0 1rem 0.75rem; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md); padding:0.9rem;}
+.verify-box p{font-size:0.8rem; color:var(--text-muted); margin-bottom:0.6rem;}
+.verify-row{display:flex; gap:0.5rem; flex-wrap:wrap;}
+.verify-row input{
+  flex:1; min-width:9rem; background:var(--surface-2); border:1px solid var(--border-strong); color:#fff;
+  padding:0.55rem 0.75rem; border-radius:var(--radius-sm); font-size:0.8125rem;
+}
+.verify-row input:focus{outline:none; border-color:var(--accent);}
+
+.composer{border-top:1px solid var(--border); padding:0.85rem 1rem; display:flex; gap:0.6rem; align-items:flex-end; flex-shrink:0;}
+#input{
+  flex:1; resize:none; background:var(--surface); border:1px solid var(--border-strong); color:#fff;
+  padding:0.7rem 0.9rem; border-radius:var(--radius-md); font-size:0.875rem; max-height:8rem; font-family:inherit;
+}
+#input:focus{outline:none; border-color:var(--accent);}
+#send-btn{
+  background-color:var(--accent-strong); color:#fff; width:2.6rem; height:2.6rem; border-radius:var(--radius-md);
+  border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  transition:background-color .2s ease;
+}
+#send-btn:hover{background-color:#1D4ED8;}
+#send-btn:disabled{opacity:0.5; cursor:not-allowed;}
+.options-bar-btn{
+  background:var(--surface); color:var(--text-muted); width:2.6rem; height:2.6rem; border-radius:var(--radius-md);
+  border:1px solid var(--border-strong); cursor:pointer; display:flex; align-items:center; justify-content:center;
+  flex-shrink:0; transition:all .2s ease;
+}
+.options-bar-btn:hover{color:#fff; border-color:var(--accent);}
+.disclaimer{font-size:0.7rem; color:var(--text-muted); text-align:center; padding:0.4rem 1rem 0.8rem;}
+
+@media (max-width: 420px){
+  .brand .sub{display:none;}
+  .header-actions .btn-label{display:none;}
+  .header-actions .btn-secondary{padding:0.5rem; gap:0;}
+  header{padding:0 0.75rem;}
+  .composer{padding:0.65rem 0.6rem; gap:0.4rem;}
+  .options-bar-btn, #send-btn{width:2.35rem; height:2.35rem;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="dot"><i data-lucide="sparkles" style="width:1.1rem;height:1.1rem;color:#fff;"></i></div>
+    Kytron <span class="sub">AI Consultant</span>
+  </div>
+  <div class="header-actions">
+    <button class="btn-secondary" id="new-chat-btn"><i data-lucide="plus" style="width:0.9rem;height:0.9rem;"></i> <span class="btn-label">New Chat</span></button>
+    <a href="/client" class="btn-secondary"><i data-lucide="layout-dashboard" style="width:0.9rem;height:0.9rem;"></i> <span class="btn-label">Client Portal</span></a>
+  </div>
+</header>
+
+<main>
+  <div class="status-bar">
+    <span class="status-dot" id="status-dot"></span>
+    <span id="status-text">Connecting…</span>
+  </div>
+
+  <div id="log"></div>
+
+  <div id="verify-box" class="verify-box hidden">
+    <p>Enter your Order ID and the email your project is registered under:</p>
+    <div class="verify-row">
+      <input type="text" id="verify-order-id" placeholder="Order ID">
+      <input type="email" id="verify-email" placeholder="Email">
+      <button class="btn-secondary" id="verify-submit">Verify</button>
+    </div>
+  </div>
+
+  <div class="composer">
+    <button id="options-bar-btn" class="options-bar-btn" aria-label="Open guided options" title="Guided Options">
+      <i data-lucide="list" style="width:1rem;height:1rem;"></i>
+    </button>
+    <textarea id="input" rows="1" placeholder="Ask about a service, your project, or how to get started…"></textarea>
+    <button id="send-btn" aria-label="Send"><i data-lucide="send" style="width:1.1rem;height:1.1rem;"></i></button>
+  </div>
+  <p class="disclaimer">The AI Consultant can guide and explain — it never changes your project or account directly.</p>
+</main>
+
+<script>
+lucide.createIcons();
+
+const log = document.getElementById('log');
+const input = document.getElementById('input');
+const sendBtn = document.getElementById('send-btn');
+const statusDot = document.getElementById('status-dot');
+const statusText = document.getElementById('status-text');
+const verifyBox = document.getElementById('verify-box');
+
+let conversationUid = sessionStorage.getItem('kytron_ai_consultant_uid') || null;
+let sending = false;
+let optionsTree = null;
+let questionStack = [];
+let currentSelection = new Set();
+
+function addMessage(role, text, source){
+  const el = document.createElement('div');
+  el.className = 'msg ' + role;
+  el.textContent = text;
+  if (role === 'assistant' && source && source !== 'option'){
+    const tag = document.createElement('div');
+    tag.className = 'msg-source';
+    tag.textContent = source === 'ai' ? 'AI-assisted' : source === 'fallback' ? 'Assistant' : source;
+    el.appendChild(tag);
+  }
+  log.appendChild(el);
+  log.scrollTop = log.scrollHeight;
+}
+
+function showTyping(){
+  const el = document.createElement('div');
+  el.className = 'typing';
+  el.id = 'typing-indicator';
+  el.innerHTML = '<span></span><span></span><span></span>';
+  log.appendChild(el);
+  log.scrollTop = log.scrollHeight;
+}
+function hideTyping(){
+  const el = document.getElementById('typing-indicator');
+  if (el) el.remove();
+}
+
+function setStatus(ok, label){
+  statusDot.classList.toggle('fallback', !ok);
+  statusText.textContent = label;
+}
+
+// ==============================================================================
+// FREE TEXT — always available, always goes straight to the AI. No local
+// state here decides whether this is "allowed" right now — there is
+// nothing to check.
+// ==============================================================================
+async function sendMessage(text){
+  text = (text || input.value).trim();
+  if (!text || sending) return;
+  sending = true;
+  sendBtn.disabled = true;
+  input.value = '';
+  removeExistingOptionBlock();
+  addMessage('user', text);
+  showTyping();
+
+  try{
+    const res = await fetch('/api/consultant/chat', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({message: text, conversation_uid: conversationUid}),
+    });
+    const data = await res.json();
+    hideTyping();
+    if (!res.ok){
+      addMessage('assistant', data.error || 'Something went wrong. Please try again.', 'fallback');
+    } else {
+      conversationUid = data.conversation_uid;
+      sessionStorage.setItem('kytron_ai_consultant_uid', conversationUid);
+      addMessage('assistant', data.reply, data.source);
+      setStatus(data.source !== 'fallback', data.source === 'ai' ? 'AI-assisted' : 'Online');
+      if (data.verified_order_id) verifyBox.classList.add('hidden');
+    }
+  } catch(err){
+    hideTyping();
+    addMessage('assistant', "I'm having trouble connecting right now. Please try again in a moment, or use the Contact page.", 'fallback');
+    setStatus(false, 'Connection issue');
+  } finally {
+    sending = false;
+    sendBtn.disabled = false;
+    input.focus();
+  }
+}
+
+// ==============================================================================
+// OPTION SYSTEM — zero AI calls. Pure navigation never touches the
+// backend; only a content-producing selection does, via POST /option,
+// which returns structured facts (never fake natural language) and the
+// next question. Never sets anything that would change how a LATER
+// free-text message is interpreted — see ai_consultant.py.
+// ==============================================================================
+async function fetchOptionsTree(){
+  try{
+    const res = await fetch('/api/consultant/options-tree');
+    if (res.ok) optionsTree = await res.json();
+  } catch(err){ optionsTree = null; }
+}
+
+function isSpecialMarker(id){ return typeof id === 'string' && id.startsWith('__') && id.endsWith('__'); }
+function removeExistingOptionBlock(){
+  const existing = document.getElementById('active-option-block');
+  if (existing) existing.remove();
+}
+
+function renderMainMenu(){
+  if (!optionsTree) return;
+  questionStack = [];
+  renderQuestion(optionsTree.root);
+}
+
+function buildNavBar(){
+  const nav = document.createElement('div');
+  nav.className = 'nav-bar';
+  if (questionStack.length > 0){
+    const back = document.createElement('button');
+    back.textContent = '← Back';
+    back.onclick = () => { verifyBox.classList.add('hidden'); renderQuestion(questionStack.pop()); };
+    nav.appendChild(back);
+  }
+  const menu = document.createElement('button');
+  menu.textContent = 'Main Menu';
+  menu.onclick = () => { verifyBox.classList.add('hidden'); renderMainMenu(); };
+  nav.appendChild(menu);
+  return nav;
+}
+
+function renderQuestion(questionId){
+  if (!optionsTree || isSpecialMarker(questionId)) return;
+  const question = optionsTree.questions[questionId];
+  if (!question) return;
+
+  removeExistingOptionBlock();
+  currentSelection = new Set();
+
+  const block = document.createElement('div');
+  block.className = 'msg assistant option-block';
+  block.id = 'active-option-block';
+
+  if (questionStack.length > 0) block.appendChild(buildNavBar());
+
+  const qText = document.createElement('div');
+  qText.className = 'q-text';
+  qText.textContent = question.text;
+  block.appendChild(qText);
+
+  // Services display is a read-only catalogue dump, not a real selection.
+  if (question.kind === 'services_display'){
+    const list = document.createElement('div');
+    list.className = 'option-list';
+    (question._services_snapshot || []).forEach(s => {
+      const item = document.createElement('div');
+      item.className = 'option-item';
+      item.style.cursor = 'default';
+      item.textContent = s.description ? `${s.name} — ${s.description}` : s.name;
+      list.appendChild(item);
+    });
+    block.appendChild(list);
+    const actions = document.createElement('div');
+    actions.className = 'option-actions';
+    const cont = document.createElement('button');
+    cont.className = 'primary';
+    cont.textContent = 'Got it';
+    cont.onclick = () => submitOption(question, ['ack'], null);
+    actions.appendChild(cont);
+    block.appendChild(actions);
+    log.appendChild(block);
+    log.scrollTop = log.scrollHeight;
+    return;
+  }
+
+  const list = document.createElement('div');
+  list.className = 'option-list' + (question.type === 'multi_select' ? ' multi' : '');
+  let otherInput = null;
+
+  question.options.forEach(opt => {
+    const item = document.createElement('div');
+    item.className = 'option-item';
+    if (question.type === 'multi_select'){
+      item.setAttribute('role', 'checkbox');
+      item.setAttribute('aria-checked', 'false');
+    } else {
+      item.setAttribute('role', 'button');
+    }
+    item.setAttribute('tabindex', '0');
+    const mark = document.createElement('span');
+    mark.className = 'mark';
+    const label = document.createElement('span');
+    label.textContent = opt.label;
+    item.appendChild(mark);
+    item.appendChild(label);
+
+    const activate = () => {
+      if (question.type === 'single_select'){
+        handleSingleSelect(question, opt);
+        return;
+      }
+      if (currentSelection.has(opt.id)) currentSelection.delete(opt.id);
+      else currentSelection.add(opt.id);
+      const isSelected = currentSelection.has(opt.id);
+      item.classList.toggle('selected', isSelected);
+      item.setAttribute('aria-checked', String(isSelected));
+      if (opt.opens_free_text && otherInput){
+        otherInput.classList.toggle('hidden', !isSelected);
+        if (isSelected) otherInput.focus();
+      }
+    };
+    item.onclick = activate;
+    item.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); activate(); } };
+    list.appendChild(item);
+
+    if (opt.opens_free_text && question.type === 'multi_select'){
+      otherInput = document.createElement('input');
+      otherInput.type = 'text';
+      otherInput.className = 'option-other-input hidden';
+      otherInput.placeholder = 'Tell us more…';
+      list.appendChild(otherInput);
+    }
+  });
+  block.appendChild(list);
+
+  if (question.type === 'multi_select'){
+    const actions = document.createElement('div');
+    actions.className = 'option-actions';
+    const cont = document.createElement('button');
+    cont.className = 'primary';
+    cont.textContent = 'Continue';
+    cont.onclick = () => {
+      const freeText = otherInput && !otherInput.classList.contains('hidden') ? otherInput.value : '';
+      submitOption(question, Array.from(currentSelection), freeText);
+    };
+    actions.appendChild(cont);
+    block.appendChild(actions);
+  }
+
+  if (question.type === 'single_select'){
+    const otherOpt = question.options.find(o => o.opens_free_text);
+    if (otherOpt){
+      const singleOther = document.createElement('input');
+      singleOther.type = 'text';
+      singleOther.className = 'option-other-input hidden';
+      singleOther.placeholder = 'Tell us more…';
+      block.appendChild(singleOther);
+      const actions = document.createElement('div');
+      actions.className = 'option-actions hidden';
+      const cont = document.createElement('button');
+      cont.className = 'primary';
+      cont.textContent = 'Continue';
+      cont.onclick = () => {
+        if (otherOpt.next === '__free_text__'){ removeExistingOptionBlock(); input.focus(); return; }
+        submitOption(question, [otherOpt.id], singleOther.value);
+      };
+      actions.appendChild(cont);
+      block.appendChild(actions);
+      const items = list.querySelectorAll('.option-item');
+      items[question.options.indexOf(otherOpt)].addEventListener('click', () => {
+        singleOther.classList.remove('hidden');
+        actions.classList.remove('hidden');
+        singleOther.focus();
+      });
+    }
+  }
+
+  log.appendChild(block);
+  log.scrollTop = log.scrollHeight;
+}
+
+function handleSingleSelect(question, option){
+  if (option.opens_free_text) return;
+  if (!question.kind && option.next && !isSpecialMarker(option.next) && !question.fact_field){
+    questionStack.push(question.id);
+    renderQuestion(option.next);
+    return;
+  }
+  if (option.next === '__status_flow__'){
+    removeExistingOptionBlock();
+    questionStack.push(question.id);
+    verifyBox.classList.remove('hidden');
+    renderNavRow();
+    return;
+  }
+  if (option.next === '__escalate__'){ submitOption(question, [option.id], null, true); return; }
+  if (option.next === '__free_text__'){ removeExistingOptionBlock(); input.focus(); return; }
+  submitOption(question, [option.id], null);
+}
+
+function renderNavRow(){
+  removeExistingOptionBlock();
+  const block = document.createElement('div');
+  block.className = 'msg assistant option-block';
+  block.id = 'active-option-block';
+  block.appendChild(buildNavBar());
+  log.appendChild(block);
+  log.scrollTop = log.scrollHeight;
+}
+
+async function submitOption(question, selectedIds, freeText){
+  if (sending) return;
+  removeExistingOptionBlock();
+  showTyping();
+  sending = true;
+  try{
+    const res = await fetch('/api/consultant/option', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        conversation_uid: conversationUid, question_id: question.id,
+        selected_option_ids: selectedIds, free_text: freeText || '',
+      }),
+    });
+    const data = await res.json();
+    hideTyping();
+    if (!res.ok){
+      addMessage('assistant', data.error || 'Something went wrong. Please try again.', 'fallback');
+      renderQuestion(question.id);
+    } else {
+      conversationUid = data.conversation_uid;
+      sessionStorage.setItem('kytron_ai_consultant_uid', conversationUid);
+      if (data.summary) addMessage('user', data.summary);
+      addMessage('assistant', data.reply, data.source);
+
+      questionStack.push(question.id);
+      const nextId = data.next_question_id;
+      if (nextId === '__status_flow__'){
+        verifyBox.classList.remove('hidden');
+        renderNavRow();
+      } else if (nextId === '__done__' || !nextId){
+        renderNavRow();
+      } else if (!isSpecialMarker(nextId)){
+        renderQuestion(nextId);
+      }
+    }
+  } catch(err){
+    hideTyping();
+    addMessage('assistant', "I'm having trouble connecting right now. Please try again in a moment.", 'fallback');
+  } finally {
+    sending = false;
+  }
+}
+
+document.getElementById('options-bar-btn').onclick = () => {
+  verifyBox.classList.add('hidden');
+  if (!optionsTree){ fetchOptionsTree().then(() => { if (optionsTree) renderMainMenu(); }); return; }
+  renderMainMenu();
+};
+
+// ==============================================================================
+// VERIFY PROJECT
+// ==============================================================================
+document.getElementById('verify-submit').onclick = async () => {
+  if (sending) return;
+  const order_id = document.getElementById('verify-order-id').value.trim();
+  const email = document.getElementById('verify-email').value.trim();
+  if (!order_id || !email || !conversationUid) return;
+  sending = true;
+  const verifyBtn = document.getElementById('verify-submit');
+  verifyBtn.disabled = true;
+  showTyping();
+  try{
+    const res = await fetch('/api/consultant/verify-project', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({conversation_uid: conversationUid, order_id, email}),
+    });
+    const data = await res.json();
+    hideTyping();
+    if (data.verified){
+      addMessage('assistant', `Verified — Order ${data.project.order_id}, status: ${data.project.status}.`, 'option');
+      verifyBox.classList.add('hidden');
+      renderNavRow();
+    } else {
+      addMessage('assistant', data.error || "Couldn't verify that.", 'fallback');
+    }
+  } catch(err){
+    hideTyping();
+    addMessage('assistant', "Couldn't verify right now — please try again shortly.", 'fallback');
+  } finally {
+    sending = false;
+    verifyBtn.disabled = false;
+  }
+};
+
+// ==============================================================================
+// NEW CHAT / INIT
+// ==============================================================================
+async function startNewChat(){
+  const hasContent = log.children.length > 0;
+  if (hasContent && !confirm('Start a new chat? Your current conversation will no longer be shown.')) return;
+  const oldUid = conversationUid;
+  if (oldUid){
+    try{
+      await fetch('/api/consultant/end', {
+        method: 'POST', headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({conversation_uid: oldUid}),
+      });
+    } catch(err){ /* proceed regardless */ }
+  }
+  conversationUid = null;
+  sessionStorage.removeItem('kytron_ai_consultant_uid');
+  log.innerHTML = '';
+  verifyBox.classList.add('hidden');
+  document.getElementById('verify-order-id').value = '';
+  document.getElementById('verify-email').value = '';
+  questionStack = [];
+  currentSelection = new Set();
+  sending = false;
+  sendBtn.disabled = false;
+  init();
+}
+document.getElementById('new-chat-btn').onclick = startNewChat;
+
+sendBtn.onclick = () => sendMessage();
+input.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); sendMessage(); }
+});
+input.addEventListener('input', () => {
+  input.style.height = 'auto';
+  input.style.height = Math.min(input.scrollHeight, 128) + 'px';
+});
+
+async function init(){
+  await fetchOptionsTree();
+  if (conversationUid){
+    try{
+      const res = await fetch('/api/consultant/history?conversation_uid=' + encodeURIComponent(conversationUid));
+      if (res.ok){
+        const data = await res.json();
+        if (data.messages && data.messages.length){
+          data.messages.forEach(m => addMessage(m.role, m.content, m.source));
+          setStatus(true, 'Online');
+          renderMainMenu();
+          input.focus();
+          return;
+        }
+      }
+    } catch(err){ /* fall through to fresh greeting */ }
+  }
+  setStatus(true, 'Online');
+  await sendMessage('Hi');
+  renderMainMenu();
+  input.focus();
+}
+init();
+</script>
+</body>
+</html>

@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kytron Solutions | End-to-End Digital Engineering</title>
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* RESET & BASE STYLES */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #0B0F19;
+            color: #F3F4F6;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* DESKTOP TOP NAV BAR */
+        .desktop-header {
+            display: none;
+        }
+
+        @media (min-width: 768px) {
+            .desktop-header {
+                display: flex;
+                position: sticky;
+                top: 0;
+                z-index: 50;
+                background-color: rgba(11, 15, 25, 0.85);
+                backdrop-filter: blur(12px);
+                border-bottom: 1px solid #1F2937;
+                padding: 1rem 2rem;
+                align-items: center;
+                justify-content: space-between;
+            }
+        }
+
+        .brand-logo {
+            font-size: 1.5rem;
+            font-weight: 900;
+            letter-spacing: 0.05em;
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .brand-logo span {
+            color: #3B82F6;
+        }
+
+        .desktop-nav {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #D1D5DB;
+        }
+
+        .desktop-nav a:hover, desktop-nav a.active {
+            color: #60A5FA;
+            transition: color 0.2s ease;
+        }
+
+        .btn-primary {
+            background-color: #2563EB;
+            color: #FFFFFF;
+            padding: 0.5rem 1.25rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.2);
+            transition: background-color 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #1D4ED8;
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: #FFFFFF;
+            border: 1px solid #374151;
+            padding: 0.5rem 1.25rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .btn-secondary:hover {
+            border-color: #3B82F6;
+            background-color: rgba(59, 130, 246, 0.05);
+        }
+
+        /* MOBILE TOP BAR */
+        .mobile-topbar {
+            display: flex;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background-color: rgba(11, 15, 25, 0.9);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid #1F2937;
+            padding: 1rem 1.5rem;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        @media (min-width: 768px) {
+            .mobile-topbar {
+                display: none;
+            }
+        }
+
+        .mobile-start-btn {
+            background-color: #2563EB;
+            color: #FFFFFF;
+            font-size: 0.75rem;
+            padding: 0.375rem 0.75rem;
+            border-radius: 0.25rem;
+            font-weight: 600;
+        }
+
+        /* MAIN CONTENT AREA */
+        main {
+            flex-grow: 1;
+        }
+
+        /* CYBERNETIC NODE GRID HERO SECTION */
+        .hero-fullscreen {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: radial-gradient(circle at center, #111827 0%, #0B0F19 100%);
+        }
+
+        #hero-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .hero-center-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 0 1.25rem;
+            pointer-events: none;
+            animation: fadeInScale 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            max-width: 100%;
+        }
+
+        @keyframes fadeInScale {
+            0% { opacity: 0; transform: scale(0.95) translateY(10px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.3rem 0.75rem;
+            background: rgba(37, 99, 235, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 9999px;
+            color: #60A5FA;
+            font-size: 0.65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 1rem;
+            box-shadow: 0 0 20px rgba(37, 99, 235, 0.15);
+        }
+
+        @media (min-width: 768px) {
+            .hero-badge {
+                font-size: 0.75rem;
+                padding: 0.375rem 1rem;
+                margin-bottom: 1.5rem;
+            }
+        }
+
+        .hero-center-content h1 {
+            font-size: 2.25rem;
+            font-weight: 900;
+            letter-spacing: -0.03em;
+            color: #FFFFFF;
+            margin-bottom: 0.75rem;
+            text-shadow: 0 15px 35px rgba(0, 0, 0, 0.8);
+            line-height: 1.15;
+        }
+
+        @media (min-width: 768px) {
+            .hero-center-content h1 {
+                font-size: 6rem;
+                margin-bottom: 1rem;
+            }
+        }
+
+        .hero-center-content h1 span {
+            background: linear-gradient(135deg, #3B82F6 0%, #60A5FA 50%, #9333EA 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 30px rgba(59, 130, 246, 0.4));
+        }
+
+        .hero-center-content p {
+            font-size: 0.875rem;
+            color: #94A3B8;
+            max-width: 32rem;
+            margin: 0 auto 1.5rem auto;
+            text-shadow: 0 5px 15px rgba(0, 0, 0, 0.8);
+            line-height: 1.5;
+            padding: 0 0.5rem;
+            pointer-events: auto;
+        }
+
+        @media (min-width: 768px) {
+            .hero-center-content p {
+                font-size: 1.25rem;
+                line-height: 1.6;
+                padding: 0;
+                margin-bottom: 2rem;
+            }
+        }
+
+        /* HERO ACTION BUTTONS CONTAINER */
+        .hero-actions {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            pointer-events: auto;
+            flex-wrap: wrap;
+        }
+
+        /* CLEAN SCROLL INDICATOR */
+        .scroll-indicator-new {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(17, 24, 39, 0.8);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            padding: 0.4rem 1rem;
+            border-radius: 9999px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+            animation: pulseGlow 2.5s infinite;
+        }
+
+        @media (min-width: 768px) {
+            .scroll-indicator-new {
+                bottom: 2.5rem;
+                padding: 0.6rem 1.35rem;
+                gap: 0.75rem;
+            }
+        }
+
+        .scroll-text {
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #93C5FD;
+        }
+
+        .scroll-chevron-stack {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .scroll-chevron {
+            width: 0.875rem;
+            height: 0.875rem;
+            color: #3B82F6;
+            animation: chevronPulse 1.5s infinite;
+        }
+
+        @media (min-width: 768px) {
+            .scroll-chevron {
+                width: 1rem;
+                height: 1rem;
+            }
+        }
+
+        .scroll-chevron:nth-child(2) {
+            animation-delay: 0.2s;
+            opacity: 0.5;
+        }
+
+        @keyframes chevronPulse {
+            0% { transform: translateY(0); opacity: 0.2; }
+            50% { transform: translateY(4px); opacity: 1; }
+            100% { transform: translateY(0); opacity: 0.2; }
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { border-color: rgba(59, 130, 246, 0.3); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5); }
+            50% { border-color: rgba(59, 130, 246, 0.7); box-shadow: 0 10px 30px -3px rgba(59, 130, 246, 0.3); }
+        }
+
+        /* NARRATIVE SECTION */
+        .intro-narrative-section {
+            max-width: 65rem;
+            margin: 6rem auto 2rem auto;
+            padding: 0 1.5rem;
+            text-align: center;
+        }
+
+        .intro-narrative-section h2 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: #FFFFFF;
+            margin-bottom: 1.25rem;
+            letter-spacing: -0.02em;
+        }
+
+        @media (min-width: 768px) {
+            .intro-narrative-section h2 {
+                font-size: 3rem;
+            }
+        }
+
+        .intro-narrative-section p {
+            font-size: 1.05rem;
+            line-height: 1.75;
+            color: #9CA3AF;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .intro-narrative-section p {
+                font-size: 1.15rem;
+            }
+        }
+
+        /* METRICS BANNER */
+        .stats-section {
+            max-width: 75rem;
+            margin: 3rem auto 5rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            background-color: #111827;
+            border: 1px solid #1F2937;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6);
+        }
+
+        @media (min-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        .stat-card {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #FFFFFF;
+            margin-bottom: 0.25rem;
+        }
+
+        @media (min-width: 768px) {
+            .stat-number {
+                font-size: 2.5rem;
+            }
+        }
+
+        .stat-label {
+            font-size: 0.8125rem;
+            color: #9CA3AF;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* SERVICES WEIGHT SECTION (NEW) */
+        .services-deep-section {
+            max-width: 75rem;
+            margin: 0 auto 6rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .services-deep-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .services-deep-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .service-deep-card {
+            background: linear-gradient(135deg, #111827 0%, #1F2937 100%);
+            border: 1px solid #374151;
+            border-radius: 1rem;
+            padding: 3rem 2.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .service-deep-card:hover {
+            border-color: #3B82F6;
+            transform: translateY(-4px);
+        }
+
+        .service-deep-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #FFFFFF;
+            margin-bottom: 1rem;
+        }
+
+        .service-deep-card p {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #9CA3AF;
+            margin-bottom: 1.5rem;
+        }
+
+        .service-deep-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+        }
+
+        .service-deep-list li {
+            display: flex;
+            align-items: center;
+            gap: 0.625rem;
+            font-size: 0.875rem;
+            color: #D1D5DB;
+        }
+
+        .service-deep-list li i {
+            color: #3B82F6;
+            width: 1.125rem;
+            height: 1.125rem;
+        }
+
+        /* CORE PILLARS SECTION */
+        .features-section {
+            max-width: 75rem;
+            margin: 0 auto 6rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3.5rem;
+        }
+
+        .section-header h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #FFFFFF;
+            margin-bottom: 0.75rem;
+        }
+
+        .section-header p {
+            color: #9CA3AF;
+            font-size: 1rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .features-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .feature-card {
+            background-color: #111827;
+            border: 1px solid #1F2937;
+            border-radius: 1rem;
+            padding: 2.5rem 2rem;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+        }
+
+        .feature-card:hover {
+            border-color: #3B82F6;
+            transform: translateY(-6px);
+            box-shadow: 0 25px 35px -12px rgba(37, 99, 235, 0.2);
+        }
+
+        .feature-icon-box {
+            width: 3.5rem;
+            height: 3.5rem;
+            border-radius: 0.75rem;
+            background-color: rgba(37, 99, 235, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #60A5FA;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #FFFFFF;
+            margin-bottom: 0.75rem;
+        }
+
+        .feature-card p {
+            font-size: 0.875rem;
+            line-height: 1.6;
+            color: #9CA3AF;
+        }
+
+        /* CLIENT TRUST WEIGHT SECTION (NEW) */
+        .trust-section {
+            max-width: 75rem;
+            margin: 0 auto 6rem auto;
+            padding: 0 1.5rem;
+            text-align: center;
+        }
+
+        .trust-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-top: 2.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .trust-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        .trust-badge-card {
+            background-color: #111827;
+            border: 1px solid #1F2937;
+            border-radius: 0.75rem;
+            padding: 1.75rem 1rem;
+            color: #9CA3AF;
+            font-size: 0.875rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .cta-banner {
+            max-width: 75rem;
+            margin: 0 auto 7rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .cta-banner-box {
+            background: linear-gradient(135deg, #111827 0%, #1E293B 100%);
+            border: 1px solid #374151;
+            border-radius: 1.25rem;
+            padding: 3rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        @media (min-width: 768px) {
+            .cta-banner-box {
+                padding: 5rem 3rem;
+            }
+        }
+
+        .cta-banner-box h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #FFFFFF;
+            margin-bottom: 1rem;
+        }
+
+        @media (min-width: 768px) {
+            .cta-banner-box h2 {
+                font-size: 3rem;
+            }
+        }
+
+        .cta-banner-box p {
+            color: #9CA3AF;
+            font-size: 1rem;
+            max-width: 36rem;
+            margin: 0 auto 2rem auto;
+        }
+
+        /* FLOATING AI CHATBOT ICON */
+        .ai-chatbot-float {
+            position: fixed;
+            bottom: 5rem;
+            right: 1.5rem;
+            z-index: 100;
+            background-color: #2563EB;
+            color: #FFFFFF;
+            width: 3.5rem;
+            height: 3.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 25px -3px rgba(37, 99, 235, 0.5);
+            transition: transform 0.2s ease, background-color 0.2s ease;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .ai-chatbot-float:hover {
+            transform: scale(1.1);
+            background-color: #1D4ED8;
+        }
+
+        @media (min-width: 768px) {
+            .ai-chatbot-float {
+                bottom: 2rem;
+                right: 2rem;
+            }
+        }
+
+        /* FOOTER */
+        footer {
+            background-color: #111827;
+            border-top: 1px solid #1F2937;
+            color: #9CA3AF;
+            padding: 3rem 1.5rem;
+            margin-bottom: 4rem;
+        }
+
+        @media (min-width: 768px) {
+            footer {
+                padding: 3rem 4rem;
+                margin-bottom: 0;
+            }
+        }
+
+        .footer-container {
+            max-width: 80rem;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .footer-container {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        .footer-col h3, .footer-col h4 {
+            color: #FFFFFF;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .footer-col h4 {
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .footer-col p {
+            font-size: 0.875rem;
+            line-height: 1.5;
+            color: #9CA3AF;
+            margin-bottom: 1rem;
+        }
+
+        .operational-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.125rem 0.5rem;
+            border-radius: 9999px;
+            background-color: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            font-size: 0.75rem;
+            color: #34D399;
+            margin-left: 0.5rem;
+        }
+
+        .pulse-dot {
+            width: 0.375rem;
+            height: 0.375rem;
+            border-radius: 9999px;
+            background-color: #10B981;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .footer-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .footer-links a:hover {
+            color: #FFFFFF;
+            transition: color 0.2s ease;
+        }
+
+        .support-info {
+            font-size: 0.75rem;
+            color: #9CA3AF;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .support-info strong {
+            color: #D1D5DB;
+        }
+
+        .social-icon {
+            color: #9CA3AF;
+            display: inline-flex;
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+
+        .social-icon:hover {
+            color: #60A5FA;
+        }
+
+        .footer-bottom {
+            max-width: 80rem;
+            margin: 0 auto;
+            padding-top: 2rem;
+            border-top: 1px solid #1F2937;
+            font-size: 0.75rem;
+            text-align: center;
+            color: #6B7280;
+        }
+
+        /* MOBILE BOTTOM NAV BAR */
+        .mobile-bottom-nav {
+            display: flex;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 50;
+            background-color: rgba(17, 24, 39, 0.95);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid #1F2937;
+            padding: 0.75rem 1rem;
+            justify-content: space-around;
+            align-items: center;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #9CA3AF;
+        }
+
+        @media (min-width: 768px) {
+            .mobile-bottom-nav {
+                display: none;
+            }
+        }
+
+        .mobile-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .mobile-nav-item:hover {
+            color: #60A5FA;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- DESKTOP TOP NAV BAR -->
+    <header class="desktop-header">
+        <a href="/" class="brand-logo">
+            KYTRON<span>.</span>
+        </a>
+        <nav class="desktop-nav">
+            <a href="/" class="active">Home</a>
+            <a href="/services">Services</a>
+            <a href="/portfolio">Portfolio</a>
+            <a href="/client">Client Portal</a>
+            <a href="/consultant">Consultant</a>
+        </nav>
+        <div>
+            <a href="/client" class="btn-primary">Launch Project</a>
+        </div>
+    </header>
+
+    <!-- MOBILE TOP BAR (Brand Only) -->
+    <header class="mobile-topbar">
+        <a href="/" class="brand-logo" style="font-size: 1.25rem;">
+            KYTRON<span>.</span>
+        </a>
+        <a href="/client" class="mobile-start-btn">Launch</a>
+    </header>
+
+    <!-- MAIN CONTENT AREA -->
+    <main>
+        <!-- CYBERNETIC NODE GRID HERO SECTION -->
+        <section class="hero-fullscreen">
+            <canvas id="hero-canvas"></canvas>
+            <div class="hero-center-content">
+                <div class="hero-badge">
+                    <i data-lucide="sparkles" style="width: 0.75rem; height: 0.75rem;"></i>
+                    <span>Next-Gen Engineering</span>
+                </div>
+                <h1>KYTRON <span>SYSTEMS</span></h1>
+                <p>Advanced digital engineering engineered for high-performance scale and unmatched visual immersion.</p>
+                <!-- HERO ACTION BUTTONS -->
+                <div class="hero-actions">
+                    <a href="/client" class="btn-primary">Launch Project</a>
+                    <a href="/about" class="btn-secondary">About Us</a>
+                </div>
+            </div>
+            <!-- CLEAN SCROLL INDICATOR -->
+            <div class="scroll-indicator-new">
+                <span class="scroll-text">Explore</span>
+                <div class="scroll-chevron-stack">
+                    <i data-lucide="chevron-down" class="scroll-chevron"></i>
+                    <i data-lucide="chevron-down" class="scroll-chevron"></i>
+                </div>
+            </div>
+        </section>
+
+        <!-- EXPANDED INTRODUCTION NARRATIVE SECTION -->
+        <section class="intro-narrative-section">
+            <h2>Pioneering The Future of Software Engineering</h2>
+            <p>At Kytron Solutions, we break past the limits of conventional web and application development. By combining elite cloud architecture, automated backend intelligence, and gorgeous responsive design, we build robust digital ecosystems designed to scale infinitely with your business ambitions.</p>
+        </section>
+
+        <!-- METRICS BANNER -->
+        <section class="stats-section">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">Custom Engineered</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">&lt;0.5s</div>
+                    <div class="stat-label">Response Velocity</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">Automated Support</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">Secure</div>
+                    <div class="stat-label">Isolated Client Portals</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- HEAVY WEIGHT CONTENT SECTION: CORE ENGINEERING CAPABILITIES -->
+        <section class="services-deep-section">
+            <div class="section-header">
+                <h2>Comprehensive Technical Execution</h2>
+                <p>Delivering end-to-end digital assets engineered for maximum security, speed, and market dominance.</p>
+            </div>
+            <div class="services-deep-grid">
+                <div class="service-deep-card">
+                    <h3>Enterprise Web Architecture</h3>
+                    <p>We craft high-performance web platforms optimized for fast execution, robust SEO, and frictionless multi-device user engagement.</p>
+                    <ul class="service-deep-list">
+                        <li><i data-lucide="check-circle-2"></i> Custom responsive layout systems with fluid design components</li>
+                        <li><i data-lucide="check-circle-2"></i> Optimized client-side rendering & rapid asset loading pipelines</li>
+                        <li><i data-lucide="check-circle-2"></i> Cross-platform mobile and desktop cross-compatibility</li>
+                    </ul>
+                    <a href="/services" class="btn-secondary" style="display: inline-block;">Explore Web Services</a>
+                </div>
+                <div class="service-deep-card">
+                    <h3>Automated Backends & Cloud Scaling</h3>
+                    <p>Power your digital infrastructure with resilient Python-driven server logic, real-time data flow, and isolated client portals.</p>
+                    <ul class="service-deep-list">
+                        <li><i data-lucide="check-circle-2"></i> Secure role-based client authentication and encrypted dashboards</li>
+                        <li><i data-lucide="check-circle-2"></i> High-velocity database integration and automated API triggers</li>
+                        <li><i data-lucide="check-circle-2"></i> Continuous operational tracking and server health diagnostics</li>
+                    </ul>
+                    <a href="/services" class="btn-secondary" style="display: inline-block;">Explore Cloud Architecture</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- CORE PILLARS SECTION -->
+        <section class="features-section">
+            <div class="section-header">
+                <h2>Engineered For Maximum Impact</h2>
+                <p>Built with absolute precision using state-of-the-art frameworks and cloud infrastructure.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon-box">
+                        <i data-lucide="layers" style="width: 1.75rem; height: 1.75rem;"></i>
+                    </div>
+                    <h3>Modular Architecture</h3>
+                    <p>Every product is constructed from the ground up using scalable Python backends and hyper-optimized layouts for seamless expansion.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon-box">
+                        <i data-lucide="zap" style="width: 1.75rem; height: 1.75rem;"></i>
+                    </div>
+                    <h3>Lightning Performance</h3>
+                    <p>Zero unnecessary overhead. Raw execution speed ensures high user retention, instant page loads, and top-tier SEO performance.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon-box">
+                        <i data-lucide="shield-check" style="width: 1.75rem; height: 1.75rem;"></i>
+                    </div>
+                    <h3>Enterprise Security</h3>
+                    <p>Built-in data sanitization, encrypted client dashboards, and secure role-based access control protecting every transaction and file.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CLIENT TRUST WEIGHT SECTION -->
+        <section class="trust-section">
+            <div class="section-header" style="margin-bottom: 1.5rem;">
+                <h2>Trusted By Innovative Teams Worldwide</h2>
+                <p>Powering next-generation digital operations across software, tech, and enterprise infrastructure.</p>
+            </div>
+            <div class="trust-grid">
+                <div class="trust-badge-card">Fintech Solutions</div>
+                <div class="trust-badge-card">AI Infrastructure</div>
+                <div class="trust-badge-card">SaaS Platforms</div>
+                <div class="trust-badge-card">Enterprise Security</div>
+            </div>
+        </section>
+
+        <!-- BOTTOM CONVERSION BANNER -->
+        <section class="cta-banner">
+            <div class="cta-banner-box">
+                <h2>Ready to Deploy Your Next Big Idea?</h2>
+                <p>Step into the client portal to initialize your project specs, select your tech parameters, and initiate live tracking.</p>
+                <a href="/client" class="btn-primary" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.875rem 2rem; font-size: 1rem;">
+                    <span>Initialize Client Portal</span>
+                    <i data-lucide="terminal" style="width: 1.25rem; height: 1.25rem;"></i>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <!-- FLOATING AI CHATBOT ICON — links to the AI Consultant route;
+         this page has no embedded chat widget/drawer of its own. -->
+    <a href="/consultant" class="ai-chatbot-float" aria-label="AI Assistant">
+        <i data-lucide="bot" style="width: 1.75rem; height: 1.75rem;"></i>
+    </a>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-col">
+                <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                    <h3 style="margin-bottom: 0;">KYTRON<span>.</span></h3>
+                    <div class="operational-badge">
+                        <span class="pulse-dot"></span>
+                        <span>Operational</span>
+                    </div>
+                </div>
+                <p>
+                    High-performance web and app manufacturing, design, and deployment engineered for elite scale.
+                </p>
+                <div class="support-info">
+                    <p><strong>Support:</strong> support@kytronsolutions.com</p>
+                    <p><strong>Hours:</strong> Mon-Fri, 9:00 AM - 6:00 PM</p>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul class="footer-links">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/services">Services</a></li>
+                    <li><a href="/portfolio">Portfolio</a></li>
+                    <li><a href="/client">Client Portal</a></li>
+                    <li><a href="/consultant">AI Consultant</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Company & Legal</h4>
+                <ul class="footer-links">
+                    <li><a href="/about">About Us</a></li>
+                    <li><a href="/terms">Terms & Conditions</a></li>
+                    <li><a href="/privacy">Privacy Policy</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Connect & Action</h4>
+                <p>Ready to engineer your digital asset? Let's connect.</p>
+                <div style="margin-bottom: 1rem;">
+                    <!-- Instagram Handle Link using Lucide Icon -->
+                    <a href="https://instagram.com/kytron_solutions" target="_blank" class="social-icon" aria-label="Instagram">
+                        <i data-lucide="instagram"></i>
+                    </a>
+                </div>
+                <a href="/contact" class="btn-primary" style="display: inline-block; background-color: #FFFFFF; color: #111827;">Contact Us</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 Kytron Solutions. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- MOBILE BOTTOM NAV BAR -->
+    <nav class="mobile-bottom-nav">
+        <a href="/" class="mobile-nav-item">
+            <i data-lucide="home"></i>
+            <span>Home</span>
+        </a>
+        <a href="/services" class="mobile-nav-item">
+            <i data-lucide="layers"></i>
+            <span>Services</span>
+        </a>
+        <a href="/portfolio" class="mobile-nav-item">
+            <i data-lucide="briefcase"></i>
+            <span>Portfolio</span>
+        </a>
+        <a href="/client" class="mobile-nav-item">
+            <i data-lucide="users"></i>
+            <span>Client</span>
+        </a>
+        <a href="/consultant" class="mobile-nav-item">
+            <i data-lucide="bot"></i>
+            <span>Consultant</span>
+        </a>
+    </nav>
+
+    <!-- Initialize Lucide Icons & Responsive Cybernetic Node Grid Script -->
+    <script>
+        lucide.createIcons();
+
+        // Cybernetic Node Grid Animation with perfectly balanced density scaling
+        const canvas = document.getElementById('hero-canvas');
+        const ctx = canvas.getContext('2d');
+
+        let width, height;
+        let particles = [];
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            initParticles();
+        }
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 0.55;
+                this.vy = (Math.random() - 0.5) * 0.55;
+                this.radius = Math.random() * 1.8 + 1;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                if (this.x < 0 || this.x > width) this.vx = -this.vx;
+                if (this.y < 0 || this.y > height) this.vy = -this.vy;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(96, 165, 250, 0.85)';
+                ctx.shadowBlur = 8;
+                ctx.shadowColor = '#3B82F6';
+                ctx.fill();
+                ctx.shadowBlur = 0;
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            const isMobile = window.innerWidth < 768;
+            
+            const densityFactor = isMobile ? 14000 : 17500; 
+            const maxParticles = isMobile ? 45 : 65;
+            const particleCount = Math.min(Math.max(Math.floor((window.innerWidth * window.innerHeight) / densityFactor), isMobile ? 28 : 40), maxParticles);
+            
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        window.addEventListener('resize', resize);
+        resize();
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+
+            const isMobile = window.innerWidth < 768;
+            const connectionDistance = isMobile ? 110 : 130;
+
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist < connectionDistance) {
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.strokeStyle = `rgba(59, 130, 246, ${(1 - dist / connectionDistance) * 0.45})`;
+                        ctx.lineWidth = 0.7;
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
+</body>
+</html>

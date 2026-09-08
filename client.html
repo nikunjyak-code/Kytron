@@ -1,0 +1,2197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Client Portal | Kytron Solutions</title>
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+/* ==========================================================================
+   KYTRON CLIENT PORTAL — CLIENT.HTML
+   Design language matches index.html / about.html / services.html / portfolio.html:
+   dark navy surface, blue accent, system-ui, Lucide icons, rounded cards.
+   This file introduces CSS custom properties (the marketing pages hard-code
+   values); values below are copied 1:1 from the existing pages so the look
+   is identical — the variables are purely an internal maintainability change.
+   ========================================================================== */
+:root{
+  --bg:#0B0F19; --surface:#111827; --surface-2:#0B0F19;
+  --border:#1F2937; --border-strong:#374151;
+  --text:#F3F4F6; --text-strong:#FFFFFF; --text-muted:#9CA3AF; --text-body:#D1D5DB;
+  --accent:#3B82F6; --accent-strong:#2563EB; --accent-light:#60A5FA;
+  --green:#22C55E; --amber:#F59E0B; --red:#EF4444; --purple:#A855F7;
+  --radius-sm:0.5rem; --radius-md:0.875rem; --radius-lg:1.25rem;
+  --header-h:64px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;}
+body{
+  background-color:var(--bg); color:var(--text);
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;
+  -webkit-font-smoothing:antialiased; min-height:100vh; overflow-x:hidden;
+}
+a{text-decoration:none;color:inherit;}
+button{font-family:inherit;}
+::selection{background:rgba(59,130,246,0.35);}
+.hidden{display:none !important;}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;}
+:focus-visible{outline:2px solid var(--accent-light);outline-offset:2px;border-radius:4px;}
+
+/* -------------------------------------------------------------------- */
+/* SHARED: BUTTONS / INPUTS / BADGES                                    */
+/* -------------------------------------------------------------------- */
+.btn-primary{
+  background-color:var(--accent-strong); color:#fff; padding:0.625rem 1.25rem;
+  border-radius:var(--radius-sm); font-size:0.875rem; font-weight:600; border:none;
+  box-shadow:0 10px 15px -3px rgba(59,130,246,0.2); cursor:pointer; transition:background-color .2s ease;
+  display:inline-flex; align-items:center; justify-content:center; gap:0.5rem;
+}
+.btn-primary:hover{background-color:#1D4ED8;}
+.btn-primary:disabled{opacity:0.55; cursor:not-allowed; box-shadow:none;}
+.btn-secondary{
+  background-color:transparent; color:#fff; border:1px solid var(--border-strong);
+  padding:0.625rem 1.25rem; border-radius:var(--radius-sm); font-size:0.875rem; font-weight:600;
+  cursor:pointer; transition:all .2s ease; display:inline-flex; align-items:center; justify-content:center; gap:0.5rem;
+}
+.btn-secondary:hover{border-color:var(--accent); background-color:rgba(59,130,246,0.05);}
+.btn-ghost{
+  background:transparent; border:none; color:var(--text-muted); font-size:0.8125rem; font-weight:600;
+  cursor:pointer; padding:0.5rem 0.75rem; border-radius:var(--radius-sm); display:inline-flex; align-items:center; gap:0.4rem;
+}
+.btn-ghost:hover{color:var(--text-strong); background:rgba(255,255,255,0.04);}
+.btn-danger{background:rgba(239,68,68,0.1); color:#FCA5A5; border:1px solid rgba(239,68,68,0.35);
+  padding:0.625rem 1.25rem; border-radius:var(--radius-sm); font-size:0.875rem; font-weight:600; cursor:pointer;}
+.btn-danger:hover{background:rgba(239,68,68,0.18);}
+.btn-sm{padding:0.4rem 0.85rem; font-size:0.8rem;}
+.icon-btn{
+  width:2.25rem; height:2.25rem; border-radius:50%; display:inline-flex; align-items:center; justify-content:center;
+  background:transparent; border:1px solid var(--border-strong); color:var(--text-muted); cursor:pointer; position:relative;
+  transition:all .2s ease; flex-shrink:0;
+}
+.icon-btn:hover{color:#fff; border-color:var(--accent);}
+.icon-btn i{width:1.1rem;height:1.1rem;}
+
+.field{display:flex; flex-direction:column; gap:0.4rem; margin-bottom:1.1rem;}
+.field label{font-size:0.8125rem; font-weight:600; color:var(--text-body);}
+.field input, .field select, .field textarea{
+  background-color:var(--bg); border:1px solid var(--border-strong); color:#fff;
+  padding:0.7rem 0.9rem; border-radius:var(--radius-sm); font-size:0.9rem; font-family:inherit;
+  transition:border-color .2s ease;
+}
+.field input:focus, .field select:focus, .field textarea:focus{border-color:var(--accent); outline:none;}
+.field .error-text{font-size:0.75rem; color:#FCA5A5; display:none;}
+.field.has-error input{border-color:var(--red);}
+.field.has-error .error-text{display:block;}
+.field .hint{font-size:0.75rem; color:var(--text-muted);}
+.password-row{position:relative;}
+.password-row .toggle-pw{position:absolute; right:0.75rem; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--text-muted); cursor:pointer;}
+.password-row input{padding-right:2.5rem;}
+
+.badge{
+  display:inline-flex; align-items:center; gap:0.35rem; font-size:0.7rem; font-weight:700;
+  padding:0.25rem 0.65rem; border-radius:9999px; text-transform:uppercase; letter-spacing:0.03em; white-space:nowrap;
+}
+.badge-dot{width:0.4rem; height:0.4rem; border-radius:50%; flex-shrink:0;}
+.badge-blue{background:rgba(59,130,246,0.12); color:#93C5FD;}
+.badge-blue .badge-dot{background:#3B82F6;}
+.badge-green{background:rgba(34,197,94,0.12); color:#86EFAC;}
+.badge-green .badge-dot{background:#22C55E;}
+.badge-amber{background:rgba(245,158,11,0.12); color:#FCD34D;}
+.badge-amber .badge-dot{background:#F59E0B;}
+.badge-red{background:rgba(239,68,68,0.12); color:#FCA5A5;}
+.badge-red .badge-dot{background:#EF4444;}
+.badge-gray{background:rgba(156,163,175,0.12); color:#D1D5DB;}
+.badge-gray .badge-dot{background:#9CA3AF;}
+.badge-purple{background:rgba(168,85,247,0.12); color:#D8B4FE;}
+.badge-purple .badge-dot{background:#A855F7;}
+
+.card{background-color:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md); padding:1.25rem;}
+.card-hover{transition:border-color .2s ease;}
+.card-hover:hover{border-color:var(--accent);}
+
+/* -------------------------------------------------------------------- */
+/* TOASTS                                                                */
+/* -------------------------------------------------------------------- */
+#toast-stack{position:fixed; top:1rem; right:1rem; left:1rem; z-index:400; display:flex; flex-direction:column; gap:0.6rem; align-items:flex-end; pointer-events:none;}
+@media(min-width:640px){#toast-stack{left:auto; width:22rem;}}
+.toast{
+  pointer-events:auto; width:100%; background:#111827; border:1px solid var(--border-strong); border-left:3px solid var(--accent);
+  border-radius:var(--radius-sm); padding:0.85rem 1rem; display:flex; gap:0.65rem; align-items:flex-start;
+  box-shadow:0 20px 40px rgba(0,0,0,0.45); animation:toast-in .25s cubic-bezier(.16,1,.3,1);
+}
+.toast.success{border-left-color:var(--green);}
+.toast.error{border-left-color:var(--red);}
+.toast i{width:1.1rem;height:1.1rem; flex-shrink:0; margin-top:0.1rem;}
+.toast.success i{color:var(--green);} .toast.error i{color:var(--red);} .toast.info i{color:var(--accent-light);}
+.toast p{font-size:0.85rem; color:var(--text-body); line-height:1.4;}
+.toast button{background:none;border:none;color:var(--text-muted);cursor:pointer;margin-left:auto;}
+@keyframes toast-in{from{opacity:0; transform:translateY(-8px);} to{opacity:1; transform:translateY(0);}}
+
+/* -------------------------------------------------------------------- */
+/* LOADING / EMPTY / ERROR STATES                                       */
+/* -------------------------------------------------------------------- */
+.state-block{display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:3rem 1.5rem; gap:0.85rem;}
+.state-block i{width:2.25rem; height:2.25rem; color:var(--text-muted);}
+.state-block h4{font-size:0.95rem; color:#fff; font-weight:700;}
+.state-block p{font-size:0.825rem; color:var(--text-muted); max-width:24rem; line-height:1.5;}
+.spinner{width:1.5rem; height:1.5rem; border-radius:50%; border:2.5px solid var(--border-strong); border-top-color:var(--accent-light); animation:spin .7s linear infinite;}
+.spinner-lg{width:2.25rem; height:2.25rem; border-width:3px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.skeleton{background:linear-gradient(90deg, var(--border) 25%, #26314699 37%, var(--border) 63%); background-size:400% 100%; animation:sk 1.4s ease infinite; border-radius:0.5rem;}
+@keyframes sk{0%{background-position:100% 50%;} 100%{background-position:0 50%;}}
+.skel-card{height:7.5rem;}
+.skel-line{height:0.75rem; margin-bottom:0.5rem;}
+
+/* -------------------------------------------------------------------- */
+/* APP SHELL — TOP BAR                                                  */
+/* -------------------------------------------------------------------- */
+.app-topbar{
+  position:sticky; top:0; z-index:60; height:var(--header-h);
+  background-color:rgba(11,15,25,0.9); backdrop-filter:blur(12px); border-bottom:1px solid var(--border);
+  display:flex; align-items:center; justify-content:space-between; padding:0 1rem;
+}
+@media(min-width:768px){.app-topbar{padding:0 1.5rem;}}
+.app-topbar-left{display:flex; align-items:center; gap:0.75rem;}
+.hamburger-btn{display:inline-flex;} @media(min-width:1024px){.hamburger-btn{display:none;}}
+.brand-logo{font-size:1.3rem; font-weight:900; letter-spacing:0.05em; color:#fff; display:flex; align-items:center; gap:0.2rem;}
+.brand-logo span{color:var(--accent);}
+.page-title{display:none; font-size:0.95rem; font-weight:700; color:var(--text-body); border-left:1px solid var(--border-strong); padding-left:0.85rem; margin-left:0.1rem;}
+@media(min-width:640px){.page-title{display:block;}}
+.app-topbar-right{display:flex; align-items:center; gap:0.6rem;}
+.notif-dot{position:absolute; top:0.3rem; right:0.35rem; width:0.5rem; height:0.5rem; border-radius:50%; background:var(--red); border:1.5px solid var(--bg);}
+.avatar-btn{display:flex; align-items:center; gap:0.5rem; background:transparent; border:1px solid var(--border-strong); border-radius:9999px; padding:0.3rem 0.7rem 0.3rem 0.3rem; cursor:pointer; color:#fff;}
+.avatar-circle{width:1.75rem; height:1.75rem; border-radius:50%; background:linear-gradient(135deg,#3B82F6,#8B5CF6); display:flex; align-items:center; justify-content:center; font-size:0.7rem; font-weight:800; color:#fff; flex-shrink:0;}
+.avatar-btn span{font-size:0.8125rem; font-weight:600; display:none;}
+@media(min-width:640px){.avatar-btn span{display:inline;}}
+
+/* dropdown menus */
+.menu-pop{position:absolute; top:calc(100% + 0.6rem); right:0; min-width:14rem; background:var(--surface); border:1px solid var(--border-strong); border-radius:var(--radius-md); box-shadow:0 20px 50px rgba(0,0,0,0.5); overflow:hidden; z-index:70; opacity:0; transform:translateY(-6px); pointer-events:none; transition:all .18s ease;}
+.menu-pop.open{opacity:1; transform:translateY(0); pointer-events:auto;}
+.menu-pop .menu-head{padding:0.85rem 1rem; border-bottom:1px solid var(--border);}
+.menu-pop .menu-head p:first-child{font-size:0.85rem; font-weight:700; color:#fff;}
+.menu-pop .menu-head p:last-child{font-size:0.75rem; color:var(--text-muted); margin-top:0.15rem;}
+.menu-item{display:flex; align-items:center; gap:0.65rem; padding:0.7rem 1rem; font-size:0.825rem; color:var(--text-body); cursor:pointer; border:none; background:none; width:100%; text-align:left;}
+.menu-item:hover{background:rgba(255,255,255,0.04); color:#fff;}
+.menu-item i{width:1rem; height:1rem; color:var(--text-muted);}
+.menu-item.danger{color:#FCA5A5;} .menu-item.danger i{color:#FCA5A5;}
+.menu-divider{height:1px; background:var(--border);}
+
+/* notifications panel */
+.notif-panel{position:absolute; top:calc(100% + 0.6rem); right:0; width:22rem; max-width:88vw; max-height:28rem; overflow-y:auto; background:var(--surface); border:1px solid var(--border-strong); border-radius:var(--radius-md); box-shadow:0 20px 50px rgba(0,0,0,0.5); z-index:70; opacity:0; transform:translateY(-6px); pointer-events:none; transition:all .18s ease;}
+.notif-panel.open{opacity:1; transform:translateY(0); pointer-events:auto;}
+.notif-panel-head{position:sticky; top:0; background:var(--surface); display:flex; align-items:center; justify-content:space-between; padding:0.85rem 1rem; border-bottom:1px solid var(--border);}
+.notif-panel-head h4{font-size:0.875rem; font-weight:700;}
+.notif-row{display:flex; gap:0.65rem; padding:0.85rem 1rem; border-bottom:1px solid var(--border); cursor:pointer;}
+.notif-row:hover{background:rgba(255,255,255,0.03);}
+.notif-row:last-child{border-bottom:none;}
+.notif-row.unread{background:rgba(59,130,246,0.05);}
+.notif-icon{width:2rem; height:2rem; border-radius:50%; background:var(--surface-2); border:1px solid var(--border-strong); display:flex; align-items:center; justify-content:center; flex-shrink:0;}
+.notif-icon i{width:1rem; height:1rem; color:var(--accent-light);}
+.notif-row p.title{font-size:0.8125rem; color:#fff; font-weight:600; line-height:1.4;}
+.notif-row p.time{font-size:0.7rem; color:var(--text-muted); margin-top:0.2rem;}
+
+/* -------------------------------------------------------------------- */
+/* APP SHELL — SIDEBAR + LAYOUT                                         */
+/* -------------------------------------------------------------------- */
+.app-body{display:flex; min-height:calc(100vh - var(--header-h));}
+.sidebar{
+  width:15.5rem; flex-shrink:0; border-right:1px solid var(--border); padding:1.25rem 0.85rem;
+  position:sticky; top:var(--header-h); height:calc(100vh - var(--header-h)); overflow-y:auto;
+  display:none; flex-direction:column; gap:0.25rem;
+}
+@media(min-width:1024px){.sidebar{display:flex;}}
+.nav-item{
+  display:flex; align-items:center; gap:0.75rem; padding:0.65rem 0.85rem; border-radius:var(--radius-sm);
+  color:var(--text-muted); font-size:0.875rem; font-weight:600; cursor:pointer; border:none; background:none; width:100%; text-align:left; position:relative;
+}
+.nav-item i{width:1.1rem; height:1.1rem; flex-shrink:0;}
+.nav-item:hover{color:#fff; background:rgba(255,255,255,0.03);}
+.nav-item.active{color:#fff; background:rgba(59,130,246,0.12);}
+.nav-item.active::before{content:""; position:absolute; left:-0.85rem; top:0.35rem; bottom:0.35rem; width:3px; background:var(--accent); border-radius:0 3px 3px 0;}
+.nav-item .count-pill{margin-left:auto; background:var(--border-strong); color:var(--text-body); font-size:0.7rem; font-weight:700; padding:0.05rem 0.45rem; border-radius:9999px;}
+.nav-item.active .count-pill{background:var(--accent); color:#fff;}
+.sidebar-divider{height:1px; background:var(--border); margin:0.75rem 0.4rem;}
+.sidebar-foot{margin-top:auto; padding:0.85rem 0.6rem 0; font-size:0.7rem; color:var(--text-muted); line-height:1.5;}
+
+/* mobile drawer */
+.drawer-overlay{position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:80; opacity:0; pointer-events:none; transition:opacity .2s ease;}
+.drawer-overlay.open{opacity:1; pointer-events:auto;}
+.drawer{position:fixed; top:0; left:0; bottom:0; width:16.5rem; background:var(--surface); border-right:1px solid var(--border-strong); z-index:90; transform:translateX(-100%); transition:transform .25s cubic-bezier(.16,1,.3,1); display:flex; flex-direction:column; padding:1.1rem 0.85rem;}
+.drawer.open{transform:translateX(0);}
+.drawer-head{display:flex; align-items:center; justify-content:space-between; padding:0 0.5rem 1rem;}
+@media(min-width:1024px){.drawer-overlay, .drawer{display:none;}}
+
+.main-content{flex:1; min-width:0; padding:1.25rem 1rem 6rem;}
+@media(min-width:768px){.main-content{padding:1.75rem 2rem 3rem;}}
+.section-panel{display:none;}
+.section-panel.active{display:block;}
+
+.section-head{display:flex; flex-direction:column; gap:0.2rem; margin-bottom:1.5rem;}
+.section-head h1{font-size:1.4rem; font-weight:800; color:#fff; letter-spacing:-0.01em;}
+.section-head p{font-size:0.85rem; color:var(--text-muted);}
+.section-head-row{display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; flex-wrap:wrap;}
+
+/* -------------------------------------------------------------------- */
+/* DASHBOARD                                                            */
+/* -------------------------------------------------------------------- */
+.welcome-banner{
+  background:linear-gradient(135deg, #111827 0%, #1E293B 100%); border:1px solid var(--border-strong); border-radius:var(--radius-lg);
+  padding:1.5rem; margin-bottom:1.5rem; position:relative; overflow:hidden;
+}
+.welcome-banner h2{font-size:1.15rem; font-weight:800; color:#fff;}
+.welcome-banner p{font-size:0.825rem; color:var(--text-muted); margin-top:0.3rem;}
+.welcome-banner .must-change{margin-top:0.85rem;}
+
+.summary-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:0.85rem; margin-bottom:1.75rem;}
+@media(min-width:640px){.summary-grid{grid-template-columns:repeat(4,1fr);}}
+.summary-card{background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md); padding:1rem; cursor:pointer; transition:border-color .2s ease;}
+.summary-card:hover{border-color:var(--accent);}
+.summary-card .top{display:flex; align-items:center; justify-content:space-between; margin-bottom:0.6rem;}
+.summary-card .icon-wrap{width:2.1rem; height:2.1rem; border-radius:0.6rem; display:flex; align-items:center; justify-content:center;}
+.summary-card .icon-wrap i{width:1.1rem; height:1.1rem;}
+.summary-card .val{font-size:1.5rem; font-weight:800; color:#fff; line-height:1;}
+.summary-card .lbl{font-size:0.75rem; color:var(--text-muted); margin-top:0.35rem; font-weight:600;}
+
+.dash-grid{display:grid; grid-template-columns:1fr; gap:1.5rem;}
+@media(min-width:1100px){.dash-grid{grid-template-columns:1.4fr 1fr;}}
+.panel-block{margin-bottom:1.75rem;}
+.panel-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:0.9rem;}
+.panel-head h3{font-size:1rem; font-weight:700; color:#fff; display:flex; align-items:center; gap:0.5rem;}
+.panel-head h3 i{width:1.05rem; height:1.05rem; color:var(--accent-light);}
+.panel-head a, .panel-head button.link{font-size:0.775rem; font-weight:700; color:var(--accent-light); background:none; border:none; cursor:pointer;}
+
+/* Action Required list */
+.action-row{display:flex; gap:0.85rem; align-items:flex-start; padding:0.9rem 0; border-bottom:1px solid var(--border);}
+.action-row:last-child{border-bottom:none;}
+.action-row .a-icon{width:2.25rem; height:2.25rem; border-radius:0.6rem; background:rgba(245,158,11,0.1); display:flex; align-items:center; justify-content:center; flex-shrink:0;}
+.action-row .a-icon i{width:1.05rem; height:1.05rem; color:var(--amber);}
+.action-row .a-body{flex:1; min-width:0;}
+.action-row .a-body p.title{font-size:0.85rem; font-weight:700; color:#fff;}
+.action-row .a-body p.meta{font-size:0.75rem; color:var(--text-muted); margin-top:0.2rem;}
+.action-row .a-cta{flex-shrink:0;}
+
+/* Recent activity */
+.activity-row{display:flex; gap:0.75rem; padding:0.75rem 0; border-bottom:1px solid var(--border);}
+.activity-row:last-child{border-bottom:none;}
+.activity-dot{width:0.5rem; height:0.5rem; border-radius:50%; background:var(--accent); margin-top:0.4rem; flex-shrink:0;}
+.activity-row p.txt{font-size:0.825rem; color:var(--text-body); line-height:1.5;}
+.activity-row p.txt b{color:#fff; font-weight:700;}
+.activity-row p.time{font-size:0.7rem; color:var(--text-muted); margin-top:0.15rem;}
+
+/* Upcoming */
+.upcoming-row{display:flex; gap:0.85rem; align-items:center; padding:0.75rem 0; border-bottom:1px solid var(--border);}
+.upcoming-row:last-child{border-bottom:none;}
+.upcoming-date{width:3rem; height:3rem; border-radius:0.6rem; background:var(--surface-2); border:1px solid var(--border-strong); display:flex; flex-direction:column; align-items:center; justify-content:center; flex-shrink:0;}
+.upcoming-date .d{font-size:1rem; font-weight:800; color:#fff; line-height:1;}
+.upcoming-date .m{font-size:0.6rem; color:var(--text-muted); text-transform:uppercase; font-weight:700;}
+.upcoming-row .u-body p.title{font-size:0.825rem; font-weight:700; color:#fff;}
+.upcoming-row .u-body p.meta{font-size:0.75rem; color:var(--text-muted); margin-top:0.15rem;}
+
+/* -------------------------------------------------------------------- */
+/* PROJECT CARDS                                                        */
+/* -------------------------------------------------------------------- */
+.project-toolbar{display:flex; flex-wrap:wrap; gap:0.6rem; margin-bottom:1.25rem;}
+.search-box{position:relative; flex:1; min-width:12rem;}
+.search-box i{position:absolute; left:0.85rem; top:50%; transform:translateY(-50%); width:1rem; height:1rem; color:var(--text-muted);}
+.search-box input{width:100%; padding-left:2.5rem;}
+.filter-pill{background:var(--surface); border:1px solid var(--border-strong); color:var(--text-body); font-size:0.8rem; font-weight:600; padding:0.6rem 0.9rem; border-radius:var(--radius-sm); cursor:pointer;}
+.filter-pill.active{border-color:var(--accent); color:#fff; background:rgba(59,130,246,0.1);}
+
+.projects-grid{display:grid; grid-template-columns:1fr; gap:1rem;}
+@media(min-width:768px){.projects-grid{grid-template-columns:repeat(2,1fr);}}
+@media(min-width:1400px){.projects-grid{grid-template-columns:repeat(3,1fr);}}
+.project-card{background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md); padding:1.1rem; display:flex; flex-direction:column; gap:0.85rem; cursor:pointer; transition:border-color .2s ease;}
+.project-card:hover{border-color:var(--accent);}
+.pc-head{display:flex; align-items:flex-start; justify-content:space-between; gap:0.6rem;}
+.pc-head h4{font-size:0.95rem; font-weight:700; color:#fff; line-height:1.3;}
+.pc-order{font-size:0.7rem; color:var(--text-muted); font-family:ui-monospace,"SF Mono",Menlo,monospace; margin-top:0.25rem;}
+.pc-progress-row{display:flex; align-items:center; gap:0.6rem;}
+.pc-progress-bar{flex:1; height:0.4rem; background:var(--border); border-radius:9999px; overflow:hidden;}
+.pc-progress-bar > span{display:block; height:100%; background:linear-gradient(90deg,#3B82F6,#60A5FA); border-radius:9999px;}
+.pc-progress-pct{font-size:0.7rem; font-weight:700; color:var(--text-muted); flex-shrink:0;}
+.pc-meta-grid{display:grid; grid-template-columns:1fr 1fr; gap:0.5rem 0.75rem; font-size:0.75rem;}
+.pc-meta-grid dt{color:var(--text-muted); margin-bottom:0.1rem;}
+.pc-meta-grid dd{color:var(--text-body); font-weight:600;}
+.pc-action-strip{background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.25); border-radius:0.6rem; padding:0.55rem 0.75rem; font-size:0.75rem; color:#FCD34D; display:flex; align-items:center; gap:0.5rem;}
+.pc-action-strip i{width:0.9rem; height:0.9rem; flex-shrink:0;}
+.pc-foot{display:flex; align-items:center; justify-content:space-between; font-size:0.7rem; color:var(--text-muted); border-top:1px solid var(--border); padding-top:0.7rem;}
+
+/* -------------------------------------------------------------------- */
+/* FILES                                                                */
+/* -------------------------------------------------------------------- */
+.file-row{display:flex; align-items:center; gap:0.85rem; padding:0.85rem; border:1px solid var(--border); border-radius:var(--radius-sm); margin-bottom:0.6rem;}
+.file-row:hover{border-color:var(--border-strong);}
+.file-icon{width:2.5rem; height:2.5rem; border-radius:0.6rem; background:var(--surface-2); border:1px solid var(--border-strong); display:flex; align-items:center; justify-content:center; flex-shrink:0;}
+.file-icon i{width:1.15rem; height:1.15rem; color:var(--accent-light);}
+.file-body{flex:1; min-width:0;}
+.file-body p.name{font-size:0.85rem; font-weight:600; color:#fff; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.file-body p.meta{font-size:0.7rem; color:var(--text-muted); margin-top:0.2rem; display:flex; flex-wrap:wrap; gap:0.4rem; align-items:center;}
+.file-body p.meta span::after{content:"·"; margin-left:0.4rem; color:var(--border-strong);}
+.file-body p.meta span:last-child::after{content:"";}
+
+/* -------------------------------------------------------------------- */
+/* MESSAGES                                                             */
+/* -------------------------------------------------------------------- */
+.messages-layout{display:grid; grid-template-columns:1fr; gap:1.25rem;}
+@media(min-width:900px){.messages-layout{grid-template-columns:19rem 1fr; height:calc(100vh - 220px); min-height:26rem;}}
+.conv-list{background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md); overflow-y:auto;}
+.conv-row{display:flex; gap:0.75rem; padding:0.9rem 1rem; border-bottom:1px solid var(--border); cursor:pointer;}
+.conv-row:hover, .conv-row.active{background:rgba(59,130,246,0.06);}
+.conv-row .c-avatar{width:2.25rem; height:2.25rem; border-radius:50%; background:var(--surface-2); border:1px solid var(--border-strong); display:flex; align-items:center; justify-content:center; font-size:0.7rem; font-weight:800; color:var(--accent-light); flex-shrink:0;}
+.conv-row .c-body{flex:1; min-width:0;}
+.conv-row .c-body p.proj{font-size:0.8rem; font-weight:700; color:#fff;}
+.conv-row .c-body p.snip{font-size:0.75rem; color:var(--text-muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.conv-row .c-unread{width:0.5rem; height:0.5rem; border-radius:50%; background:var(--accent); margin-top:0.3rem; flex-shrink:0;}
+.thread-panel{background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md); display:flex; flex-direction:column; min-height:22rem;}
+.thread-head{padding:0.9rem 1.1rem; border-bottom:1px solid var(--border); font-size:0.85rem; font-weight:700; color:#fff;}
+.thread-body{flex:1; overflow-y:auto; padding:1rem 1.1rem; display:flex; flex-direction:column; gap:0.8rem;}
+.msg-bubble{max-width:75%; padding:0.65rem 0.85rem; border-radius:0.85rem; font-size:0.825rem; line-height:1.45;}
+.msg-bubble.mine{align-self:flex-end; background:var(--accent-strong); color:#fff; border-bottom-right-radius:0.25rem;}
+.msg-bubble.theirs{align-self:flex-start; background:var(--surface-2); border:1px solid var(--border-strong); color:var(--text-body); border-bottom-left-radius:0.25rem;}
+.msg-bubble .time{display:block; font-size:0.65rem; opacity:0.7; margin-top:0.3rem;}
+.thread-input{display:flex; gap:0.6rem; padding:0.85rem; border-top:1px solid var(--border);}
+.thread-input input{flex:1;}
+
+/* -------------------------------------------------------------------- */
+/* MODALS                                                                */
+/* -------------------------------------------------------------------- */
+.modal-overlay{position:fixed; inset:0; background:rgba(0,0,0,0.65); z-index:200; display:flex; align-items:flex-end; justify-content:center; opacity:0; pointer-events:none; transition:opacity .2s ease;}
+@media(min-width:640px){.modal-overlay{align-items:center;}}
+.modal-overlay.open{opacity:1; pointer-events:auto;}
+.modal-box{background:var(--surface); border:1px solid var(--border-strong); border-radius:1.25rem 1.25rem 0 0; width:100%; max-width:28rem; max-height:88vh; overflow-y:auto; padding:1.5rem; transform:translateY(2rem); transition:transform .25s cubic-bezier(.16,1,.3,1); box-shadow:0 30px 60px rgba(0,0,0,0.55);}
+@media(min-width:640px){.modal-box{border-radius:1.25rem;}}
+.modal-overlay.open .modal-box{transform:translateY(0);}
+.modal-head{display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:1.1rem;}
+.modal-head h3{font-size:1.1rem; font-weight:800; color:#fff;}
+.modal-head p{font-size:0.8rem; color:var(--text-muted); margin-top:0.25rem;}
+.modal-close{background:none; border:none; color:var(--text-muted); cursor:pointer; padding:0.25rem;}
+.modal-actions{display:flex; gap:0.6rem; margin-top:0.5rem;}
+.modal-actions > *{flex:1;}
+
+/* login screen */
+.login-wrap{min-height:100vh; display:flex; align-items:center; justify-content:center; padding:1.5rem;}
+.login-card{width:100%; max-width:26rem; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:2rem 1.75rem;}
+.login-brand{display:flex; align-items:center; gap:0.4rem; font-size:1.4rem; font-weight:900; letter-spacing:0.05em; margin-bottom:0.35rem;}
+.login-brand span{color:var(--accent);}
+.login-card h2{font-size:1.05rem; font-weight:700; color:#fff; margin-bottom:0.3rem;}
+.login-card > p.sub{font-size:0.8125rem; color:var(--text-muted); margin-bottom:1.5rem;}
+.login-links{display:flex; align-items:center; justify-content:space-between; font-size:0.775rem; margin-top:-0.4rem; margin-bottom:1.1rem;}
+.login-links button{background:none; border:none; color:var(--accent-light); font-weight:600; cursor:pointer; font-size:0.775rem;}
+.login-foot{text-align:center; margin-top:1.4rem; font-size:0.8125rem; color:var(--text-muted);}
+.login-foot a{color:var(--accent-light); font-weight:600;}
+.login-error{background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.35); color:#FCA5A5; font-size:0.8125rem; padding:0.7rem 0.9rem; border-radius:var(--radius-sm); margin-bottom:1.1rem; display:none; gap:0.5rem; align-items:flex-start;}
+.login-error.show{display:flex;}
+.login-error i{width:1rem; height:1rem; flex-shrink:0; margin-top:0.1rem;}
+
+/* strength meter */
+.strength-meter{display:flex; gap:0.3rem; margin-top:0.4rem;}
+.strength-meter span{height:0.3rem; flex:1; border-radius:9999px; background:var(--border-strong);}
+.strength-meter.s1 span:nth-child(1){background:var(--red);}
+.strength-meter.s2 span:nth-child(1),.strength-meter.s2 span:nth-child(2){background:var(--amber);}
+.strength-meter.s3 span:nth-child(1),.strength-meter.s3 span:nth-child(2),.strength-meter.s3 span:nth-child(3){background:var(--green);}
+
+/* -------------------------------------------------------------------- */
+/* START-A-PROJECT WIZARD                                                */
+/* -------------------------------------------------------------------- */
+#view-wizard{position:fixed; inset:0; background:var(--bg); z-index:250; overflow-y:auto; display:flex; flex-direction:column;}
+.wiz-topbar{position:sticky; top:0; z-index:2; background:var(--bg); border-bottom:1px solid var(--border); padding:0.9rem 1.25rem;}
+.wiz-topbar-row{display:flex; align-items:center; justify-content:space-between; margin-bottom:0.75rem;}
+.wiz-topbar-row .brand-logo{font-size:1.05rem; font-weight:900;}
+.wiz-progress-track{height:0.35rem; background:var(--border); border-radius:9999px; overflow:hidden;}
+.wiz-progress-fill{height:100%; background:var(--accent-strong); border-radius:9999px; transition:width .3s ease;}
+.wiz-step-label{font-size:0.75rem; color:var(--text-muted); margin-top:0.5rem;}
+.wiz-body{flex:1; max-width:34rem; width:100%; margin:0 auto; padding:1.5rem 1.25rem 7rem;}
+.wiz-step{display:none;}
+.wiz-step.active{display:block; animation:wizIn .25s ease;}
+@keyframes wizIn{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);}}
+.wiz-step h2{font-size:1.3rem; font-weight:800; color:#fff; margin-bottom:0.35rem;}
+.wiz-step > p.wiz-sub{font-size:0.85rem; color:var(--text-muted); margin-bottom:1.5rem;}
+.wiz-footer{position:sticky; bottom:0; background:var(--bg); border-top:1px solid var(--border); padding:1rem 1.25rem; display:flex; gap:0.75rem; z-index:2;}
+.wiz-footer > *{flex:1;}
+.wiz-footer .btn-secondary{flex:0 0 auto; min-width:5rem;}
+
+.option-grid{display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;}
+@media(max-width:420px){.option-grid{grid-template-columns:1fr;}}
+.option-card{background:var(--surface); border:1.5px solid var(--border); border-radius:var(--radius-md); padding:1rem; cursor:pointer; text-align:left; transition:border-color .15s ease, background-color .15s ease; display:flex; flex-direction:column; gap:0.4rem; color:var(--text);}
+.option-card i{color:var(--accent-light); width:1.4rem; height:1.4rem;}
+.option-card h4{font-size:0.9rem; font-weight:700; color:#fff;}
+.option-card p{font-size:0.75rem; color:var(--text-muted); line-height:1.3;}
+.option-card.selected{border-color:var(--accent); background:rgba(59,130,246,0.08);}
+.option-card:hover{border-color:var(--border-strong);}
+
+.chip-grid{display:flex; flex-wrap:wrap; gap:0.6rem;}
+.chip{background:var(--surface); border:1.5px solid var(--border); border-radius:9999px; padding:0.5rem 1rem; font-size:0.825rem; font-weight:600; color:var(--text-body); cursor:pointer; transition:all .15s ease;}
+.chip.selected{border-color:var(--accent); background:rgba(59,130,246,0.1); color:#fff;}
+.chip-empty{font-size:0.8125rem; color:var(--text-muted);}
+
+.wiz-dropzone{border:1.5px dashed var(--border-strong); border-radius:var(--radius-md); padding:1.75rem 1rem; text-align:center; cursor:pointer; transition:border-color .15s ease;}
+.wiz-dropzone:hover{border-color:var(--accent);}
+.wiz-dropzone i{width:1.6rem; height:1.6rem; color:var(--text-muted); margin-bottom:0.5rem;}
+.wiz-dropzone p{font-size:0.825rem; color:var(--text-muted);}
+.wiz-file-row{display:flex; align-items:center; gap:0.6rem; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-sm); padding:0.6rem 0.8rem; margin-top:0.6rem; font-size:0.8125rem;}
+.wiz-file-row i.file-icon{color:var(--accent-light); width:1.1rem; height:1.1rem; flex-shrink:0;}
+.wiz-file-row span.file-name{flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.wiz-file-row span.file-status{font-size:0.7rem; color:var(--text-muted); flex-shrink:0;}
+.wiz-file-row button{background:none; border:none; color:var(--text-muted); cursor:pointer; flex-shrink:0;}
+
+.wiz-review-block{background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md); padding:1rem 1.1rem; margin-bottom:0.9rem;}
+.wiz-review-block h5{font-size:0.75rem; text-transform:uppercase; letter-spacing:0.04em; color:var(--text-muted); margin-bottom:0.6rem;}
+.wiz-review-row{display:flex; justify-content:space-between; gap:1rem; font-size:0.8375rem; padding:0.3rem 0; color:var(--text-body);}
+.wiz-review-row dt{color:var(--text-muted); flex-shrink:0;}
+.wiz-review-row dd{text-align:right;}
+.wiz-review-edit{font-size:0.75rem; color:var(--accent-light); font-weight:600; background:none; border:none; cursor:pointer; padding:0;}
+
+.wiz-inline-notice{display:flex; gap:0.6rem; align-items:flex-start; background:rgba(59,130,246,0.08); border:1px solid rgba(59,130,246,0.3); border-radius:var(--radius-sm); padding:0.7rem 0.9rem; font-size:0.8125rem; color:var(--text-body); margin-top:0.5rem;}
+.wiz-inline-notice i{width:1rem; height:1rem; color:var(--accent-light); flex-shrink:0; margin-top:0.1rem;}
+.wiz-inline-notice a{color:var(--accent-light); font-weight:700;}
+.wiz-inline-notice.warn{background:rgba(245,158,11,0.08); border-color:rgba(245,158,11,0.3);}
+.wiz-inline-notice.warn i{color:var(--amber);}
+
+.wiz-success{text-align:center; padding:2.5rem 0.5rem;}
+.wiz-success i.big-check{width:3.5rem; height:3.5rem; color:var(--green); margin-bottom:1.25rem;}
+.wiz-success h2{font-size:1.4rem; margin-bottom:0.5rem;}
+.wiz-order-id{display:inline-block; background:var(--surface); border:1px solid var(--border-strong); border-radius:var(--radius-sm); padding:0.6rem 1.25rem; font-size:1.15rem; font-weight:800; letter-spacing:0.03em; color:var(--accent-light); margin:0.75rem 0 1.25rem;}
+.wiz-next-steps{text-align:left; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md); padding:1.1rem 1.25rem; margin-top:1.25rem;}
+.wiz-next-steps li{font-size:0.825rem; color:var(--text-body); margin-bottom:0.5rem; padding-left:1.4rem; position:relative;}
+.wiz-next-steps li:last-child{margin-bottom:0;}
+.wiz-next-steps li::before{content:'';position:absolute; left:0; top:0.4rem; width:0.4rem; height:0.4rem; border-radius:50%; background:var(--accent);}
+
+@media(prefers-reduced-motion:reduce){*{animation-duration:0.001ms !important; transition-duration:0.001ms !important;}}
+</style>
+</head>
+<body>
+
+<div id="toast-stack"></div>
+
+<!-- ======================================================================
+     LOGIN SCREEN
+     ====================================================================== -->
+<div id="view-login" class="login-wrap hidden">
+  <div class="login-card">
+    <div class="login-brand">KYTRON<span>.</span></div>
+    <h2>Client Portal</h2>
+    <p class="sub">Sign in to track your projects, files and updates.</p>
+
+    <div class="login-error" id="login-error"><i data-lucide="alert-circle"></i><span id="login-error-text">We could not log you in. Check your credentials and try again.</span></div>
+
+    <form id="login-form" novalidate>
+      <div class="field" id="f-login-email">
+        <label for="login-email">Email address</label>
+        <input type="email" id="login-email" autocomplete="email" placeholder="you@company.com" required>
+        <span class="error-text">Enter a valid email address.</span>
+      </div>
+      <div class="field" id="f-login-password">
+        <label for="login-password">Password</label>
+        <div class="password-row">
+          <input type="password" id="login-password" autocomplete="current-password" placeholder="••••••••" required>
+          <button type="button" class="toggle-pw" data-target="login-password" aria-label="Show password"><i data-lucide="eye"></i></button>
+        </div>
+        <span class="error-text">Enter your password.</span>
+      </div>
+      <div class="login-links">
+        <label style="display:flex;align-items:center;gap:0.4rem;color:var(--text-muted);font-weight:500;">
+          Stay signed in
+        </label>
+        <button type="button" id="open-forgot-pw">Forgot password?</button>
+      </div>
+      <button type="submit" class="btn-primary" id="login-submit" style="width:100%;">
+        <span>Sign in</span>
+      </button>
+    </form>
+
+    <p class="login-foot">New to Kytron? <a href="#" id="new-project-link">Start a project</a></p>
+  </div>
+</div>
+
+<!-- ======================================================================
+     FORGOT PASSWORD MODAL
+     ====================================================================== -->
+<div class="modal-overlay" id="modal-forgot">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div><h3>Reset your password</h3><p>We'll email you a secure link that's valid for 1 hour.</p></div>
+      <button class="modal-close" data-close-modal="modal-forgot"><i data-lucide="x"></i></button>
+    </div>
+    <form id="forgot-form" novalidate>
+      <div class="field" id="f-forgot-email">
+        <label for="forgot-email">Email address</label>
+        <input type="email" id="forgot-email" placeholder="you@company.com" required>
+        <span class="error-text">Enter a valid email address.</span>
+      </div>
+      <button type="submit" class="btn-primary" style="width:100%;" id="forgot-submit">Send reset link</button>
+    </form>
+  </div>
+</div>
+
+<!-- ======================================================================
+     SET NEW PASSWORD MODAL (reached via emailed reset link, or forced
+     change on first login — see integration note in the app script below)
+     ====================================================================== -->
+<div class="modal-overlay" id="modal-set-password">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div><h3 id="set-pw-title">Set a new password</h3><p id="set-pw-sub">Choose a password with at least 8 characters.</p></div>
+      <button class="modal-close" data-close-modal="modal-set-password" id="set-pw-close"><i data-lucide="x"></i></button>
+    </div>
+    <form id="set-pw-form" novalidate>
+      <div class="field hidden" id="f-current-password">
+        <label for="current-password">Current password</label>
+        <div class="password-row">
+          <input type="password" id="current-password" placeholder="Your current password">
+          <button type="button" class="toggle-pw" data-target="current-password" aria-label="Show password"><i data-lucide="eye"></i></button>
+        </div>
+        <span class="error-text">Current password is incorrect.</span>
+      </div>
+      <div class="field" id="f-new-password">
+        <label for="new-password">New password</label>
+        <div class="password-row">
+          <input type="password" id="new-password" placeholder="At least 8 characters" required minlength="8">
+          <button type="button" class="toggle-pw" data-target="new-password" aria-label="Show password"><i data-lucide="eye"></i></button>
+        </div>
+        <div class="strength-meter" id="pw-strength"><span></span><span></span><span></span></div>
+        <span class="error-text">Password must be at least 8 characters.</span>
+      </div>
+      <div class="field" id="f-confirm-password">
+        <label for="confirm-password">Confirm new password</label>
+        <input type="password" id="confirm-password" placeholder="Re-enter password" required>
+        <span class="error-text">Passwords do not match.</span>
+      </div>
+      <button type="submit" class="btn-primary" style="width:100%;" id="set-pw-submit">Update password</button>
+    </form>
+  </div>
+</div>
+
+<!-- ======================================================================
+     REVISION REQUEST MODAL
+     ====================================================================== -->
+<div class="modal-overlay" id="modal-revision">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div><h3>Request a revision</h3><p id="revision-sub">Describe the change you'd like on this project.</p></div>
+      <button class="modal-close" data-close-modal="modal-revision"><i data-lucide="x"></i></button>
+    </div>
+    <form id="revision-form" novalidate>
+      <div class="field" id="f-revision-desc">
+        <label for="revision-desc">What would you like changed?</label>
+        <textarea id="revision-desc" rows="4" placeholder="Be as specific as you can — pages, sections, or exact wording help our team move faster." required></textarea>
+        <span class="error-text">Describe the revision you need.</span>
+      </div>
+      <button type="submit" class="btn-primary" style="width:100%;" id="revision-submit">Submit revision request</button>
+    </form>
+  </div>
+</div>
+
+<!-- ======================================================================
+     APP SHELL (shown once authenticated)
+     ====================================================================== -->
+<div id="view-app" class="hidden">
+
+  <header class="app-topbar">
+    <div class="app-topbar-left">
+      <button class="icon-btn hamburger-btn" id="open-drawer" aria-label="Open menu"><i data-lucide="menu"></i></button>
+      <a href="/" class="brand-logo">KYTRON<span>.</span></a>
+      <span class="page-title" id="current-page-title">Dashboard</span>
+    </div>
+    <div class="app-topbar-right" style="position:relative;">
+      <a class="icon-btn" href="/consultant" aria-label="AI Consultant" title="AI Consultant"><i data-lucide="sparkles"></i></a>
+      <div style="position:relative;">
+        <button class="icon-btn" id="notif-btn" aria-label="Notifications"><i data-lucide="bell"></i><span class="notif-dot hidden" id="notif-dot"></span></button>
+        <div class="notif-panel" id="notif-panel">
+          <div class="notif-panel-head">
+            <h4>Notifications</h4>
+            <button class="btn-ghost btn-sm" id="mark-all-read">Mark all read</button>
+          </div>
+          <div id="notif-panel-body"><!-- populated by JS --></div>
+        </div>
+      </div>
+      <div style="position:relative;">
+        <button class="avatar-btn" id="avatar-btn">
+          <span class="avatar-circle" id="avatar-initials">--</span>
+          <span id="avatar-name">Account</span>
+          <i data-lucide="chevron-down" style="width:0.9rem;height:0.9rem;color:var(--text-muted);"></i>
+        </button>
+        <div class="menu-pop" id="account-menu">
+          <div class="menu-head">
+            <p id="menu-name">—</p>
+            <p id="menu-email">—</p>
+          </div>
+          <a href="/my-account" class="menu-item"><i data-lucide="user"></i>My Account</a>
+          <button class="menu-item" id="menu-change-pw"><i data-lucide="key-round"></i>Change password</button>
+          <div class="menu-divider"></div>
+          <button class="menu-item danger" id="menu-logout"><i data-lucide="log-out"></i>Sign out</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="app-body">
+
+    <!-- DESKTOP SIDEBAR -->
+    <aside class="sidebar">
+      <nav id="nav-list-desktop"></nav>
+      <div class="sidebar-foot">Kytron Solutions<br>Client Portal · India</div>
+    </aside>
+
+    <!-- MOBILE DRAWER -->
+    <div class="drawer-overlay" id="drawer-overlay"></div>
+    <div class="drawer" id="drawer">
+      <div class="drawer-head">
+        <a href="/" class="brand-logo" style="font-size:1.1rem;">KYTRON<span>.</span></a>
+        <button class="icon-btn" id="close-drawer" aria-label="Close menu"><i data-lucide="x"></i></button>
+      </div>
+      <nav id="nav-list-mobile"></nav>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+      <!-- ================= DASHBOARD ================= -->
+      <section class="section-panel active" id="panel-dashboard" data-title="Dashboard">
+        <div class="welcome-banner">
+          <h2 id="welcome-name">Welcome back</h2>
+          <p>Here's what's happening across your projects today.</p>
+          <div class="must-change hidden" id="must-change-banner">
+            <button class="btn-secondary btn-sm" id="banner-change-pw"><i data-lucide="shield-alert" style="width:0.9rem;height:0.9rem;"></i>Set a permanent password</button>
+          </div>
+        </div>
+
+        <div class="summary-grid" id="summary-grid">
+          <!-- populated by JS: active projects / pending actions / upcoming milestones / unread messages -->
+        </div>
+
+        <div class="dash-grid">
+          <div>
+            <div class="panel-block">
+              <div class="panel-head"><h3><i data-lucide="folder-kanban"></i>My Projects</h3><div style="display:flex; gap:0.5rem; align-items:center;"><button class="btn-secondary btn-sm" id="dash-new-project-btn"><i data-lucide="plus" style="width:0.85rem;height:0.85rem;"></i>New Project</button><button class="link" data-goto="projects">View all</button></div></div>
+              <div id="dash-projects-list"></div>
+            </div>
+            <div class="panel-block">
+              <div class="panel-head"><h3><i data-lucide="alert-triangle"></i>Action Required</h3><button class="link" data-goto="actions">View all</button></div>
+              <div class="card" id="dash-actions-card"></div>
+            </div>
+          </div>
+          <div>
+            <div class="panel-block">
+              <div class="panel-head"><h3><i data-lucide="activity"></i>Recent Activity</h3></div>
+              <div class="card" id="dash-activity-card"></div>
+            </div>
+            <div class="panel-block">
+              <div class="panel-head"><h3><i data-lucide="calendar-clock"></i>Upcoming</h3></div>
+              <div class="card" id="dash-upcoming-card"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= PROJECTS ================= -->
+      <section class="section-panel" id="panel-projects" data-title="Projects">
+        <div class="section-head-row" style="margin-bottom:1.25rem;">
+          <div class="section-head" style="margin-bottom:0;"><h1>My Projects</h1><p>Every project tied to your account, in one place.</p></div>
+          <button class="btn-primary btn-sm" id="projects-new-project-btn"><i data-lucide="plus" style="width:0.85rem;height:0.85rem;"></i>New Project</button>
+        </div>
+        <div class="project-toolbar">
+          <div class="search-box"><i data-lucide="search"></i><input type="text" id="project-search" placeholder="Search by name or Order ID"></div>
+          <button class="filter-pill active" data-status="all">All</button>
+          <button class="filter-pill" data-status="Registered">Registered</button>
+          <button class="filter-pill" data-status="Under Process">Under Process</button>
+          <button class="filter-pill" data-status="Testing Phase">Testing</button>
+          <button class="filter-pill" data-status="On Revision">On Revision</button>
+          <button class="filter-pill" data-status="Completed">Completed</button>
+        </div>
+        <div id="projects-list-wrap"></div>
+      </section>
+
+      <!-- ================= ACTIONS ================= -->
+      <section class="section-panel" id="panel-actions" data-title="Action Required">
+        <div class="section-head"><h1>Action Required</h1><p>Anything here needs your input to keep your project moving.</p></div>
+        <div class="card" id="actions-full-card"></div>
+      </section>
+
+      <!-- ================= FILES ================= -->
+      <section class="section-panel" id="panel-files" data-title="Files">
+        <div class="section-head-row" style="margin-bottom:1.25rem;">
+          <div class="section-head" style="margin-bottom:0;"><h1>Files</h1><p>Documents shared across all of your projects.</p></div>
+        </div>
+        <div class="project-toolbar">
+          <div class="search-box"><i data-lucide="search"></i><input type="text" id="file-search" placeholder="Search files"></div>
+        </div>
+        <div id="files-list-wrap"></div>
+      </section>
+
+      <!-- ================= MESSAGES ================= -->
+      <section class="section-panel" id="panel-messages" data-title="Messages">
+        <div class="section-head"><h1>Messages</h1><p>Conversations with the Kytron team, organized by project.</p></div>
+        <div class="messages-layout" id="messages-layout"></div>
+      </section>
+
+      <!-- ================= NOTIFICATIONS ================= -->
+      <section class="section-panel" id="panel-notifications" data-title="Notifications">
+        <div class="section-head-row" style="margin-bottom:1.25rem;">
+          <div class="section-head" style="margin-bottom:0;"><h1>Notifications</h1><p>Updates, approvals and deadlines across your account.</p></div>
+          <button class="btn-secondary btn-sm" id="mark-all-read-2">Mark all as read</button>
+        </div>
+        <div class="card" id="notifications-full-card" style="padding:0;"></div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<!-- ======================================================================
+     START A PROJECT — WIZARD
+     Backend contract (unchanged, reused exactly):
+       GET  /api/catalog/project-types -> [{id,name,icon,description}]
+       GET  /api/catalog/categories    -> [{id,name}]
+       GET  /api/catalog/services      -> [{id,name,icon,description}]
+       GET  /api/catalog/features?project_type=<id> -> [{id,name,description}]
+       POST /api/client/check-email    body {email} -> {exists, name?, ...}
+       POST /api/client/uploads        multipart {file} -> {file_id,...}
+       POST /api/client/projects       multipart form, see WIZ_SUBMIT_FIELDS
+     Note: the backend only stores the FIRST selected service
+     (project.service = services[0]) — this step is single-select to match
+     that reality rather than presenting a misleading multi-select.
+     There is no dedicated "goal" column; the goal prompt folds into the
+     free-text project_notes description rather than inventing a field.
+     ====================================================================== -->
+<div id="view-wizard" class="hidden">
+  <div class="wiz-topbar">
+    <div class="wiz-topbar-row">
+      <a href="/" class="brand-logo">KYTRON<span>.</span></a>
+      <button class="icon-btn" id="wiz-close" aria-label="Close"><i data-lucide="x"></i></button>
+    </div>
+    <div class="wiz-progress-track"><div class="wiz-progress-fill" id="wiz-progress-fill" style="width:0%;"></div></div>
+    <p class="wiz-step-label" id="wiz-step-label">Step 1 of 7</p>
+  </div>
+
+  <div class="wiz-body">
+
+    <!-- STEP 1: PROJECT TYPE -->
+    <div class="wiz-step" data-step="type">
+      <h2>What do you want to build?</h2>
+      <p class="wiz-sub">Pick the option closest to what you have in mind — we'll refine the details together.</p>
+      <div class="option-grid" id="wiz-type-grid"><div class="skeleton skel-card"></div><div class="skeleton skel-card"></div></div>
+      <div class="field" style="margin-top:1.25rem;">
+        <label for="wiz-project-name">Give this project a name <span style="font-weight:400;color:var(--text-muted);">(optional)</span></label>
+        <input type="text" id="wiz-project-name" placeholder="e.g. Sharma Textiles website">
+      </div>
+    </div>
+
+    <!-- STEP 2: BUSINESS / CONTACT INFO -->
+    <div class="wiz-step" data-step="contact">
+      <h2>Tell us about you</h2>
+      <p class="wiz-sub">So the Kytron team knows who they're talking to and how to reach you.</p>
+      <div class="field" id="f-wiz-name">
+        <label for="wiz-name">Your full name</label>
+        <input type="text" id="wiz-name" placeholder="Full name">
+        <span class="error-text">Enter your full name using letters only.</span>
+      </div>
+      <div class="field" id="f-wiz-email">
+        <label for="wiz-email">Email address</label>
+        <input type="email" id="wiz-email" placeholder="you@company.com" autocomplete="email">
+        <span class="error-text">Enter a valid email address.</span>
+        <div id="wiz-email-notice"></div>
+      </div>
+      <div class="field" id="f-wiz-phone">
+        <label for="wiz-phone">Phone / WhatsApp number <span style="font-weight:400;color:var(--text-muted);">(optional)</span></label>
+        <div style="display:flex; gap:0.5rem;">
+          <select id="wiz-country-code" style="max-width:6rem;">
+            <option value="+91" selected>+91</option>
+            <option value="+1">+1</option>
+            <option value="+44">+44</option>
+            <option value="+971">+971</option>
+            <option value="+61">+61</option>
+          </select>
+          <input type="tel" id="wiz-phone" placeholder="98765 43210" style="flex:1;">
+        </div>
+        <span class="error-text">Enter a valid phone number.</span>
+      </div>
+      <div class="field">
+        <label for="wiz-company">Business / company name <span style="font-weight:400;color:var(--text-muted);">(optional)</span></label>
+        <input type="text" id="wiz-company" placeholder="Your business name">
+      </div>
+      <label style="display:flex; align-items:flex-start; gap:0.6rem; font-size:0.8125rem; color:var(--text-body); cursor:pointer;">
+        <input type="checkbox" id="wiz-project-updates" checked style="margin-top:0.15rem;">
+        <span>Email me updates as my project moves forward</span>
+      </label>
+    </div>
+
+    <!-- STEP 3: WHAT YOU NEED -->
+    <div class="wiz-step" data-step="needs">
+      <h2>What do you need on it?</h2>
+      <p class="wiz-sub">Select everything that applies — you can always add more later.</p>
+      <h5 style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.04em; color:var(--text-muted); margin-bottom:0.6rem;">Categories</h5>
+      <div class="chip-grid" id="wiz-categories-grid"><div class="skeleton" style="width:6rem;height:2rem;border-radius:9999px;"></div></div>
+      <h5 style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.04em; color:var(--text-muted); margin:1.4rem 0 0.6rem;">Main service</h5>
+      <div class="chip-grid" id="wiz-services-grid"><div class="skeleton" style="width:6rem;height:2rem;border-radius:9999px;"></div></div>
+      <div id="wiz-features-wrap" class="hidden" style="margin-top:1.4rem;">
+        <h5 style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.04em; color:var(--text-muted); margin-bottom:0.6rem;">Features for this project type</h5>
+        <div class="chip-grid" id="wiz-features-grid"></div>
+      </div>
+    </div>
+
+    <!-- STEP 4: DESCRIPTION -->
+    <div class="wiz-step" data-step="description">
+      <h2>Describe what you're looking for</h2>
+      <p class="wiz-sub">Explain it however comes naturally — in your own words. Think about what you want this to help your business do, who'll use it, and anything you'd like to avoid.</p>
+      <div class="field" id="f-wiz-description">
+        <textarea id="wiz-description" rows="7" placeholder="e.g. We run a saree wholesale business in Surat. We want a simple website where customers can browse our catalogue and enquire on WhatsApp. We currently have no website."></textarea>
+        <span class="error-text">Tell us a little about your project.</span>
+      </div>
+      <div class="field">
+        <label for="wiz-existing-link">Existing website / Instagram / WhatsApp Business link <span style="font-weight:400;color:var(--text-muted);">(optional)</span></label>
+        <input type="text" id="wiz-existing-link" placeholder="Paste a link if you have one">
+      </div>
+    </div>
+
+    <!-- STEP 5: BUDGET & TIMELINE -->
+    <div class="wiz-step" data-step="budget">
+      <h2>Budget & timeline</h2>
+      <p class="wiz-sub">Rough numbers are fine — this just helps us recommend the right scope.</p>
+      <h5 style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.04em; color:var(--text-muted); margin-bottom:0.6rem;">Budget range</h5>
+      <div class="chip-grid" id="wiz-budget-grid"></div>
+      <h5 style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.04em; color:var(--text-muted); margin:1.4rem 0 0.6rem;">Preferred timeline</h5>
+      <div class="chip-grid" id="wiz-timeline-grid"></div>
+    </div>
+
+    <!-- STEP 6: FILES -->
+    <div class="wiz-step" data-step="files">
+      <h2>Anything to share?</h2>
+      <p class="wiz-sub">Logo, brand colours, reference sites, product photos — anything that helps. This step is optional.</p>
+      <div class="wiz-dropzone" id="wiz-dropzone">
+        <i data-lucide="upload-cloud"></i>
+        <p><strong style="color:var(--accent-light);">Tap to upload</strong> or drag files here<br>PDF, images, docs — up to 50MB each</p>
+      </div>
+      <input type="file" id="wiz-file-input" multiple class="hidden">
+      <div id="wiz-file-list"></div>
+    </div>
+
+    <!-- STEP 7: REVIEW -->
+    <div class="wiz-step" data-step="review">
+      <h2>Review your request</h2>
+      <p class="wiz-sub">Take a look before you send this to Kytron.</p>
+      <div id="wiz-review-body"></div>
+      <label style="display:flex; align-items:flex-start; gap:0.6rem; font-size:0.8125rem; color:var(--text-body); cursor:pointer; margin-top:1.25rem;" id="f-wiz-terms">
+        <input type="checkbox" id="wiz-agree-terms" style="margin-top:0.15rem;">
+        <span>I agree to Kytron's <a href="/terms" target="_blank" style="color:var(--accent-light);">terms</a> and <a href="/privacy" target="_blank" style="color:var(--accent-light);">privacy policy</a></span>
+      </label>
+      <span class="error-text" id="wiz-terms-error" style="display:none; font-size:0.75rem; color:#FCA5A5;">You must agree to the terms to continue.</span>
+    </div>
+
+    <!-- STEP 8: SUCCESS -->
+    <div class="wiz-step" data-step="success">
+      <div class="wiz-success">
+        <i data-lucide="check-circle-2" class="big-check"></i>
+        <h2>Request received</h2>
+        <p style="color:var(--text-muted); font-size:0.875rem;">Your project brief is now with the Kytron team.</p>
+        <div class="wiz-order-id" id="wiz-order-id">—</div>
+        <p id="wiz-customer-id-note" class="hidden" style="font-size:0.8125rem; color:var(--text-muted); margin-top:-0.75rem;">Customer ID: <strong id="wiz-customer-id" style="color:var(--accent-light);">—</strong></p>
+        <div class="wiz-next-steps">
+          <ul>
+            <li>A Kytron team member will review your request and get in touch.</li>
+            <li>You'll receive an email confirmation with your Order ID.</li>
+            <li id="wiz-account-note" class="hidden">We've created your Client Portal account — check your email for login details.</li>
+            <li id="wiz-account-note-failed" class="hidden">We've created your Client Portal account (Customer ID shown below), but the welcome email couldn't be delivered right now. Use <strong>Forgot password</strong> on the login screen with this email address to get in.</li>
+            <li>Track progress any time from <strong>My Projects</strong> in this portal.</li>
+          </ul>
+        </div>
+        <button class="btn-primary" id="wiz-success-cta" style="margin-top:1.75rem; width:100%;">Go to My Projects</button>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="wiz-footer" id="wiz-footer">
+    <button class="btn-secondary" id="wiz-back">Back</button>
+    <button class="btn-primary" id="wiz-next">Continue</button>
+  </div>
+</div>
+
+<!-- ======================================================================
+     APP SCRIPT
+     ====================================================================== -->
+<script>
+lucide.createIcons();
+
+/* ==========================================================================
+   BACKEND CONTRACT
+   --------------------------------------------------------------------------
+   IMPLEMENTED in the existing app.py — this file calls these exactly as-is:
+     GET    /api/auth/session
+     POST   /api/auth/login                body {email, password}
+     POST   /api/auth/logout
+     POST   /api/auth/password-reset       body {email}
+     POST   /api/auth/password-reset/confirm  body {token, customer_id, new_password}
+     GET    /api/client/projects/mine      -> [ serialize_project_summary, ... ]
+     GET    /api/client/account/notification-preferences
+     PUT    /api/client/account/notification-preferences
+     GET    /api/client/documents/<id>/download
+     POST   /api/client/projects/revisions body {order_id, description}  (requires an
+            authenticated ORDER session — see note on submitRevision() below)
+
+   NOT YET IMPLEMENTED — this screen calls these against the documented,
+   forward-compatible contract below. Until the backend phase adds them,
+   these requests will 404/error and the UI shows a real error/empty state
+   (never fake data) with a Retry action. Full spec: BACKEND_IMPLEMENTATION_PROMPT.md
+     GET    /api/client/dashboard/summary     -> {active_projects, pending_actions, upcoming_milestones, unread_messages}
+     GET    /api/client/actions               -> [ {id, type, title, project_order_id, project_name, cta_label, due_label} ]
+     GET    /api/client/activity              -> [ {actor, action, project_order_id, project_name, timestamp} ]
+     GET    /api/client/upcoming              -> [ {date, label, project_order_id, project_name, type} ]
+     GET    /api/client/documents             -> [ serialize_document + project_order_id/project_name ]
+     GET    /api/client/messages/conversations-> [ {id, project_order_id, project_name, last_message, unread_count, updated_at} ]
+     GET    /api/client/messages/<conv_id>    -> [ {id, sender, body, mine, timestamp} ]
+     POST   /api/client/messages/<conv_id>    body {body}
+     GET    /api/client/notifications         -> [ {id, type, title, body, read, project_order_id, created_at} ]
+     POST   /api/client/notifications/<id>/read
+     POST   /api/client/notifications/read-all
+
+   Also note: serialize_project_summary() today returns only
+   {order_id, title, project_type, status, submitted_at, updated_at}. The
+   spec's project card additionally wants progress %, current phase, start
+   date, expected completion and a pending-action flag. This screen renders
+   those fields when present and degrades gracefully when absent — the
+   backend phase should extend serialize_project_summary() accordingly
+   rather than this screen inventing placeholder values.
+   ========================================================================== */
+
+const API = {
+  authSession: '/api/auth/session',
+  login: '/api/auth/login',
+  logout: '/api/auth/logout',
+  passwordReset: '/api/auth/password-reset',
+  passwordResetConfirm: '/api/auth/password-reset/confirm',
+  projectsMine: '/api/client/projects/mine',
+  notifPrefsGet: '/api/client/account/notification-preferences',
+  notifPrefsPut: '/api/client/account/notification-preferences',
+  revisions: '/api/client/projects/revisions',
+  changePassword: '/api/client/account/change-password',
+  // contract-only (see note above)
+  dashboardSummary: '/api/client/dashboard/summary',
+  actions: '/api/client/actions',
+  activity: '/api/client/activity',
+  upcoming: '/api/client/upcoming',
+  documents: '/api/client/documents',
+  conversations: '/api/client/messages/conversations',
+  notifications: '/api/client/notifications',
+};
+
+let CURRENT_CUSTOMER = null;
+let ALL_PROJECTS = [];
+let PROJECT_FILTER = 'all';
+
+/* ---------------------------------------------------------------------- */
+/* FETCH HELPER                                                           */
+/* ---------------------------------------------------------------------- */
+async function api(url, opts = {}) {
+  const res = await fetch(url, {
+    method: opts.method || 'GET',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'same-origin',
+    body: opts.body ? JSON.stringify(opts.body) : undefined,
+  });
+  let data = null;
+  try { data = await res.json(); } catch (e) { /* no body */ }
+  if (!res.ok) {
+    const err = new Error((data && data.error && data.error.message) || (data && data.message) || 'Something went wrong.');
+    err.status = res.status;
+    err.payload = data;
+    throw err;
+  }
+  return data;
+}
+
+/* ---------------------------------------------------------------------- */
+/* TOASTS                                                                  */
+/* ---------------------------------------------------------------------- */
+function toast(message, type = 'info') {
+  const stack = document.getElementById('toast-stack');
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  const icon = type === 'success' ? 'check-circle-2' : type === 'error' ? 'alert-circle' : 'info';
+  el.innerHTML = `<i data-lucide="${icon}"></i><p>${escapeHtml(message)}</p><button aria-label="Dismiss"><i data-lucide="x"></i></button>`;
+  stack.appendChild(el);
+  lucide.createIcons({ el });
+  const remove = () => el.remove();
+  el.querySelector('button').addEventListener('click', remove);
+  setTimeout(remove, 5000);
+}
+
+function escapeHtml(str) {
+  const d = document.createElement('div');
+  d.textContent = str == null ? '' : String(str);
+  return d.innerHTML;
+}
+
+/* ---------------------------------------------------------------------- */
+/* FORM VALIDATION HELPERS                                                */
+/* ---------------------------------------------------------------------- */
+function setFieldError(fieldId, message) {
+  const el = document.getElementById(fieldId);
+  if (!el) return;
+  el.classList.add('has-error');
+  if (message) el.querySelector('.error-text').textContent = message;
+}
+function clearFieldError(fieldId) {
+  const el = document.getElementById(fieldId);
+  if (el) el.classList.remove('has-error');
+}
+function clearAllErrors(formEl) {
+  formEl.querySelectorAll('.field').forEach(f => f.classList.remove('has-error'));
+}
+function isValidEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+
+/* ---------------------------------------------------------------------- */
+/* STATE RENDER HELPERS (loading / empty / error)                         */
+/* ---------------------------------------------------------------------- */
+function skeletonCards(n, height = 'skel-card') {
+  return Array.from({ length: n }).map(() => `<div class="skeleton ${height}" style="margin-bottom:0.75rem;"></div>`).join('');
+}
+function emptyState(icon, title, body) {
+  return `<div class="state-block"><i data-lucide="${icon}"></i><h4>${escapeHtml(title)}</h4><p>${escapeHtml(body)}</p></div>`;
+}
+function errorState(message, retryFn) {
+  const id = 'retry-' + Math.random().toString(36).slice(2, 9);
+  setTimeout(() => {
+    const btn = document.getElementById(id);
+    if (btn) btn.addEventListener('click', retryFn);
+  }, 0);
+  return `<div class="state-block"><i data-lucide="wifi-off"></i><h4>Couldn't load this</h4><p>${escapeHtml(message)}</p><button class="btn-secondary btn-sm" id="${id}">Try again</button></div>`;
+}
+function renderInto(elId, html) {
+  const el = document.getElementById(elId);
+  if (el) { el.innerHTML = html; lucide.createIcons({ el }); }
+}
+
+/* ---------------------------------------------------------------------- */
+/* AUTH: SESSION / LOGIN / LOGOUT                                         */
+/* ---------------------------------------------------------------------- */
+async function checkSessionAndBoot() {
+  try {
+    const data = await api(API.authSession);
+    if (data.logged_in && data.customer) {
+      CURRENT_CUSTOMER = data.customer;
+      showApp();
+    } else {
+      showLogin();
+    }
+  } catch (e) {
+    showLogin();
+  }
+  handlePasswordResetLink();
+}
+
+function showLogin() {
+  document.getElementById('view-login').classList.remove('hidden');
+  document.getElementById('view-app').classList.add('hidden');
+}
+
+function showApp() {
+  document.getElementById('view-login').classList.add('hidden');
+  document.getElementById('view-app').classList.remove('hidden');
+  hydrateAccountUI();
+  buildNav();
+  loadDashboard();
+  refreshNotifBadge();
+}
+
+function hydrateAccountUI() {
+  if (!CURRENT_CUSTOMER) return;
+  const name = CURRENT_CUSTOMER.name || 'Client';
+  const initials = name.split(' ').filter(Boolean).slice(0, 2).map(s => s[0].toUpperCase()).join('') || 'C';
+  document.getElementById('avatar-initials').textContent = initials;
+  document.getElementById('avatar-name').textContent = name.split(' ')[0];
+  document.getElementById('menu-name').textContent = name;
+  document.getElementById('menu-email').textContent = CURRENT_CUSTOMER.email || '';
+  document.getElementById('welcome-name').textContent = `Welcome back, ${name.split(' ')[0]}`;
+
+  const mustChange = !!CURRENT_CUSTOMER.must_change_password;
+  document.getElementById('must-change-banner').classList.toggle('hidden', !mustChange);
+  if (mustChange) openSetPasswordModal({ forced: true });
+}
+
+document.getElementById('login-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const form = e.target;
+  clearAllErrors(form);
+  document.getElementById('login-error').classList.remove('show');
+
+  const email = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value;
+  let hasError = false;
+  if (!isValidEmail(email)) { setFieldError('f-login-email'); hasError = true; }
+  if (!password) { setFieldError('f-login-password'); hasError = true; }
+  if (hasError) return;
+
+  const btn = document.getElementById('login-submit');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>';
+  try {
+    const data = await api(API.login, { method: 'POST', body: { email, password } });
+    CURRENT_CUSTOMER = data.customer;
+    toast(`Welcome back, ${data.customer.name.split(' ')[0]}.`, 'success');
+    showApp();
+  } catch (err) {
+    if (err.payload && err.payload.error && err.payload.error.code) {
+      // structured error contract already present in app.py's json_error()
+    }
+    document.getElementById('login-error-text').textContent = err.message || 'We could not log you in. Check your credentials and try again.';
+    document.getElementById('login-error').classList.add('show');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<span>Sign in</span>';
+  }
+});
+
+document.getElementById('menu-logout').addEventListener('click', async () => {
+  try { await api(API.logout, { method: 'POST' }); } catch (e) { /* ignore */ }
+  CURRENT_CUSTOMER = null;
+  toast('You have been signed out.', 'info');
+  showLogin();
+});
+
+/* ---------------------------------------------------------------------- */
+/* FORGOT PASSWORD / SET NEW PASSWORD                                     */
+/* ---------------------------------------------------------------------- */
+document.getElementById('open-forgot-pw').addEventListener('click', () => openModal('modal-forgot'));
+
+document.getElementById('forgot-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  clearAllErrors(e.target);
+  const email = document.getElementById('forgot-email').value.trim();
+  if (!isValidEmail(email)) { setFieldError('f-forgot-email'); return; }
+  const btn = document.getElementById('forgot-submit');
+  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>';
+  try {
+    const data = await api(API.passwordReset, { method: 'POST', body: { email } });
+    toast(data.message || 'If an account exists for that email, a reset link is on its way.', 'success');
+    closeModal('modal-forgot');
+    e.target.reset();
+  } catch (err) {
+    toast(err.message, 'error');
+  } finally {
+    btn.disabled = false; btn.innerHTML = 'Send reset link';
+  }
+});
+
+// Reads ?reset_token=...&customer=... left by the emailed reset link
+// (see auth_password_reset() in app.py) and opens the set-password modal.
+let RESET_CONTEXT = null;
+function handlePasswordResetLink() {
+  const params = new URLSearchParams(window.location.search);
+  const token = params.get('reset_token');
+  const customerId = params.get('customer');
+  if (token && customerId) {
+    RESET_CONTEXT = { token, customerId, forced: false };
+    document.getElementById('view-login').classList.remove('hidden');
+    document.getElementById('view-app').classList.add('hidden');
+    openSetPasswordModal({ forced: false, viaLink: true });
+  }
+}
+
+function openSetPasswordModal({ forced, viaLink }) {
+  document.getElementById('set-pw-title').textContent = viaLink ? 'Choose a new password' : (forced ? 'Set a permanent password' : 'Change your password');
+  document.getElementById('set-pw-sub').textContent = forced
+    ? 'You are using a temporary password. Set a permanent one to continue.'
+    : 'Choose a password with at least 8 characters.';
+  document.getElementById('set-pw-close').classList.toggle('hidden', !!forced && !viaLink);
+  document.getElementById('f-current-password').classList.toggle('hidden', !!viaLink);
+  document.getElementById('current-password').required = !viaLink;
+  document.getElementById('set-pw-form').reset();
+  clearAllErrors(document.getElementById('set-pw-form'));
+  document.getElementById('pw-strength').className = 'strength-meter';
+  openModal('modal-set-password', { dismissable: !forced || viaLink });
+}
+document.getElementById('menu-change-pw').addEventListener('click', () => openSetPasswordModal({ forced: false }));
+document.getElementById('banner-change-pw').addEventListener('click', () => openSetPasswordModal({ forced: true }));
+
+document.getElementById('new-password').addEventListener('input', (e) => {
+  const v = e.target.value;
+  const meter = document.getElementById('pw-strength');
+  let score = 0;
+  if (v.length >= 8) score++;
+  if (/[A-Z]/.test(v) && /[a-z]/.test(v) && /[0-9]/.test(v)) score++;
+  if (/[^A-Za-z0-9]/.test(v) && v.length >= 12) score++;
+  meter.className = 'strength-meter' + (score > 0 ? ' s' + score : '');
+});
+
+document.getElementById('set-pw-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  clearAllErrors(e.target);
+  const currentPw = document.getElementById('current-password').value;
+  const pw = document.getElementById('new-password').value;
+  const confirm = document.getElementById('confirm-password').value;
+  const needsCurrent = !RESET_CONTEXT;
+  let hasError = false;
+  if (needsCurrent && !currentPw) { setFieldError('f-current-password', 'Enter your current password.'); hasError = true; }
+  if (pw.length < 8) { setFieldError('f-new-password'); hasError = true; }
+  if (pw !== confirm) { setFieldError('f-confirm-password'); hasError = true; }
+  if (hasError) return;
+
+  const btn = document.getElementById('set-pw-submit');
+  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>';
+  try {
+    if (RESET_CONTEXT) {
+      await api(API.passwordResetConfirm, { method: 'POST', body: { token: RESET_CONTEXT.token, customer_id: RESET_CONTEXT.customerId, new_password: pw } });
+      toast('Password updated. Please sign in.', 'success');
+      RESET_CONTEXT = null;
+      closeModal('modal-set-password');
+      e.target.reset();
+    } else {
+      await api(API.changePassword, { method: 'POST', body: { current_password: currentPw, new_password: pw } });
+      toast('Password updated.', 'success');
+      closeModal('modal-set-password');
+      e.target.reset();
+      document.getElementById('must-change-banner').classList.add('hidden');
+      if (CURRENT_CUSTOMER) CURRENT_CUSTOMER.must_change_password = false;
+    }
+  } catch (err) {
+    if (err.status === 401 && err.payload && err.payload.errors && err.payload.errors.current_password) {
+      setFieldError('f-current-password', err.payload.errors.current_password);
+    } else if (err.payload && err.payload.errors && err.payload.errors.new_password) {
+      setFieldError('f-new-password', err.payload.errors.new_password);
+    } else {
+      toast(err.message, 'error');
+    }
+  } finally {
+    btn.disabled = false; btn.innerHTML = 'Update password';
+  }
+});
+
+/* ---------------------------------------------------------------------- */
+/* MODAL / DRAWER / MENU PLUMBING                                         */
+/* ---------------------------------------------------------------------- */
+function openModal(id, opts = {}) {
+  document.getElementById(id).classList.add('open');
+  document.getElementById(id).dataset.dismissable = opts.dismissable === false ? 'false' : 'true';
+}
+function closeModal(id) {
+  const el = document.getElementById(id);
+  if (el.dataset.dismissable === 'false') return;
+  el.classList.remove('open');
+}
+document.querySelectorAll('[data-close-modal]').forEach(btn => {
+  btn.addEventListener('click', () => closeModal(btn.dataset.closeModal));
+});
+document.querySelectorAll('.modal-overlay').forEach(ov => {
+  ov.addEventListener('click', (e) => { if (e.target === ov) closeModal(ov.id); });
+});
+document.querySelectorAll('.toggle-pw').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const input = document.getElementById(btn.dataset.target);
+    const isPw = input.type === 'password';
+    input.type = isPw ? 'text' : 'password';
+    btn.innerHTML = isPw ? '<i data-lucide="eye-off"></i>' : '<i data-lucide="eye"></i>';
+    lucide.createIcons({ el: btn });
+  });
+});
+
+document.getElementById('open-drawer').addEventListener('click', () => {
+  document.getElementById('drawer').classList.add('open');
+  document.getElementById('drawer-overlay').classList.add('open');
+});
+function closeDrawer() {
+  document.getElementById('drawer').classList.remove('open');
+  document.getElementById('drawer-overlay').classList.remove('open');
+}
+document.getElementById('close-drawer').addEventListener('click', closeDrawer);
+document.getElementById('drawer-overlay').addEventListener('click', closeDrawer);
+
+document.getElementById('avatar-btn').addEventListener('click', (e) => {
+  e.stopPropagation();
+  document.getElementById('account-menu').classList.toggle('open');
+  document.getElementById('notif-panel').classList.remove('open');
+});
+document.getElementById('notif-btn').addEventListener('click', (e) => {
+  e.stopPropagation();
+  document.getElementById('notif-panel').classList.toggle('open');
+  document.getElementById('account-menu').classList.remove('open');
+  if (document.getElementById('notif-panel').classList.contains('open')) loadNotifPanel();
+});
+document.addEventListener('click', () => {
+  document.getElementById('account-menu').classList.remove('open');
+  document.getElementById('notif-panel').classList.remove('open');
+});
+
+/* ---------------------------------------------------------------------- */
+/* NAVIGATION (hash-routed sections)                                      */
+/* ---------------------------------------------------------------------- */
+const NAV_ITEMS = [
+  { key: 'dashboard', label: 'Dashboard', icon: 'layout-dashboard' },
+  { key: 'projects', label: 'Projects', icon: 'folder-kanban' },
+  { key: 'actions', label: 'Action Required', icon: 'alert-triangle', countKey: 'pending_actions' },
+  { key: 'files', label: 'Files', icon: 'file-text' },
+  { key: 'messages', label: 'Messages', icon: 'message-square', countKey: 'unread_messages' },
+  { key: 'notifications', label: 'Notifications', icon: 'bell' },
+];
+let SUMMARY_COUNTS = {};
+
+function navItemHtml(item) {
+  const count = SUMMARY_COUNTS[item.countKey];
+  const pill = (item.countKey && count) ? `<span class="count-pill">${count}</span>` : '';
+  return `<button class="nav-item" data-section="${item.key}"><i data-lucide="${item.icon}"></i><span>${item.label}</span>${pill}</button>`;
+}
+function buildNav() {
+  ['nav-list-desktop', 'nav-list-mobile'].forEach(id => {
+    renderInto(id, NAV_ITEMS.map(navItemHtml).join(''));
+  });
+  document.querySelectorAll('[data-section]').forEach(btn => {
+    btn.addEventListener('click', () => goToSection(btn.dataset.section));
+  });
+  document.querySelectorAll('[data-goto]').forEach(btn => {
+    btn.addEventListener('click', () => goToSection(btn.dataset.goto));
+  });
+  goToSection('dashboard');
+}
+
+function goToSection(key) {
+  document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
+  const panel = document.getElementById('panel-' + key);
+  if (panel) {
+    panel.classList.add('active');
+    document.getElementById('current-page-title').textContent = panel.dataset.title || '';
+  }
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.toggle('active', b.dataset.section === key));
+  closeDrawer();
+  window.scrollTo({ top: 0, behavior: 'auto' });
+
+  if (key === 'projects' && ALL_PROJECTS.length === 0) loadProjects();
+  if (key === 'actions') loadActionsFull();
+  if (key === 'files') loadFiles();
+  if (key === 'messages') loadMessages();
+  if (key === 'notifications') loadNotificationsFull();
+}
+
+/* ---------------------------------------------------------------------- */
+/* DASHBOARD                                                              */
+/* ---------------------------------------------------------------------- */
+async function loadDashboard() {
+  renderInto('summary-grid', skeletonCards(4, 'skel-card').split('</div>').slice(0, 4).map(s => s + '</div>').join(''));
+  loadSummaryCards();
+  loadDashProjects();
+  loadDashActions();
+  loadDashActivity();
+  loadDashUpcoming();
+}
+
+const SUMMARY_DEFS = [
+  { key: 'active_projects', label: 'Active Projects', icon: 'folder-kanban', color: '#3B82F6', bg: 'rgba(59,130,246,0.12)', section: 'projects' },
+  { key: 'pending_actions', label: 'Pending Actions', icon: 'alert-triangle', color: '#F59E0B', bg: 'rgba(245,158,11,0.12)', section: 'actions' },
+  { key: 'upcoming_milestones', label: 'Upcoming Milestones', icon: 'calendar-clock', color: '#A855F7', bg: 'rgba(168,85,247,0.12)', section: 'dashboard' },
+  { key: 'unread_messages', label: 'Unread Messages', icon: 'message-square', color: '#22C55E', bg: 'rgba(34,197,94,0.12)', section: 'messages' },
+];
+
+async function loadSummaryCards() {
+  try {
+    const data = await api(API.dashboardSummary);
+    SUMMARY_COUNTS = data;
+    renderInto('summary-grid', SUMMARY_DEFS.map(d => summaryCardHtml(d, data[d.key])).join(''));
+    attachSummaryClicks();
+    buildNav();
+  } catch (e) {
+    // Endpoint not implemented yet — fall back to what we can compute
+    // client-side from /api/client/projects/mine (active project count),
+    // and show the rest as unavailable rather than fabricating numbers.
+    try {
+      const projects = await api(API.projectsMine);
+      ALL_PROJECTS = projects;
+      const active = projects.filter(p => !['Completed', 'Cancelled'].includes(p.status)).length;
+      const fallback = { active_projects: active, pending_actions: null, upcoming_milestones: null, unread_messages: null };
+      SUMMARY_COUNTS = fallback;
+      renderInto('summary-grid', SUMMARY_DEFS.map(d => summaryCardHtml(d, fallback[d.key])).join(''));
+      attachSummaryClicks();
+      buildNav();
+    } catch (e2) {
+      renderInto('summary-grid', `<div style="grid-column:1/-1;">${errorState('Dashboard summary is unavailable right now.', loadSummaryCards)}</div>`);
+    }
+  }
+}
+function summaryCardHtml(def, value) {
+  const shown = (value === null || value === undefined) ? '—' : value;
+  return `<div class="summary-card" data-section="${def.section}">
+    <div class="top"><div class="icon-wrap" style="background:${def.bg};"><i data-lucide="${def.icon}" style="color:${def.color};"></i></div></div>
+    <p class="val">${shown}</p><p class="lbl">${def.label}</p>
+  </div>`;
+}
+function attachSummaryClicks() {
+  document.querySelectorAll('.summary-card[data-section]').forEach(c => c.addEventListener('click', () => goToSection(c.dataset.section)));
+}
+
+async function loadDashProjects() {
+  renderInto('dash-projects-list', skeletonCards(2));
+  try {
+    if (ALL_PROJECTS.length === 0) ALL_PROJECTS = await api(API.projectsMine);
+    const top = ALL_PROJECTS.slice(0, 3);
+    if (top.length === 0) {
+      renderInto('dash-projects-list', emptyState('folder-plus', 'No projects yet', 'Start your first project brief and it will show up here.') + '<button class="btn-primary btn-sm" id="dash-empty-new-project-btn" style="display:flex;margin:0.25rem auto 0;">Start a Project</button>');
+      const btn = document.getElementById('dash-empty-new-project-btn');
+      if (btn) btn.addEventListener('click', () => openWizard());
+      return;
+    }
+    renderInto('dash-projects-list', `<div class="projects-grid">${top.map(projectCardHtml).join('')}</div>`);
+    attachProjectCardClicks();
+  } catch (e) {
+    renderInto('dash-projects-list', errorState(e.message, loadDashProjects));
+  }
+}
+
+async function loadDashActions() {
+  renderInto('dash-actions-card', skeletonCards(2));
+  try {
+    const actions = await api(API.actions);
+    renderInto('dash-actions-card', actions.length ? actions.slice(0, 3).map(actionRowHtml).join('') : emptyState('check-circle-2', 'You\u2019re all caught up', 'No action is needed from you right now.'));
+    attachActionClicks();
+  } catch (e) {
+    renderInto('dash-actions-card', emptyState('check-circle-2', 'You\u2019re all caught up', 'No action is needed from you right now.'));
+  }
+}
+
+async function loadDashActivity() {
+  renderInto('dash-activity-card', skeletonCards(3, 'skel-line'));
+  try {
+    const activity = await api(API.activity);
+    renderInto('dash-activity-card', activity.length ? activity.slice(0, 6).map(activityRowHtml).join('') : emptyState('activity', 'No activity yet', 'Updates on your projects will appear here.'));
+  } catch (e) {
+    renderInto('dash-activity-card', emptyState('activity', 'No activity yet', 'Updates on your projects will appear here.'));
+  }
+}
+
+async function loadDashUpcoming() {
+  renderInto('dash-upcoming-card', skeletonCards(3, 'skel-line'));
+  try {
+    const upcoming = await api(API.upcoming);
+    renderInto('dash-upcoming-card', upcoming.length ? upcoming.slice(0, 5).map(upcomingRowHtml).join('') : emptyState('calendar', 'Nothing on the calendar', 'Milestones and deadlines will show up here.'));
+  } catch (e) {
+    renderInto('dash-upcoming-card', emptyState('calendar', 'Nothing on the calendar', 'Milestones and deadlines will show up here.'));
+  }
+}
+
+function actionRowHtml(a) {
+  return `<div class="action-row">
+    <div class="a-icon"><i data-lucide="${iconForActionType(a.type)}"></i></div>
+    <div class="a-body"><p class="title">${escapeHtml(a.title)}</p><p class="meta">${escapeHtml(a.project_name || a.project_order_id || '')}${a.due_label ? ' · ' + escapeHtml(a.due_label) : ''}</p></div>
+    <button class="btn-secondary btn-sm a-cta" data-order="${escapeHtml(a.project_order_id || '')}">${escapeHtml(a.cta_label || 'Review')}</button>
+  </div>`;
+}
+function iconForActionType(type) {
+  return { upload: 'upload', approval: 'check-square', message: 'message-square', requirement: 'clipboard-list' }[type] || 'circle-dot';
+}
+function attachActionClicks() {
+  document.querySelectorAll('.a-cta[data-order]').forEach(btn => {
+    btn.addEventListener('click', () => { if (btn.dataset.order) window.location.href = `/project/${btn.dataset.order}`; });
+  });
+}
+
+function activityRowHtml(ev) {
+  return `<div class="activity-row"><div class="activity-dot"></div>
+    <div><p class="txt"><b>${escapeHtml(ev.actor || 'Kytron')}</b> ${escapeHtml(ev.action)} ${ev.project_name ? '· ' + escapeHtml(ev.project_name) : ''}</p>
+    <p class="time">${escapeHtml(ev.timestamp || '')}</p></div></div>`;
+}
+
+function upcomingRowHtml(u) {
+  const dt = u.date ? new Date(u.date) : null;
+  const day = dt ? dt.getDate() : '—';
+  const mon = dt ? dt.toLocaleString('en-IN', { month: 'short' }) : '';
+  return `<div class="upcoming-row"><div class="upcoming-date"><span class="d">${day}</span><span class="m">${mon}</span></div>
+    <div class="u-body"><p class="title">${escapeHtml(u.label)}</p><p class="meta">${escapeHtml(u.project_name || '')}</p></div></div>`;
+}
+
+/* ---------------------------------------------------------------------- */
+/* PROJECTS SECTION                                                       */
+/* ---------------------------------------------------------------------- */
+async function loadProjects() {
+  renderInto('projects-list-wrap', `<div class="projects-grid">${skeletonCards(6)}</div>`);
+  try {
+    ALL_PROJECTS = await api(API.projectsMine);
+    renderProjectsList();
+  } catch (e) {
+    renderInto('projects-list-wrap', errorState(e.message, loadProjects));
+  }
+}
+function renderProjectsList() {
+  const q = (document.getElementById('project-search').value || '').toLowerCase().trim();
+  let filtered = ALL_PROJECTS.filter(p => PROJECT_FILTER === 'all' || p.status === PROJECT_FILTER);
+  if (q) filtered = filtered.filter(p => (p.title || '').toLowerCase().includes(q) || (p.order_id || '').toLowerCase().includes(q));
+  if (filtered.length === 0) {
+    renderInto('projects-list-wrap', emptyState('search-x', 'No projects match', 'Try a different search term or filter.'));
+    return;
+  }
+  renderInto('projects-list-wrap', `<div class="projects-grid">${filtered.map(projectCardHtml).join('')}</div>`);
+  attachProjectCardClicks();
+}
+document.getElementById('project-search').addEventListener('input', renderProjectsList);
+document.querySelectorAll('#panel-projects .filter-pill').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('#panel-projects .filter-pill').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    PROJECT_FILTER = btn.dataset.status;
+    renderProjectsList();
+  });
+});
+
+const STATUS_BADGE = {
+  'Registered': 'blue', 'Under Process': 'amber', 'Testing Phase': 'purple',
+  'On Revision': 'amber', 'Ready for Delivery': 'purple', 'Delivered': 'blue',
+  'Completed': 'green', 'Cancelled': 'red',
+};
+function projectCardHtml(p) {
+  const badgeColor = STATUS_BADGE[p.status] || 'gray';
+  const hasProgress = typeof p.progress === 'number';
+  const progressRow = hasProgress
+    ? `<div class="pc-progress-row"><div class="pc-progress-bar"><span style="width:${p.progress}%;"></span></div><span class="pc-progress-pct">${p.progress}%</span></div>`
+    : '';
+  const metaFields = [
+    p.current_phase ? ['Current phase', p.current_phase] : null,
+    p.service || p.project_type ? ['Type', p.service || p.project_type] : null,
+    p.start_date ? ['Started', p.start_date] : null,
+    p.expected_completion ? ['Due', p.expected_completion] : (p.submitted_at ? ['Submitted', p.submitted_at] : null),
+  ].filter(Boolean);
+  const actionStrip = p.pending_action
+    ? `<div class="pc-action-strip"><i data-lucide="alert-triangle"></i><span>${escapeHtml(p.pending_action)}</span></div>` : '';
+  return `<div class="project-card" data-order="${escapeHtml(p.order_id)}">
+    <div class="pc-head">
+      <div><h4>${escapeHtml(p.title || 'Untitled project')}</h4><p class="pc-order">${escapeHtml(p.order_id)}</p></div>
+      <span class="badge badge-${badgeColor}"><span class="badge-dot"></span>${escapeHtml(p.status)}</span>
+    </div>
+    ${progressRow}
+    <dl class="pc-meta-grid">${metaFields.map(([k, v]) => `<div><dt>${escapeHtml(k)}</dt><dd>${escapeHtml(v)}</dd></div>`).join('')}</dl>
+    ${actionStrip}
+    <div class="pc-foot"><span>${p.last_activity ? 'Updated ' + escapeHtml(p.last_activity) : (p.updated_at ? 'Updated ' + escapeHtml(p.updated_at) : '')}</span><i data-lucide="arrow-right" style="width:0.9rem;height:0.9rem;"></i></div>
+  </div>`;
+}
+function attachProjectCardClicks() {
+  document.querySelectorAll('.project-card[data-order]').forEach(card => {
+    card.addEventListener('click', () => { window.location.href = `/project/${card.dataset.order}`; });
+  });
+}
+
+/* ---------------------------------------------------------------------- */
+/* ACTION REQUIRED — FULL LIST                                            */
+/* ---------------------------------------------------------------------- */
+async function loadActionsFull() {
+  renderInto('actions-full-card', skeletonCards(4));
+  try {
+    const actions = await api(API.actions);
+    renderInto('actions-full-card', actions.length ? actions.map(actionRowHtml).join('') : emptyState('check-circle-2', 'You\u2019re all caught up', 'Nothing needs your attention right now.'));
+    attachActionClicks();
+  } catch (e) {
+    renderInto('actions-full-card', errorState('Action items aren\u2019t available yet.', loadActionsFull));
+  }
+}
+
+/* ---------------------------------------------------------------------- */
+/* FILES SECTION                                                          */
+/* ---------------------------------------------------------------------- */
+let ALL_FILES = [];
+async function loadFiles() {
+  renderInto('files-list-wrap', skeletonCards(4, 'skel-line'));
+  try {
+    ALL_FILES = await api(API.documents);
+    renderFilesList();
+  } catch (e) {
+    renderInto('files-list-wrap', errorState('The combined files view isn\u2019t available yet — open an individual project to see its files.', loadFiles));
+  }
+}
+function renderFilesList() {
+  const q = (document.getElementById('file-search').value || '').toLowerCase().trim();
+  const filtered = q ? ALL_FILES.filter(f => (f.file_name || '').toLowerCase().includes(q)) : ALL_FILES;
+  if (filtered.length === 0) { renderInto('files-list-wrap', emptyState('file-x', 'No files yet', 'Files shared on your projects will appear here.')); return; }
+  renderInto('files-list-wrap', filtered.map(fileRowHtml).join(''));
+}
+document.getElementById('file-search').addEventListener('input', renderFilesList);
+function fileRowHtml(f) {
+  return `<a class="file-row" href="${f.download_url || '#'}" style="text-decoration:none;">
+    <div class="file-icon"><i data-lucide="file-text"></i></div>
+    <div class="file-body"><p class="name">${escapeHtml(f.file_name)}</p>
+      <p class="meta"><span>${escapeHtml(f.category || 'File')}</span><span>${escapeHtml(f.project_name || f.project_order_id || '')}</span><span>${escapeHtml(f.upload_date || '')}</span></p></div>
+    <i data-lucide="download" style="width:1.1rem;height:1.1rem;color:var(--text-muted);flex-shrink:0;"></i>
+  </a>`;
+}
+
+/* ---------------------------------------------------------------------- */
+/* MESSAGES SECTION                                                       */
+/* ---------------------------------------------------------------------- */
+async function loadMessages() {
+  renderInto('messages-layout', `<div class="conv-list">${skeletonCards(4, 'skel-line')}</div><div class="thread-panel">${emptyState('message-square', 'Select a conversation', 'Choose a project on the left to view messages.')}</div>`);
+  try {
+    const convos = await api(API.conversations);
+    if (convos.length === 0) {
+      renderInto('messages-layout', emptyState('message-square-off', 'No conversations yet', 'Messages tied to your projects will appear here.'));
+      return;
+    }
+    renderInto('messages-layout', `<div class="conv-list">${convos.map(convRowHtml).join('')}</div><div class="thread-panel" id="thread-panel">${emptyState('message-square', 'Select a conversation', 'Choose a project on the left to view messages.')}</div>`);
+    document.querySelectorAll('.conv-row').forEach(row => row.addEventListener('click', () => openThread(row.dataset.id, convos)));
+  } catch (e) {
+    renderInto('messages-layout', errorState('Messaging isn\u2019t available yet.', loadMessages));
+  }
+}
+function convRowHtml(c) {
+  const initials = (c.project_name || c.project_order_id || '?').slice(0, 2).toUpperCase();
+  return `<div class="conv-row" data-id="${c.id}">
+    <div class="c-avatar">${escapeHtml(initials)}</div>
+    <div class="c-body"><p class="proj">${escapeHtml(c.project_name || c.project_order_id)}</p><p class="snip">${escapeHtml(c.last_message || 'No messages yet')}</p></div>
+    ${c.unread_count ? '<div class="c-unread"></div>' : ''}
+  </div>`;
+}
+async function openThread(convId, convos) {
+  document.querySelectorAll('.conv-row').forEach(r => r.classList.toggle('active', r.dataset.id === String(convId)));
+  const convo = convos.find(c => String(c.id) === String(convId));
+  renderInto('thread-panel', `<div class="thread-head">${escapeHtml(convo ? (convo.project_name || convo.project_order_id) : '')}</div><div class="thread-body">${skeletonCards(3, 'skel-line')}</div>`);
+  try {
+    const messages = await api(API.conversations + '/' + convId);
+    const body = document.querySelector('#thread-panel .thread-body');
+    body.innerHTML = messages.map(m => `<div class="msg-bubble ${m.mine ? 'mine' : 'theirs'}">${escapeHtml(m.body)}<span class="time">${escapeHtml(m.timestamp || '')}</span></div>`).join('');
+    body.scrollTop = body.scrollHeight;
+    const panel = document.getElementById('thread-panel');
+    panel.insertAdjacentHTML('beforeend', `<div class="thread-input"><input type="text" id="thread-msg-input" placeholder="Write a message..."><button class="btn-primary btn-sm" id="thread-send"><i data-lucide="send"></i></button></div>`);
+    lucide.createIcons({ el: panel });
+    document.getElementById('thread-send').addEventListener('click', () => sendMessage(convId));
+  } catch (e) {
+    renderInto('thread-panel', errorState('Couldn\u2019t load this conversation.', () => openThread(convId, convos)));
+  }
+}
+async function sendMessage(convId) {
+  const input = document.getElementById('thread-msg-input');
+  const text = input.value.trim();
+  if (!text) return;
+  input.disabled = true;
+  try {
+    await api(API.conversations + '/' + convId, { method: 'POST', body: { body: text } });
+    input.value = '';
+    toast('Message sent.', 'success');
+  } catch (e) {
+    toast('Message could not be sent — messaging isn\u2019t fully wired up yet.', 'error');
+  } finally {
+    input.disabled = false;
+  }
+}
+
+/* ---------------------------------------------------------------------- */
+/* NOTIFICATIONS                                                          */
+/* ---------------------------------------------------------------------- */
+async function refreshNotifBadge() {
+  try {
+    const items = await api(API.notifications);
+    const unread = items.filter(n => !n.read).length;
+    document.getElementById('notif-dot').classList.toggle('hidden', unread === 0);
+  } catch (e) {
+    document.getElementById('notif-dot').classList.add('hidden');
+  }
+}
+async function loadNotifPanel() {
+  renderInto('notif-panel-body', skeletonCards(3, 'skel-line'));
+  try {
+    const items = await api(API.notifications);
+    renderInto('notif-panel-body', items.length ? items.slice(0, 8).map(notifRowHtml).join('') : emptyState('bell-off', 'No notifications', 'You\u2019re fully up to date.'));
+  } catch (e) {
+    renderInto('notif-panel-body', emptyState('bell-off', 'Nothing to show', 'Notifications aren\u2019t available yet.'));
+  }
+}
+function notifRowHtml(n) {
+  return `<div class="notif-row ${n.read ? '' : 'unread'}" data-id="${n.id}">
+    <div class="notif-icon"><i data-lucide="${iconForActionType(n.type)}"></i></div>
+    <div><p class="title">${escapeHtml(n.title)}</p><p class="time">${escapeHtml(n.created_at || '')}</p></div>
+  </div>`;
+}
+async function loadNotificationsFull() {
+  renderInto('notifications-full-card', skeletonCards(5));
+  try {
+    const items = await api(API.notifications);
+    renderInto('notifications-full-card', items.length ? items.map(notifRowHtml).join('') : emptyState('bell-off', 'No notifications', 'You\u2019re fully up to date.'));
+  } catch (e) {
+    renderInto('notifications-full-card', errorState('Notifications aren\u2019t available yet.', loadNotificationsFull));
+  }
+}
+document.getElementById('mark-all-read').addEventListener('click', markAllRead);
+document.getElementById('mark-all-read-2').addEventListener('click', markAllRead);
+async function markAllRead() {
+  try {
+    await api(API.notifications + '/read-all', { method: 'POST' });
+    toast('All notifications marked as read.', 'success');
+    document.getElementById('notif-dot').classList.add('hidden');
+    loadNotifPanel();
+    loadNotificationsFull();
+  } catch (e) {
+    toast('Couldn\u2019t update notifications right now.', 'error');
+  }
+}
+
+/* ---------------------------------------------------------------------- */
+/* REVISION REQUEST MODAL (wired to the real, implemented endpoint)       */
+/* ---------------------------------------------------------------------- */
+let REVISION_ORDER_ID = null;
+function openRevisionModal(orderId) {
+  REVISION_ORDER_ID = orderId;
+  document.getElementById('revision-sub').textContent = `Describe the change you'd like on ${orderId}.`;
+  openModal('modal-revision');
+}
+document.getElementById('revision-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  clearAllErrors(e.target);
+  const desc = document.getElementById('revision-desc').value.trim();
+  if (!desc) { setFieldError('f-revision-desc'); return; }
+  const btn = document.getElementById('revision-submit');
+  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>';
+  try {
+    // NOTE: /api/client/projects/revisions requires an authenticated ORDER
+    // session (project_session_required in app.py), separate from the
+    // account-level session this page runs under. In production this
+    // action should deep-link into that order's authenticated context
+    // (Project_details.html) rather than call the endpoint directly from
+    // here — flagged for the backend/routing phase.
+    await api(API.revisions, { method: 'POST', body: { order_id: REVISION_ORDER_ID, description: desc } });
+    toast('Revision request submitted.', 'success');
+    closeModal('modal-revision');
+    e.target.reset();
+  } catch (err) {
+    toast(err.message, 'error');
+  } finally {
+    btn.disabled = false; btn.innerHTML = 'Submit revision request';
+  }
+});
+
+/* ---------------------------------------------------------------------- */
+/* START-A-PROJECT WIZARD                                                 */
+/* ---------------------------------------------------------------------- */
+const WIZ_STEPS = ['type', 'contact', 'needs', 'description', 'budget', 'files', 'review', 'success'];
+const WIZ_BUDGET_OPTIONS = ['Under ₹15,000', '₹15,000 – ₹40,000', '₹40,000 – ₹1,00,000', '₹1,00,000 – ₹3,00,000', 'Above ₹3,00,000', 'Not sure yet'];
+const WIZ_TIMELINE_OPTIONS = ['ASAP', 'Within 1 week', '2–4 weeks', '1–2 months', 'Flexible'];
+
+let WIZ = {
+  stepIndex: 0,
+  catalog: { types: null, categories: null, services: null },
+  featuresCache: {},
+  selectedType: null,
+  selectedCategories: [],
+  selectedService: null,
+  selectedFeatures: [],
+  budget: null,
+  timeline: null,
+  files: [],       // { localId, file, fileId, name, size, status: 'uploading'|'done'|'error' }
+  emailCheckTimer: null,
+  emailKnownExisting: false,
+};
+
+function openWizard() {
+  WIZ = { ...WIZ, stepIndex: 0, selectedType: null, selectedCategories: [], selectedService: null,
+    selectedFeatures: [], budget: null, timeline: null, files: [], emailKnownExisting: false };
+  document.getElementById('wiz-project-name').value = '';
+  document.getElementById('wiz-description').value = '';
+  document.getElementById('wiz-existing-link').value = '';
+  document.getElementById('wiz-agree-terms').checked = false;
+  document.getElementById('wiz-file-list').innerHTML = '';
+  document.getElementById('wiz-email-notice').innerHTML = '';
+
+  if (CURRENT_CUSTOMER) {
+    document.getElementById('wiz-name').value = CURRENT_CUSTOMER.name || '';
+    document.getElementById('wiz-email').value = CURRENT_CUSTOMER.email || '';
+    document.getElementById('wiz-email').disabled = true;
+    document.getElementById('wiz-country-code').value = CURRENT_CUSTOMER.country_code || '+91';
+    document.getElementById('wiz-phone').value = CURRENT_CUSTOMER.phone || '';
+    document.getElementById('wiz-company').value = CURRENT_CUSTOMER.company || '';
+  } else {
+    document.getElementById('wiz-name').value = '';
+    document.getElementById('wiz-email').value = '';
+    document.getElementById('wiz-email').disabled = false;
+    document.getElementById('wiz-country-code').value = '+91';
+    document.getElementById('wiz-phone').value = '';
+    document.getElementById('wiz-company').value = '';
+  }
+
+  document.getElementById('view-wizard').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+  renderWizBudgetTimeline();
+  loadWizCatalog();
+  goToWizStep(0);
+}
+
+function closeWizard() {
+  document.getElementById('view-wizard').classList.add('hidden');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('new-project-link').addEventListener('click', (e) => { e.preventDefault(); openWizard(); });
+document.getElementById('dash-new-project-btn').addEventListener('click', () => openWizard());
+document.getElementById('projects-new-project-btn').addEventListener('click', () => openWizard());
+document.getElementById('wiz-close').addEventListener('click', () => {
+  if (WIZ.stepIndex > 0 && WIZ.stepIndex < WIZ_STEPS.length - 1) {
+    if (!confirm('Discard this project request? Anything entered so far will be lost.')) return;
+  }
+  closeWizard();
+});
+
+function currentWizStepKey() { return WIZ_STEPS[WIZ.stepIndex]; }
+
+function goToWizStep(index) {
+  WIZ.stepIndex = Math.max(0, Math.min(WIZ_STEPS.length - 1, index));
+  const key = currentWizStepKey();
+  document.querySelectorAll('.wiz-step').forEach(s => s.classList.toggle('active', s.dataset.step === key));
+
+  const isLast = WIZ.stepIndex === WIZ_STEPS.length - 1; // success
+  const isReview = key === 'review';
+  const progressPct = Math.round((WIZ.stepIndex / (WIZ_STEPS.length - 2)) * 100);
+  document.getElementById('wiz-progress-fill').style.width = Math.min(100, Math.max(0, progressPct)) + '%';
+  document.getElementById('wiz-step-label').textContent = isLast ? 'Done' : `Step ${WIZ.stepIndex + 1} of ${WIZ_STEPS.length - 1}`;
+
+  const footer = document.getElementById('wiz-footer');
+  const backBtn = document.getElementById('wiz-back');
+  const nextBtn = document.getElementById('wiz-next');
+  if (isLast) {
+    footer.classList.add('hidden');
+  } else {
+    footer.classList.remove('hidden');
+    backBtn.style.visibility = WIZ.stepIndex === 0 ? 'hidden' : 'visible';
+    nextBtn.textContent = isReview ? 'Submit request' : 'Continue';
+  }
+  if (isReview) renderWizReview();
+
+  document.getElementById('view-wizard').scrollTop = 0;
+  lucide.createIcons({ el: document.getElementById('view-wizard') });
+}
+
+document.getElementById('wiz-back').addEventListener('click', () => goToWizStep(WIZ.stepIndex - 1));
+document.getElementById('wiz-next').addEventListener('click', onWizNext);
+
+async function onWizNext() {
+  const key = currentWizStepKey();
+  if (!validateWizStep(key)) return;
+  if (key === 'review') { await submitWizard(); return; }
+  goToWizStep(WIZ.stepIndex + 1);
+}
+
+function validateWizStep(key) {
+  if (key === 'type') {
+    if (!WIZ.selectedType) { toast('Choose a project type to continue.', 'error'); return false; }
+    return true;
+  }
+  if (key === 'contact') {
+    let ok = true;
+    clearFieldError('f-wiz-name'); clearFieldError('f-wiz-email'); clearFieldError('f-wiz-phone');
+    const name = document.getElementById('wiz-name').value.trim();
+    const email = document.getElementById('wiz-email').value.trim();
+    const phone = document.getElementById('wiz-phone').value.trim();
+    if (!/^[a-zA-Z\s.'-]{2,}$/.test(name)) { setFieldError('f-wiz-name'); ok = false; }
+    if (!isValidEmail(email)) { setFieldError('f-wiz-email'); ok = false; }
+    if (phone && phone.replace(/\D/g, '').length < 6) { setFieldError('f-wiz-phone'); ok = false; }
+    if (!CURRENT_CUSTOMER && WIZ.emailKnownExisting) { toast('That email already has a Kytron account — please sign in instead.', 'error'); ok = false; }
+    return ok;
+  }
+  if (key === 'description') {
+    clearFieldError('f-wiz-description');
+    const desc = document.getElementById('wiz-description').value.trim();
+    if (desc.length < 10) { setFieldError('f-wiz-description'); toast('Add a little more detail about your project.', 'error'); return false; }
+    return true;
+  }
+  if (key === 'review') {
+    const agreed = document.getElementById('wiz-agree-terms').checked;
+    document.getElementById('wiz-terms-error').style.display = agreed ? 'none' : 'block';
+    if (!agreed) return false;
+    return true;
+  }
+  return true;
+}
+
+/* ---- catalog loading + step 1 (type) ---- */
+async function loadWizCatalog() {
+  if (!WIZ.catalog.types) {
+    try { WIZ.catalog.types = await api('/api/catalog/project-types'); }
+    catch (e) { WIZ.catalog.types = []; }
+    renderWizTypes();
+  }
+  if (!WIZ.catalog.categories) {
+    try { WIZ.catalog.categories = await api('/api/catalog/categories'); }
+    catch (e) { WIZ.catalog.categories = []; }
+    renderWizCategories();
+  }
+  if (!WIZ.catalog.services) {
+    try { WIZ.catalog.services = await api('/api/catalog/services'); }
+    catch (e) { WIZ.catalog.services = []; }
+    renderWizServices();
+  }
+}
+
+function renderWizTypes() {
+  const list = WIZ.catalog.types || [];
+  if (!list.length) { renderInto('wiz-type-grid', emptyState('folder', 'No project types available', 'Please describe what you need in the next step and we\u2019ll take it from there.')); return; }
+  renderInto('wiz-type-grid', list.map(t => `
+    <button type="button" class="option-card${WIZ.selectedType && WIZ.selectedType.id === t.id ? ' selected' : ''}" data-type-id="${t.id}">
+      <i data-lucide="${t.icon || 'layout-grid'}"></i>
+      <h4>${escapeHtml(t.name)}</h4>
+      ${t.description ? `<p>${escapeHtml(t.description)}</p>` : ''}
+    </button>`).join(''));
+  document.querySelectorAll('#wiz-type-grid [data-type-id]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const t = list.find(x => String(x.id) === btn.dataset.typeId);
+      WIZ.selectedType = t;
+      WIZ.selectedFeatures = [];
+      renderWizTypes();
+      loadWizFeatures(t.id);
+    });
+  });
+}
+
+async function loadWizFeatures(typeId) {
+  const wrap = document.getElementById('wiz-features-wrap');
+  if (WIZ.featuresCache[typeId]) {
+    renderWizFeatures(WIZ.featuresCache[typeId]);
+    return;
+  }
+  try {
+    const feats = await api(`/api/catalog/features?project_type=${encodeURIComponent(typeId)}`);
+    WIZ.featuresCache[typeId] = feats;
+    renderWizFeatures(feats);
+  } catch (e) {
+    wrap.classList.add('hidden');
+  }
+}
+
+function renderWizFeatures(feats) {
+  const wrap = document.getElementById('wiz-features-wrap');
+  if (!feats || !feats.length) { wrap.classList.add('hidden'); return; }
+  wrap.classList.remove('hidden');
+  renderInto('wiz-features-grid', feats.map(f => `
+    <button type="button" class="chip${WIZ.selectedFeatures.includes(String(f.id)) ? ' selected' : ''}" data-feature-id="${f.id}" title="${escapeHtml(f.description || '')}">${escapeHtml(f.name)}</button>
+  `).join(''));
+  document.querySelectorAll('#wiz-features-grid [data-feature-id]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.featureId;
+      WIZ.selectedFeatures = WIZ.selectedFeatures.includes(id) ? WIZ.selectedFeatures.filter(x => x !== id) : [...WIZ.selectedFeatures, id];
+      renderWizFeatures(feats);
+    });
+  });
+}
+
+/* ---- step 3: categories (multi) + service (single) ---- */
+function renderWizCategories() {
+  const list = WIZ.catalog.categories || [];
+  if (!list.length) { document.getElementById('wiz-categories-grid').innerHTML = '<p class="chip-empty">No preset categories \u2014 you can describe this in the next step.</p>'; return; }
+  renderInto('wiz-categories-grid', list.map(c => `
+    <button type="button" class="chip${WIZ.selectedCategories.includes(String(c.id)) ? ' selected' : ''}" data-cat-id="${c.id}">${escapeHtml(c.name)}</button>
+  `).join(''));
+  document.querySelectorAll('#wiz-categories-grid [data-cat-id]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.catId;
+      WIZ.selectedCategories = WIZ.selectedCategories.includes(id) ? WIZ.selectedCategories.filter(x => x !== id) : [...WIZ.selectedCategories, id];
+      renderWizCategories();
+    });
+  });
+}
+
+function renderWizServices() {
+  const list = WIZ.catalog.services || [];
+  if (!list.length) { document.getElementById('wiz-services-grid').innerHTML = '<p class="chip-empty">No preset services \u2014 you can describe this in the next step.</p>'; return; }
+  renderInto('wiz-services-grid', list.map(s => `
+    <button type="button" class="chip${WIZ.selectedService === String(s.id) ? ' selected' : ''}" data-svc-id="${s.id}">${escapeHtml(s.name)}</button>
+  `).join(''));
+  document.querySelectorAll('#wiz-services-grid [data-svc-id]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.svcId;
+      WIZ.selectedService = WIZ.selectedService === id ? null : id; // tap again to deselect
+      renderWizServices();
+    });
+  });
+}
+
+/* ---- step 5: budget / timeline chips ---- */
+function renderWizBudgetTimeline() {
+  renderInto('wiz-budget-grid', WIZ_BUDGET_OPTIONS.map(b => `<button type="button" class="chip${WIZ.budget === b ? ' selected' : ''}" data-budget="${escapeHtml(b)}">${escapeHtml(b)}</button>`).join(''));
+  renderInto('wiz-timeline-grid', WIZ_TIMELINE_OPTIONS.map(t => `<button type="button" class="chip${WIZ.timeline === t ? ' selected' : ''}" data-timeline="${escapeHtml(t)}">${escapeHtml(t)}</button>`).join(''));
+  document.querySelectorAll('#wiz-budget-grid [data-budget]').forEach(btn => btn.addEventListener('click', () => { WIZ.budget = btn.dataset.budget; renderWizBudgetTimeline(); }));
+  document.querySelectorAll('#wiz-timeline-grid [data-timeline]').forEach(btn => btn.addEventListener('click', () => { WIZ.timeline = btn.dataset.timeline; renderWizBudgetTimeline(); }));
+}
+
+/* ---- step 2: live email check (guest only) ---- */
+document.getElementById('wiz-email').addEventListener('input', (e) => {
+  if (CURRENT_CUSTOMER) return;
+  clearTimeout(WIZ.emailCheckTimer);
+  WIZ.emailKnownExisting = false;
+  const notice = document.getElementById('wiz-email-notice');
+  notice.innerHTML = '';
+  const email = e.target.value.trim();
+  if (!isValidEmail(email)) return;
+  WIZ.emailCheckTimer = setTimeout(async () => {
+    try {
+      const res = await api('/api/client/check-email', { method: 'POST', body: { email } });
+      if (res.exists) {
+        WIZ.emailKnownExisting = true;
+        notice.innerHTML = `<div class="wiz-inline-notice warn"><i data-lucide="alert-triangle"></i><span>An account already exists for this email. <a href="#" id="wiz-goto-signin">Sign in</a> to submit a new project instead.</span></div>`;
+        lucide.createIcons({ el: notice });
+        const link = document.getElementById('wiz-goto-signin');
+        if (link) link.addEventListener('click', (ev) => { ev.preventDefault(); closeWizard(); showLogin(); document.getElementById('login-email').value = email; });
+      }
+    } catch (e2) { /* silent \u2014 non-blocking check */ }
+  }, 500);
+});
+
+/* ---- step 6: file uploads ---- */
+document.getElementById('wiz-dropzone').addEventListener('click', () => document.getElementById('wiz-file-input').click());
+document.getElementById('wiz-file-input').addEventListener('change', (e) => { handleWizFiles(e.target.files); e.target.value = ''; });
+document.getElementById('wiz-dropzone').addEventListener('dragover', (e) => e.preventDefault());
+document.getElementById('wiz-dropzone').addEventListener('drop', (e) => { e.preventDefault(); handleWizFiles(e.dataTransfer.files); });
+
+function handleWizFiles(fileList) {
+  Array.from(fileList).forEach(file => {
+    if (file.size > 50 * 1024 * 1024) { toast(`${file.name} is over the 50MB limit.`, 'error'); return; }
+    const localId = 'f' + Math.random().toString(36).slice(2, 9);
+    const entry = { localId, file, fileId: null, name: file.name, size: file.size, status: 'uploading' };
+    WIZ.files.push(entry);
+    renderWizFileList();
+    uploadWizFile(entry);
+  });
+}
+
+async function uploadWizFile(entry) {
+  try {
+    const fd = new FormData();
+    fd.append('file', entry.file);
+    const res = await fetch('/api/client/uploads', { method: 'POST', credentials: 'same-origin', body: fd });
+    const data = await res.json();
+    if (!res.ok) throw new Error((data && data.error && data.error.message) || (data && data.message) || 'Upload failed.');
+    entry.fileId = data.file_id;
+    entry.status = 'done';
+  } catch (e) {
+    entry.status = 'error';
+  }
+  renderWizFileList();
+}
+
+function renderWizFileList() {
+  renderInto('wiz-file-list', WIZ.files.map(f => `
+    <div class="wiz-file-row" data-local-id="${f.localId}">
+      <i data-lucide="file" class="file-icon"></i>
+      <span class="file-name">${escapeHtml(f.name)}</span>
+      <span class="file-status">${f.status === 'uploading' ? 'Uploading\u2026' : f.status === 'error' ? 'Failed' : Math.round(f.size / 1024) + ' KB'}</span>
+      <button type="button" data-remove-file="${f.localId}" aria-label="Remove"><i data-lucide="x"></i></button>
+    </div>`).join(''));
+  document.querySelectorAll('[data-remove-file]').forEach(btn => {
+    btn.addEventListener('click', () => { WIZ.files = WIZ.files.filter(f => f.localId !== btn.dataset.removeFile); renderWizFileList(); });
+  });
+}
+
+/* ---- step 7: review ---- */
+function wizFindName(list, id) { const m = (list || []).find(x => String(x.id) === String(id)); return m ? m.name : id; }
+
+function renderWizReview() {
+  const catNames = WIZ.selectedCategories.map(id => wizFindName(WIZ.catalog.categories, id));
+  const svcName = WIZ.selectedService ? wizFindName(WIZ.catalog.services, WIZ.selectedService) : null;
+  const featNames = WIZ.selectedType ? WIZ.selectedFeatures.map(id => wizFindName(WIZ.featuresCache[WIZ.selectedType.id], id)) : [];
+  const doneFiles = WIZ.files.filter(f => f.status === 'done');
+
+  document.getElementById('wiz-review-body').innerHTML = `
+    <div class="wiz-review-block">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem;"><h5 style="margin:0;">Project</h5><button type="button" class="wiz-review-edit" data-wiz-edit="type">Edit</button></div>
+      <div class="wiz-review-row"><dt>Type</dt><dd>${escapeHtml(WIZ.selectedType ? WIZ.selectedType.name : '\u2014')}</dd></div>
+      ${document.getElementById('wiz-project-name').value.trim() ? `<div class="wiz-review-row"><dt>Name</dt><dd>${escapeHtml(document.getElementById('wiz-project-name').value.trim())}</dd></div>` : ''}
+    </div>
+    <div class="wiz-review-block">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem;"><h5 style="margin:0;">Contact</h5><button type="button" class="wiz-review-edit" data-wiz-edit="contact">Edit</button></div>
+      <div class="wiz-review-row"><dt>Name</dt><dd>${escapeHtml(document.getElementById('wiz-name').value.trim())}</dd></div>
+      <div class="wiz-review-row"><dt>Email</dt><dd>${escapeHtml(document.getElementById('wiz-email').value.trim())}</dd></div>
+      ${document.getElementById('wiz-phone').value.trim() ? `<div class="wiz-review-row"><dt>Phone</dt><dd>${escapeHtml(document.getElementById('wiz-country-code').value + ' ' + document.getElementById('wiz-phone').value.trim())}</dd></div>` : ''}
+      ${document.getElementById('wiz-company').value.trim() ? `<div class="wiz-review-row"><dt>Business</dt><dd>${escapeHtml(document.getElementById('wiz-company').value.trim())}</dd></div>` : ''}
+    </div>
+    <div class="wiz-review-block">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem;"><h5 style="margin:0;">What you need</h5><button type="button" class="wiz-review-edit" data-wiz-edit="needs">Edit</button></div>
+      ${catNames.length ? `<div class="wiz-review-row"><dt>Categories</dt><dd>${escapeHtml(catNames.join(', '))}</dd></div>` : ''}
+      ${svcName ? `<div class="wiz-review-row"><dt>Main service</dt><dd>${escapeHtml(svcName)}</dd></div>` : ''}
+      ${featNames.length ? `<div class="wiz-review-row"><dt>Features</dt><dd>${escapeHtml(featNames.join(', '))}</dd></div>` : ''}
+      ${(!catNames.length && !svcName && !featNames.length) ? `<div class="wiz-review-row"><dt>Selections</dt><dd>None selected</dd></div>` : ''}
+    </div>
+    <div class="wiz-review-block">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem;"><h5 style="margin:0;">Budget & timeline</h5><button type="button" class="wiz-review-edit" data-wiz-edit="budget">Edit</button></div>
+      <div class="wiz-review-row"><dt>Budget</dt><dd>${escapeHtml(WIZ.budget || 'Not specified')}</dd></div>
+      <div class="wiz-review-row"><dt>Timeline</dt><dd>${escapeHtml(WIZ.timeline || 'Not specified')}</dd></div>
+    </div>
+    <div class="wiz-review-block">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem;"><h5 style="margin:0;">Description</h5><button type="button" class="wiz-review-edit" data-wiz-edit="description">Edit</button></div>
+      <p style="font-size:0.825rem; color:var(--text-body); white-space:pre-wrap;">${escapeHtml(document.getElementById('wiz-description').value.trim())}</p>
+    </div>
+    <div class="wiz-review-block">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem;"><h5 style="margin:0;">Files${doneFiles.length ? ` (${doneFiles.length})` : ''}</h5><button type="button" class="wiz-review-edit" data-wiz-edit="files">Edit</button></div>
+      ${doneFiles.length ? doneFiles.map(f => `<div class="wiz-review-row"><dt>${escapeHtml(f.name)}</dt><dd>${Math.round(f.size/1024)} KB</dd></div>`).join('') : `<div class="wiz-review-row"><dt>Attachments</dt><dd>None</dd></div>`}
+    </div>
+  `;
+  lucide.createIcons({ el: document.getElementById('wiz-review-body') });
+}
+
+/* ---- final submit ---- */
+async function submitWizard() {
+  const nextBtn = document.getElementById('wiz-next');
+  nextBtn.disabled = true;
+  nextBtn.innerHTML = '<span class="spinner"></span>';
+
+  const stillUploading = WIZ.files.some(f => f.status === 'uploading');
+  if (stillUploading) {
+    toast('Please wait for your files to finish uploading.', 'error');
+    nextBtn.disabled = false; nextBtn.textContent = 'Submit request';
+    return;
+  }
+
+  const fd = new FormData();
+  fd.append('full_name', document.getElementById('wiz-name').value.trim());
+  fd.append('email', document.getElementById('wiz-email').value.trim());
+  fd.append('country_code', document.getElementById('wiz-country-code').value);
+  fd.append('phone', document.getElementById('wiz-phone').value.trim());
+  fd.append('company', document.getElementById('wiz-company').value.trim());
+  fd.append('project_update_email', document.getElementById('wiz-project-updates').checked ? 'true' : 'false');
+  fd.append('project_type', WIZ.selectedType ? WIZ.selectedType.name : '');
+  fd.append('project_name', document.getElementById('wiz-project-name').value.trim());
+  let description = document.getElementById('wiz-description').value.trim();
+  const link = document.getElementById('wiz-existing-link').value.trim();
+  if (link) description += `\n\nExisting link: ${link}`;
+  fd.append('project_notes', description);
+  fd.append('budget_range', WIZ.budget || '');
+  fd.append('preferred_deadline', WIZ.timeline || '');
+  fd.append('agree_to_terms', document.getElementById('wiz-agree-terms').checked ? 'true' : 'false');
+  if (CURRENT_CUSTOMER && CURRENT_CUSTOMER.customer_id) fd.append('customer_id', CURRENT_CUSTOMER.customer_id);
+  WIZ.selectedCategories.forEach(id => fd.append('categories[]', wizFindName(WIZ.catalog.categories, id)));
+  if (WIZ.selectedService) fd.append('services[]', wizFindName(WIZ.catalog.services, WIZ.selectedService));
+  WIZ.selectedFeatures.forEach(id => fd.append('features[]', wizFindName(WIZ.featuresCache[WIZ.selectedType.id], id)));
+  WIZ.files.filter(f => f.status === 'done' && f.fileId).forEach(f => fd.append('uploaded_file_ids[]', f.fileId));
+
+  try {
+    const res = await fetch('/api/client/projects', { method: 'POST', credentials: 'same-origin', body: fd });
+    const data = await res.json();
+    if (!res.ok) {
+      const msg = (data && data.error && data.error.message) || (data && data.message) || 'Something went wrong. Please try again.';
+      toast(msg, 'error');
+      nextBtn.disabled = false; nextBtn.textContent = 'Submit request';
+      return;
+    }
+    document.getElementById('wiz-order-id').textContent = data.order_id;
+    // Use the server's own record of whether a new account was actually
+    // created, rather than inferring it from whether this browser had a
+    // session — a guest submission can still match an existing customer.
+    const newAccount = !!data.new_customer_account;
+    const emailSent = data.credential_email_sent;
+    document.getElementById('wiz-account-note').classList.toggle('hidden', !(newAccount && emailSent !== false));
+    document.getElementById('wiz-account-note-failed').classList.toggle('hidden', !(newAccount && emailSent === false));
+    document.getElementById('wiz-customer-id-note').classList.toggle('hidden', !(newAccount && emailSent === false));
+    if (newAccount && emailSent === false) document.getElementById('wiz-customer-id').textContent = data.customer_id;
+    document.getElementById('wiz-success-cta').textContent = newAccount ? 'Sign in to your new account' : 'Go to My Projects';
+    goToWizStep(WIZ_STEPS.length - 1);
+    ALL_PROJECTS = []; // force a refresh of My Projects with the new entry
+    if (CURRENT_CUSTOMER) { loadDashProjects(); } else {
+      const prefillEmail = document.getElementById('wiz-email').value.trim();
+      document.getElementById('wiz-success-cta').onclick = () => { closeWizard(); showLogin(); document.getElementById('login-email').value = prefillEmail; };
+    }
+    if (CURRENT_CUSTOMER) {
+      document.getElementById('wiz-success-cta').onclick = () => { closeWizard(); goToSection('projects'); };
+    }
+  } catch (e) {
+    toast('Network error \u2014 please check your connection and try again.', 'error');
+  } finally {
+    nextBtn.disabled = false; nextBtn.textContent = 'Submit request';
+  }
+}
+
+document.getElementById('view-wizard').querySelector('.wiz-body').addEventListener('click', (e) => {
+  const editBtn = e.target.closest('[data-wiz-edit]');
+  if (editBtn) goToWizStep(WIZ_STEPS.indexOf(editBtn.dataset.wizEdit));
+});
+
+/* ---------------------------------------------------------------------- */
+/* BOOT                                                                    */
+/* ---------------------------------------------------------------------- */
+checkSessionAndBoot();
+</script>
+</body>
+</html>

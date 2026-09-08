@@ -1814,11 +1814,23 @@ def bootstrap_admin_if_empty():
     secret key is bootstrapped: generate it once, persist the one-time
     credential to a local file (never hardcode, never print a fixed
     password), and never touch it again once an Admin row exists."""
-    if Admin.query.first() is not None:
+ 
+    email = os.environ.get("KYTRON_ADMIN_EMAIL", "admin@kytron.local").strip().lower()
+    configured_password = os.environ.get("KYTRON_ADMIN_PASSWORD", "").strip()
+    reset_existing = os.environ.get("KYTRON_ADMIN_RESET", "").strip() == "1"
+
+    existing_admin = Admin.query.first()
+
+    if existing_admin is not None:
+        if reset_existing and configured_password:
+            existing_admin.email = email
+            existing_admin.password_hash = generate_password_hash(configured_password)
+            existing_admin.must_change_password = True
+            db.session.commit()
         return
 
-    email = os.environ.get("KYTRON_ADMIN_EMAIL", "admin@kytron.local").strip().lower()
-    temp_password = gen_temp_password()
+    temp_password = configured_password or gen_temp_password()
+ 
     admin = Admin(
         admin_id=gen_admin_id(),
         full_name="Kytron Admin",
